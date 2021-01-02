@@ -1,0 +1,80 @@
+Actor
+Alert
+Athlete
+Barbed Hide (UA: Feats for Races)
+Bountiful Luck (UA: Feats for Races)
+Bountiful Luck (XGE)
+Charger
+Critter Friend (UA: Feats for Races)
+Crossbow Expert
+Defensive Duelist
+Dragon Fear (UA: Feats for Races)
+Dragon Fear (XGE)
+Dragon Hide (UA: Feats for Races)
+Dragon Hide (XGE)
+Dragon Wings (UA: Feats for Races)
+Drow Hide Magic (XGE)
+Drow High Magic (UA: Feats for Races)
+Dual Wielder
+Dungeon Delver
+Durable
+Dwarf Resilience (UA: Feats for Races)
+Dwarven Fortitude (XGE)
+Elemental Adept
+Elven Accuracy (UA: Feats for Races)
+Elven Accuracy (XGE)
+Everybody's Friend (UA: Feats for Races)
+Fade Away (UA: Feats for Races)
+Fade Away (XGE)
+Fey Teleportation (UA: Feats for Races)
+Fey Teleportation (XGE)
+Flames of Phlegethos (UA: Feats for Races)
+Flames of Phlegethos (XGE)
+Grappler
+Great Weapon Master
+Grudge-Bearer (UA: Feats for Races)
+Healer
+Heavily Armored
+Heavy Armor Master
+Human Determination (UA: Feats for Races)
+Infernal Constitution (UA: Feats for Races)
+Infernal Constitution (XGE)
+Inspiring Leader
+Keen Mind
+Lightly Armored
+Linguist
+Lucky
+Mage Slayer
+Magic Initiate
+Martial Adept
+Medium Armor Master
+Mobile
+Moderately Armored
+Mounted Combatant
+Observant
+Orchish Fury (XGE)
+Orcish Aggression (UA: Feats for Races)
+Orcish Fury (UA: Feats for Races)
+Polearm Master
+Prodigy (UA: Feats for Races)
+Prodigy (XGE)
+Resilient
+Ritual Caster
+Savage Attacker
+Second Chance (UA: Feats for Races)
+Second Chance (XGE)
+Sentinel
+Sharpshooter
+Shield Master
+Skilled
+Skulker
+Spell Sniper
+Squat Nimbleness (UA: Feats for Races)
+Squat Nimbleness (XGE)
+Tavern Brawler
+Tough
+War Caster
+Weapon Master
+Wonder Maker (UA: Feats for Races)
+Wood Elf Magic (UA: Feats for Races)
+Wood Elf Magic (XGE)
