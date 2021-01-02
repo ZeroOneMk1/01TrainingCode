@@ -104,7 +104,7 @@ async def todos(ctx):
         todos = todosfile.read()
         print(todos)
         await ctx.send("These are the spells I'm currently working on:\n" + todos)
-    todosfile.close()
+        todosfile.close()
 
 
 @client.command()
@@ -299,5 +299,4 @@ async def partyTime(ctx):
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
 
-# print(cfile.read())
 client.run(cfile.read())
