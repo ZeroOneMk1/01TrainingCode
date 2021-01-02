@@ -14,18 +14,37 @@ classes = ['Artificer', 'Blood Hunter', 'Bard', 'Barbarian', 'Cleric', 'Druid',
 @tasks.loop(seconds=5)
 async def checkTime():
 
-    schedule = open("Discord Bot/schedule.txt", "r")
+    zachschedule = open("Discord Bot/schedule.txt", "r")
+    kyleschedule = open("Discord Bot/schedule copy.txt", "r")
+
+    """ZACH LOOP"""
+
     await client.wait_until_ready()
     channel = client.get_channel(792311682898460693)
 
     current_time = datetime.now().strftime("%A, %H:%M")
-    if(current_time == schedule.read()):
-        schedule.close()
+    if(current_time == zachschedule.read()):
+        zachschedule.close()
         for i in range(5):
             await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
         await client.change_presence(activity=discord.Game(status[0]))
     else:
-        schedule.close()
+        zachschedule.close()
+        await client.change_presence(activity=discord.Game(status[1]))
+
+    """KYLE LOOP"""
+
+    await client.wait_until_ready()
+    channel = client.get_channel(769850094353776654)
+
+    current_time = datetime.now().strftime("%A, %H:%M")
+    if(current_time == kyleschedule.read()):
+        kyleschedule.close()
+        for i in range(5):
+            await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
+        await client.change_presence(activity=discord.Game(status[0]))
+    else:
+        kyleschedule.close()
         await client.change_presence(activity=discord.Game(status[1]))
 
 
@@ -200,19 +219,31 @@ async def rollStats(ctx):
 
 
 @client.command()
-async def setMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
+async def setZachMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
     schedule = open("Discord Bot/schedule.txt", "w")
+    schedule.write(f'{weekday}, {time}')
+    await ctx.send(f"Changed the meeting time to {weekday}, {time}")
+    schedule.close()
+
+@client.command()
+async def setKyleMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
+    schedule = open("Discord Bot/schedule copy.txt", "w")
     schedule.write(f'{weekday}, {time}')
     await ctx.send(f"Changed the meeting time to {weekday}, {time}")
     schedule.close()
 
 
 @client.command()
-async def getMeetingTime(ctx):
+async def getZachMeetingTime(ctx):
     schedule = open("Discord Bot/schedule.txt", "r")
     await ctx.send(f'We meet on {schedule.read()}')
     schedule.close()
 
+@client.command()
+async def getKyleMeetingTime(ctx):
+    schedule = open("Discord Bot/schedule copy.txt", "r")
+    await ctx.send(f'We meet on {schedule.read()}')
+    schedule.close()
 
 @client.command()
 async def thanks(ctx, *, pog = ''):
@@ -244,7 +275,7 @@ async def getTime(ctx):
     await ctx.send("It's " + current_day + " today.")
 
 
-def getIfPartyTime():
+def getIfZachPartyTime():
     schedule = open("Discord Bot/schedule.txt", "r")
     now = datetime.now()
     current_time = now.strftime("%A, %H:%M")
@@ -255,6 +286,17 @@ def getIfPartyTime():
         schedule.close()
         return False
 
+
+def getIfKylePartyTime():
+    schedule = open("Discord Bot/schedule copy.txt", "r")
+    now = datetime.now()
+    current_time = now.strftime("%A, %H:%M")
+    if(current_time == schedule.read()):
+        schedule.close()
+        return True
+    else:
+        schedule.close()
+        return False
 
 @client.command()
 async def delete(ctx, amount=1):
@@ -290,11 +332,21 @@ async def rainbowTime(ctx):
             await ctx.author.remove_roles(role)
 
 @client.command(aliases=['partyTime?', 'pogTime?', 'time?'])
-async def partyTime(ctx):
-    if(getIfPartyTime()):
+async def zachPartyTime(ctx):
+    if(getIfZachPartyTime()):
         await ctx.send("THE TIME IS NOW, REJOICE!\n@everyone")
     else:
         schedule = open("Discord Bot/schedule.txt", "r")
+        await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
+        await ctx.send(f'We meet on {schedule.read()}')
+        schedule.close()
+
+@client.command(aliases=['loreTime?', 'poggerTime?'])
+async def kylePartyTime(ctx):
+    if(getIfZachPartyTime()):
+        await ctx.send("THE TIME IS NOW, REJOICE!\n@everyone")
+    else:
+        schedule = open("Discord Bot/schedule copy.txt", "r")
         await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
