@@ -86,7 +86,7 @@ async def randomFeat(ctx):
 
 @client.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
 async def randomCharacter(ctx):
-    racesfile = open("01TrainingCode/Discord Bot/races.txt", "r")
+    racesfile = open("01TrainingCode/Discord Bot/races.txt", "r", encoding='utf-8')
     races = racesfile.readlines()
     rd.shuffle(races)
     rd.shuffle(classes)
@@ -343,5 +343,12 @@ async def kylePartyTime(ctx):
         await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
+
+@client.command()
+async def clapify(ctx, *, text):
+    newtext = text.replace(' ', ':clap:')
+    await ctx.channel.purge(limit = 1)
+    await ctx.send(newtext)
+
 
 client.run(cfile.read())
