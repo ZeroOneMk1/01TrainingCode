@@ -1,0 +1,102 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamAngleX",
+			"GroupId": "",
+			"Name": "Angle X"
+		},
+		{
+			"Id": "ParamAngleY",
+			"GroupId": "",
+			"Name": "Angle Y"
+		},
+		{
+			"Id": "ParamEyeBallX",
+			"GroupId": "",
+			"Name": "Eyeball X"
+		},
+		{
+			"Id": "ParamEyeBallY",
+			"GroupId": "",
+			"Name": "Eyeball Y"
+		}
+	],
+	"ParameterGroups": [],
+	"Parts": [
+		{
+			"Id": "Part",
+			"Name": "Profile!Transparent.psd"
+		},
+		{
+			"Id": "PartRough",
+			"Name": "Rough Design"
+		},
+		{
+			"Id": "PartFace",
+			"Name": "Face"
+		},
+		{
+			"Id": "PartEye",
+			"Name": "Eye"
+		},
+		{
+			"Id": "PartEyeBall",
+			"Name": "Eyeball"
+		},
+		{
+			"Id": "PartBrow",
+			"Name": "Brows"
+		},
+		{
+			"Id": "PartMouth",
+			"Name": "Mouth"
+		},
+		{
+			"Id": "PartNose",
+			"Name": "Nose"
+		},
+		{
+			"Id": "PartEar",
+			"Name": "Ear"
+		},
+		{
+			"Id": "PartHairFront",
+			"Name": "Bangs"
+		},
+		{
+			"Id": "PartHairSide",
+			"Name": "Hair Side"
+		},
+		{
+			"Id": "PartHairBack",
+			"Name": "Hair Back"
+		},
+		{
+			"Id": "PartNeck",
+			"Name": "Neck"
+		},
+		{
+			"Id": "PartBody",
+			"Name": "Body"
+		},
+		{
+			"Id": "PartBackground",
+			"Name": "Background"
+		},
+		{
+			"Id": "PartSketch",
+			"Name": "[ Guide Image]"
+		}
+	],
+	"CombinedParameters": [
+		[
+			"ParamAngleX",
+			"ParamAngleY"
+		],
+		[
+			"ParamEyeBallX",
+			"ParamEyeBallY"
+		]
+	]
+}
