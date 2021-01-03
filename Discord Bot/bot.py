@@ -2,50 +2,43 @@ import discord
 import random as rd
 from datetime import datetime
 from discord.ext import commands, tasks
+import time
 
-cfile = open('Discord Bot/code.txt', 'r')
-
+cfile = open('01TrainingCode/Discord Bot/code.txt', 'r')
+stopped = False
 client = commands.Bot(command_prefix='wizard ')
 status = ["it's time!", "it's not time yet..."]
 classes = ['Artificer', 'Blood Hunter', 'Bard', 'Barbarian', 'Cleric', 'Druid',
            'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard']
+guilds = [792311682898460693, 769850094353776654]
+wizchannels = [792311682898460693, 769850094353776654]
+schedstrings = ['01TrainingCode/Discord Bot/schedule.txt', '01TrainingCode/Discord Bot/schedule copy.txt']
 
+@client.command(aliases =  ['sleep', 'nappytime', 'naptime', 'nap'])
+async def stop(ctx):
+    await ctx.send(':sleeping:Sleeping for 60 seconds, see you then!')
+    time.sleep(60)
 
 @tasks.loop(seconds=5)
 async def checkTime():
 
-    zachschedule = open("Discord Bot/schedule.txt", "r")
-    kyleschedule = open("Discord Bot/schedule copy.txt", "r")
+    schedules = []
+    schedules.append(open("01TrainingCode/Discord Bot/schedule.txt", "r"))
+    schedules.append(open("01TrainingCode/Discord Bot/schedule copy.txt", "r"))
 
-    """ZACH LOOP"""
+    for i in  range(2):
+        await client.wait_until_ready()
+        channel = client.get_channel(guilds[i])
 
-    await client.wait_until_ready()
-    channel = client.get_channel(792311682898460693)
-
-    current_time = datetime.now().strftime("%A, %H:%M")
-    if(current_time == zachschedule.read()):
-        zachschedule.close()
-        for i in range(5):
-            await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
-        await client.change_presence(activity=discord.Game(status[0]))
-    else:
-        zachschedule.close()
-        await client.change_presence(activity=discord.Game(status[1]))
-
-    """KYLE LOOP"""
-
-    await client.wait_until_ready()
-    channel = client.get_channel(769850094353776654)
-
-    current_time = datetime.now().strftime("%A, %H:%M")
-    if(current_time == kyleschedule.read()):
-        kyleschedule.close()
-        for i in range(5):
-            await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
-        await client.change_presence(activity=discord.Game(status[0]))
-    else:
-        kyleschedule.close()
-        await client.change_presence(activity=discord.Game(status[1]))
+        current_time = datetime.now().strftime("%A, %H:%M")
+        if(current_time == schedules[i].read()):
+            schedules[i].close()
+            for i in range(5):
+                await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
+            await client.change_presence(activity=discord.Game(status[0]))
+        else:
+            schedules[i].close()
+            await client.change_presence(activity=discord.Game(status[1]))
 
 
 @client.event
@@ -61,7 +54,7 @@ async def ping(ctx):
 
 @client.command()
 async def commission(ctx, *, thecommision):
-    todos = open("Discord Bot/todos.txt", "a")
+    todos = open("01TrainingCode/Discord Bot/todos.txt", "a")
     todos.write(f'{thecommision}\n')
     await ctx.send(f'Added "{thecommision}" to the to-do list.')
     todos.close()
@@ -75,7 +68,7 @@ async def randomClass(ctx):
 
 @client.command(aliases=['randRace', 'race', 'gimmeRace'])
 async def randomRace(ctx):
-    racesfile = open("Discord Bot/races.txt", "r")
+    racesfile = open("01TrainingCode/Discord Bot/races.txt", "r")
     races = racesfile.readlines()
     rd.shuffle(races)
     await ctx.send(f"Your random race is:\n```{races[0]}```Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
@@ -84,7 +77,7 @@ async def randomRace(ctx):
 
 @client.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
 async def randomFeat(ctx):
-    featsfile = open("Discord Bot/feats.txt", "r")
+    featsfile = open("01TrainingCode/Discord Bot/feats.txt", "r")
     feats = featsfile.readlines()
     rd.shuffle(feats)
     await ctx.send(f"Your random feat is:\n```{feats[0]}```Visit http://www.jsigvard.com/dnd/Feats.html for more information on this feat.")
@@ -93,7 +86,7 @@ async def randomFeat(ctx):
 
 @client.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
 async def randomCharacter(ctx):
-    racesfile = open("Discord Bot/races.txt", "r")
+    racesfile = open("01TrainingCode/Discord Bot/races.txt", "r")
     races = racesfile.readlines()
     rd.shuffle(races)
     rd.shuffle(classes)
@@ -115,11 +108,11 @@ async def livelaughlove(ctx):
 
 @client.command(aliases=['commissions', 'toDo', 'toDos'])
 async def todos(ctx):
-    todos = open("Discord Bot/todos.txt", "r")
+    todos = open("01TrainingCode/Discord Bot/todos.txt", "r")
     if(todos.read() == ''):
         await ctx.send("I have completed all spells. Commission more for me to start working again.")
     else:
-        todosfile = open("Discord Bot/todos.txt", "r")
+        todosfile = open("01TrainingCode/Discord Bot/todos.txt", "r")
         todos = todosfile.read()
         print(todos)
         await ctx.send("These are the spells I'm currently working on:\n" + todos)
@@ -220,49 +213,28 @@ async def rollStats(ctx):
 
 @client.command()
 async def setZachMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
-    schedule = open("Discord Bot/schedule.txt", "w")
+    schedule = open("01TrainingCode/Discord Bot/schedule.txt", "w")
     schedule.write(f'{weekday}, {time}')
     await ctx.send(f"Changed the meeting time to {weekday}, {time}")
     schedule.close()
 
 @client.command()
 async def setKyleMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
-    schedule = open("Discord Bot/schedule copy.txt", "w")
+    schedule = open("01TrainingCode/Discord Bot/schedule copy.txt", "w")
     schedule.write(f'{weekday}, {time}')
     await ctx.send(f"Changed the meeting time to {weekday}, {time}")
     schedule.close()
 
-@client.command()
-async def stop(ctx):
-    ksched = open("Discord Bot/schedule copy.txt", 'w')
-    zsched = open("Discord Bot/schedule.txt", 'w')
-    now = datetime.now()
-    minute = now.strftime('%M')
-    minute = str(int(minute) - 10)
-    current_time = now.strftime(f"%A, %H:{minute}")
-    ksched.write(current_time)
-    zsched.write(current_time)
-    
-    await client.wait_until_ready()
-    channel = client.get_channel(792311682898460693)
-    await channel.send("Someone reset the timer using the stop command, please set the meeting time again.")
-
-    await client.wait_until_ready()
-    channel = client.get_channel(769850094353776654)
-    await channel.send("Someone reset the timer using the stop command, please set the meeting time again.")
-    ksched.close()
-    zsched.close()
-
 
 @client.command()
 async def getZachMeetingTime(ctx):
-    schedule = open("Discord Bot/schedule.txt", "r")
+    schedule = open("01TrainingCode/Discord Bot/schedule.txt", "r")
     await ctx.send(f'We meet on {schedule.read()}')
     schedule.close()
 
 @client.command()
 async def getKyleMeetingTime(ctx):
-    schedule = open("Discord Bot/schedule copy.txt", "r")
+    schedule = open("01TrainingCode/Discord Bot/schedule copy.txt", "r")
     await ctx.send(f'We meet on {schedule.read()}')
     schedule.close()
 
@@ -297,7 +269,7 @@ async def getTime(ctx):
 
 
 def getIfZachPartyTime():
-    schedule = open("Discord Bot/schedule.txt", "r")
+    schedule = open("01TrainingCode/Discord Bot/schedule.txt", "r")
     now = datetime.now()
     current_time = now.strftime("%A, %H:%M")
     if(current_time == schedule.read()):
@@ -309,7 +281,7 @@ def getIfZachPartyTime():
 
 
 def getIfKylePartyTime():
-    schedule = open("Discord Bot/schedule copy.txt", "r")
+    schedule = open("01TrainingCode/Discord Bot/schedule copy.txt", "r")
     now = datetime.now()
     current_time = now.strftime("%A, %H:%M")
     if(current_time == schedule.read()):
@@ -357,7 +329,7 @@ async def zachPartyTime(ctx):
     if(getIfZachPartyTime()):
         await ctx.send("THE TIME IS NOW, REJOICE!\n@everyone")
     else:
-        schedule = open("Discord Bot/schedule.txt", "r")
+        schedule = open("01TrainingCode/Discord Bot/schedule.txt", "r")
         await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
@@ -367,7 +339,7 @@ async def kylePartyTime(ctx):
     if(getIfZachPartyTime()):
         await ctx.send("THE TIME IS NOW, REJOICE!\n@everyone")
     else:
-        schedule = open("Discord Bot/schedule copy.txt", "r")
+        schedule = open("01TrainingCode/Discord Bot/schedule copy.txt", "r")
         await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
