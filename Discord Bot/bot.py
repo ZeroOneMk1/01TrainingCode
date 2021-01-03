@@ -232,6 +232,27 @@ async def setKyleMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=da
     await ctx.send(f"Changed the meeting time to {weekday}, {time}")
     schedule.close()
 
+@client.command()
+async def stop(ctx):
+    ksched = open("Discord Bot/schedule copy.txt", 'w')
+    zsched = open("Discord Bot/schedule.txt", 'w')
+    now = datetime.now()
+    minute = now.strftime('%M')
+    minute = str(int(minute) - 10)
+    current_time = now.strftime(f"%A, %H:{minute}")
+    ksched.write(current_time)
+    zsched.write(current_time)
+    
+    await client.wait_until_ready()
+    channel = client.get_channel(792311682898460693)
+    await channel.send("Someone reset the timer using the stop command, please set the meeting time again.")
+
+    await client.wait_until_ready()
+    channel = client.get_channel(769850094353776654)
+    await channel.send("Someone reset the timer using the stop command, please set the meeting time again.")
+    ksched.close()
+    zsched.close()
+
 
 @client.command()
 async def getZachMeetingTime(ctx):
@@ -324,7 +345,7 @@ async def makeRole(ctx, name, color):
 @client.command()
 async def rainbowTime(ctx):
     await client.wait_until_ready()
-    guild = client.get_guild(706471625544957972)
+    guild = ctx.guild
     roles = await guild.fetch_roles()
     for role in roles:
         if role not in ctx.author.roles:
