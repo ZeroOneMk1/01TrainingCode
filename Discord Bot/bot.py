@@ -12,12 +12,15 @@ classes = ['Artificer', 'Blood Hunter', 'Bard', 'Barbarian', 'Cleric', 'Druid',
            'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard']
 guilds = [792311682898460693, 769850094353776654]
 wizchannels = [792311682898460693, 769850094353776654]
-schedstrings = ['01TrainingCode/Discord Bot/schedule.txt', '01TrainingCode/Discord Bot/schedule copy.txt']
+schedstrings = ['01TrainingCode/Discord Bot/schedule.txt',
+                '01TrainingCode/Discord Bot/schedule copy.txt']
 
-@client.command(aliases =  ['sleep', 'nappytime', 'naptime', 'nap'])
+
+@client.command(aliases=['sleep', 'nappytime', 'naptime', 'nap'])
 async def stop(ctx):
     await ctx.send(':sleeping:Sleeping for 60 seconds, see you then!')
     time.sleep(60)
+
 
 @tasks.loop(seconds=5)
 async def checkTime():
@@ -26,7 +29,7 @@ async def checkTime():
     schedules.append(open("01TrainingCode/Discord Bot/schedule.txt", "r"))
     schedules.append(open("01TrainingCode/Discord Bot/schedule copy.txt", "r"))
 
-    for i in  range(2):
+    for i in range(2):
         await client.wait_until_ready()
         channel = client.get_channel(guilds[i])
 
@@ -86,7 +89,8 @@ async def randomFeat(ctx):
 
 @client.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
 async def randomCharacter(ctx):
-    racesfile = open("01TrainingCode/Discord Bot/races.txt", "r", encoding='utf-8')
+    racesfile = open("01TrainingCode/Discord Bot/races.txt",
+                     "r", encoding='utf-8')
     races = racesfile.readlines()
     rd.shuffle(races)
     rd.shuffle(classes)
@@ -218,6 +222,7 @@ async def setZachMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=da
     await ctx.send(f"Changed the meeting time to {weekday}, {time}")
     schedule.close()
 
+
 @client.command()
 async def setKyleMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
     schedule = open("01TrainingCode/Discord Bot/schedule copy.txt", "w")
@@ -232,18 +237,21 @@ async def getZachMeetingTime(ctx):
     await ctx.send(f'We meet on {schedule.read()}')
     schedule.close()
 
+
 @client.command()
 async def getKyleMeetingTime(ctx):
     schedule = open("01TrainingCode/Discord Bot/schedule copy.txt", "r")
     await ctx.send(f'We meet on {schedule.read()}')
     schedule.close()
 
+
 @client.command()
-async def thanks(ctx, *, pog = ''):
+async def thanks(ctx, *, pog=''):
     await ctx.send("Any time, my student.")
 
-@client.command(aliases = ['curse'])
-async def cursed(ctx, lvl = 0):
+
+@client.command(aliases=['curse'])
+async def cursed(ctx, lvl=0):
     await ctx.channel.purge(limit=1)
     if(abs(lvl) == 0):
         await ctx.send("This is cursed.")
@@ -291,6 +299,7 @@ def getIfKylePartyTime():
         schedule.close()
         return False
 
+
 @client.command()
 async def delete(ctx, amount=1):
     await ctx.channel.purge(limit=amount+1)
@@ -304,6 +313,7 @@ async def repeat(ctx, *, message):
         await ctx.channel.purge(limit=1)
         await ctx.send(message)
 
+
 @client.command()
 async def makeRole(ctx, name, color):
     await client.wait_until_ready()
@@ -313,6 +323,7 @@ async def makeRole(ctx, name, color):
 # @client.command()
 # async def giveRole(ctx):
 #     await ctx.author.add_roles(792311300557373451)
+
 
 @client.command()
 async def rainbowTime(ctx):
@@ -324,6 +335,7 @@ async def rainbowTime(ctx):
             await ctx.author.add_roles(role)
             await ctx.author.remove_roles(role)
 
+
 @client.command(aliases=['partyTime?', 'pogTime?', 'time?'])
 async def zachPartyTime(ctx):
     if(getIfZachPartyTime()):
@@ -333,6 +345,7 @@ async def zachPartyTime(ctx):
         await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
+
 
 @client.command(aliases=['loreTime?', 'poggerTime?'])
 async def kylePartyTime(ctx):
@@ -344,10 +357,11 @@ async def kylePartyTime(ctx):
         await ctx.send(f'We meet on {schedule.read()}')
         schedule.close()
 
+
 @client.command()
 async def clapify(ctx, *, text):
     newtext = text.replace(' ', ':clap:')
-    await ctx.channel.purge(limit = 1)
+    await ctx.channel.purge(limit=1)
     await ctx.send(newtext)
 
 
