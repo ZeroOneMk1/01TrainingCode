@@ -325,7 +325,7 @@ async def repeat(ctx, *, message):
 async def map(ctx):
     await ctx.channel.send(file=discord.File('01TrainingCode\Discord Bot\map.png'))
 
-# ! Doesn't work
+# ? Doesn't work
 # @client.command()
 # async def setMap(ctx, map):
 #     premap = open('01TrainingCode\Discord Bot\map.png', 'w')
