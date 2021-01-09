@@ -314,15 +314,24 @@ async def repeat(ctx, *, message):
         await ctx.send(message)
 
 
-@client.command()
-async def makeRole(ctx, name, color):
-    await client.wait_until_ready()
-    guild = client.get_guild(706471625544957972)
-    await guild.create_role(name=name, colour=discord.Colour(int(color, 16)))
-
+# ! DANGEROUS
 # @client.command()
-# async def giveRole(ctx):
-#     await ctx.author.add_roles(792311300557373451)
+# async def makeRole(ctx, name, color):
+#     await client.wait_until_ready()
+#     guild = client.get_guild(706471625544957972)
+#     await guild.create_role(name=name, colour=discord.Colour(int(color, 16)))
+
+@client.command()
+async def map(ctx):
+    await ctx.channel.send(file=discord.File('01TrainingCode\Discord Bot\map.png'))
+
+# ! Doesn't work
+# @client.command()
+# async def setMap(ctx, map):
+#     premap = open('01TrainingCode\Discord Bot\map.png', 'w')
+#     premap.write(map) 
+
+
 
 
 @client.command()
