@@ -214,6 +214,13 @@ async def rollStats(ctx):
     stats.sort()
     await ctx.send(f'Your stats, in ascending order, are: {stats}')
 
+@client.command()
+async def rollHP(ctx, lvl, dice, conmod):
+    sum = int(dice) + int(conmod)
+    for i in range(int(lvl) - 1):
+        sum += rd.randint(1, int(dice)) + int(conmod)
+    await ctx.send("Your maximum HP is: " + str(sum))
+
 
 @client.command()
 async def setZachMeetingTime(ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
