@@ -71,7 +71,7 @@ class Karma(commands.Cog):
             await self.add_karma(ctx, bal)
 
         else:
-            await ctx.send("You're not the owner!")
+            await ctx.send("You're not my dad!")
 
 
     @commands.command()
