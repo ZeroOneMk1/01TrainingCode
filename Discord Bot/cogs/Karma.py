@@ -76,10 +76,10 @@ class Karma(commands.Cog):
 
     @commands.command()
     async def beg(self, ctx):
-        """Gives a random amount of money to the peasant casting the spell."""
+        """Gives a random amount of money."""
         await self.open_account(ctx.author)
 
-        scraps = rd.randint(1, 100)
+        scraps = rd.randint(1, 10)
 
         await self.add_karma(ctx, scraps)
         await ctx.send("Peasant...")
@@ -90,7 +90,7 @@ class Karma(commands.Cog):
         """Thanks"""
         await ctx.send("Any time, my student.")
         await self.open_account(ctx.author)
-        await self.add_karma(ctx, 1000)
+        await self.add_karma(ctx, 50)
     
 
 def setup(bot):
