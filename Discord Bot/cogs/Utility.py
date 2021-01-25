@@ -33,7 +33,7 @@ class Utility(commands.Cog):
         todos.write(f'{thecommision}\n')
         await ctx.send(f'Added "{thecommision}" to the to-do list.')
         todos.close()
-        self.Karma.add_karma(ctx, 50)
+        await self.Karma.add_karma(ctx, 50)
 
     @commands.command()
     async def ping(self, ctx):
@@ -46,7 +46,7 @@ class Utility(commands.Cog):
         """Stops the bot for 60s"""
         await ctx.send(':sleeping:Sleeping for 60 seconds, see you then!')
         time.sleep(60)
-        self.Karma.add_karma(ctx, 1)
+        await self.Karma.add_karma(ctx, 1)
 
 
 def setup(bot):

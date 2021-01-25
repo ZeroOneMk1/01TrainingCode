@@ -147,13 +147,38 @@ class DnD(commands.Cog):
 
     @commands.command()
     async def wikidot(self, ctx, *, string):
+        """Searches wikidot and returns the top result. Only works well for spells."""
         searchstring = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
         browser = Firefox(options=opts)
         browser.get(searchstring)
-        browser.implicitly_wait(20)
-        browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/div/div[1]/div/div[3]/div[1]/div[1]/a').click()
+        browser.implicitly_wait(5)
+
+        try:
+            browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/div/div[1]/div/div[3]/div[1]/div[1]/a').click()
+        except:
+            browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/div/div[1]/div/div[2]/div[1]/div[1]/a').click()
+        
         url = browser.current_url
-        await ctx.send(f"This is the top result: \n{url}\n\nIf this isn't what you wanted, try this link: \n{searchstring}")
+
+        thingy = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[1]/span')
+        
+        em = discord.Embed(title=thingy.text, color=discord.Colour.magenta())
+
+        try:
+            if "spell" in url:
+                text = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/p[4]').text
+                title = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/p[2]').text
+                em.add_field(name=title, value=text)
+            else:
+                text = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/p/strong/em').text
+
+                em.add_field(name="Description:", value=text)
+        except:
+            em.add_field(name="Couldn't find a short enough description.")
+
+        await ctx.send(f"This is the top result: \n{url}", embed=em)
+
+        await ctx.send(f"If this isn't what you wanted, try this link: \n{searchstring}")
         browser.quit()
 
 
