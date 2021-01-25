@@ -43,6 +43,7 @@ class Utility(commands.Cog):
         """Stops the bot for 60s"""
         await ctx.send(':sleeping:Sleeping for 60 seconds, see you then!')
         time.sleep(60)
+
     
 
 def setup(bot):

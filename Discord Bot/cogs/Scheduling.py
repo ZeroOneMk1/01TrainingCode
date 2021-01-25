@@ -13,22 +13,27 @@ class Scheduling(commands.Cog):
     async def checkTime(self):
         """Checks if there is a session going on."""
         while True:
+
             await asyncio.sleep(10)
 
             schedules = await self.get_campaign_data()
             i = 0
             for time in schedules:
-                await bot.wait_until_ready()
-                channel = bot.get_channel(guilds[i])
+
+                await self.bot.wait_until_ready()
+
+                channel = self.bot.get_channel(guilds[i])
 
                 current_time = datetime.now().strftime("%A, %H:%M")
+                
                 if(current_time == time):
                     for i in range(5):
                         await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
-                    await bot.change_presence(activity=discord.Game(status[0]))
+                    await self.bot.change_presence(activity=discord.Game(status[0]))
                 else:
-                    await bot.change_presence(activity=discord.Game(status[1]))
+                    await self.bot.change_presence(activity=discord.Game(status[1]))
                 i += 1
+
     
     async def getIfPartyTime(self, ctx):
 
