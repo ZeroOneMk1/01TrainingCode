@@ -1,1 +1,0 @@
-look up and return text off of dnd5e wiki

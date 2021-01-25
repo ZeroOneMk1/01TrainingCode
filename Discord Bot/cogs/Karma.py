@@ -1,4 +1,4 @@
-import discord, json
+import discord, json, asyncio
 import random as rd
 from discord.ext import commands
 
@@ -26,7 +26,7 @@ class Karma(commands.Cog):
         await self.open_account(ctx.author)
 
         users = await self.get_bank_data()
-
+        
         bal = users[str(ctx.author.id)]["balance"]
 
         bal += int(amount)
@@ -151,16 +151,15 @@ class Karma(commands.Cog):
             await self.add_balance(ctx, amount)
         else:
             await self.open_account_by_id(person)
-
             data = await self.get_bank_data()
 
             if data[str(ctx.author.id)]["balance"] < amount:
                 await ctx.send("I'm sorry, but you don't have that much karma to give.")
             else:
                 await self.add_balance(ctx, amount * -1)
-                
+                data = await self.get_bank_data()
                 bal = data[str(person)]["balance"]
-
+                
                 bal += int(amount)
 
                 data[str(person)]["balance"] = bal

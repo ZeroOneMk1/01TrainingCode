@@ -2,16 +2,24 @@ import discord
 import random as rd
 from discord.ext import commands
 from .consts import classes
+from .Karma import Karma
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
+
+opts = Options()
+opts.headless = True
 
 class DnD(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.Karma = Karma(bot)
     
     @commands.command(aliases=['randClass', 'class', 'gimme class'])
     async def randomClass(self, ctx):
         """Returns one random class."""
         rd.shuffle(classes)
         await ctx.send("Your random class is " + classes[0])
+        await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command(aliases=['randRace', 'race', 'gimmeRace'])
@@ -22,6 +30,7 @@ class DnD(commands.Cog):
         rd.shuffle(races)
         await ctx.send(f"Your random race is:\n```{races[0]}```Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
         racesfile.close()
+        await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
@@ -32,20 +41,8 @@ class DnD(commands.Cog):
         rd.shuffle(feats)
         await ctx.send(f"Your random feat is:\n```{feats[0]}```Visit http://www.jsigvard.com/dnd/Feats.html for more information on this feat.")
         featsfile.close()
+        await self.Karma.add_karma(ctx, 1)
 
-
-    @commands.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
-    async def randomCharacter(self, ctx):
-        """Generates a random Character with race, class and stats."""
-        racesfile = open("01TrainingCode/Discord Bot/races.txt",
-                        "r", encoding='utf-8')
-        races = racesfile.readlines()
-        rd.shuffle(races)
-        rd.shuffle(classes)
-        await ctx.send(f"Your random Character is of the race:\n```{races[0]}```They are a {classes[0]}, and their stats (without race modifiers) look as such:")
-        await rollStats.__call__(self, ctx)
-        await ctx.send("Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
-        racesfile.close()
     
     @commands.command(aliases=['d', 'dice'])
     async def roll(self, ctx, die=20, amount=1):
@@ -59,6 +56,7 @@ class DnD(commands.Cog):
             total += curr
         await ctx.send(rolls)
         await ctx.send(f'The total is {total}.')
+        await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command()
@@ -70,6 +68,7 @@ class DnD(commands.Cog):
             await ctx.send(rd.randint(1, int(die)) - int(mod))
         else:
             await ctx.send("I don't understand, please try again.")
+        await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command(aliases=['adv'])
@@ -83,6 +82,7 @@ class DnD(commands.Cog):
             await ctx.send('Final: ' + str(curr2))
         else:
             await ctx.send('Final: ' + str(curr1))
+        await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command(aliases=['disadv'])
@@ -96,6 +96,7 @@ class DnD(commands.Cog):
             await ctx.send('Final: ' + str(curr2))
         else:
             await ctx.send('Final: ' + str(curr1))
+        await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command(aliases=['stats', 'rollstats', 'randomstats', 'randstats'])
@@ -122,11 +123,39 @@ class DnD(commands.Cog):
         for i in range(int(lvl) - 1):
             sum += rd.randint(1, int(dice)) + int(conmod)
         await ctx.send("Your maximum HP is: " + str(sum))
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
+    async def randomCharacter(self, ctx):
+        """Generates a random Character with race, class and stats."""
+        racesfile = open("01TrainingCode/Discord Bot/races.txt",
+                        "r", encoding='utf-8')
+        races = racesfile.readlines()
+        rd.shuffle(races)
+        rd.shuffle(classes)
+        await ctx.send(f"Your random Character is of the race:\n```{races[0]}```They are a {classes[0]}, and their stats (without race modifiers) look as such:")
+        await self.rollStats.__call__(ctx)
+        await ctx.send("Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
+        racesfile.close()
+        await self.Karma.add_karma(ctx, 5)
 
     @commands.command()
     async def map(self, ctx):
         """Returns the current map for the campaign."""
         await ctx.channel.send(file=discord.File('01TrainingCode\Discord Bot\map.png'))
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command()
+    async def wikidot(self, ctx, *, string):
+        searchstring = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
+        browser = Firefox(options=opts)
+        browser.get(searchstring)
+        browser.implicitly_wait(20)
+        browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/div/div[1]/div/div[3]/div[1]/div[1]/a').click()
+        url = browser.current_url
+        await ctx.send(f"This is the top result: \n{url}\n\nIf this isn't what you wanted, try this link: \n{searchstring}")
+        browser.quit()
+
 
 def setup(bot):
     bot.add_cog(DnD(bot))
