@@ -16,48 +16,37 @@ class Scheduling(commands.Cog):
         """Checks if there is a session going on."""
         while True:
 
-            await asyncio.sleep(10)
+            await asyncio.sleep(5)
 
             schedules = await self.get_campaign_data()
-            i = 0
-            for time in schedules:
+
+            for campaign in schedules:
 
                 await self.bot.wait_until_ready()
 
-                channel = self.bot.get_channel(guilds[i])
+                channel = self.bot.get_channel(schedules[campaign]["channel"])
 
                 current_time = datetime.now().strftime("%A, %H:%M")
 
-                if(current_time == time):
+                camp_time = schedules[campaign]["time"]
+
+                if(current_time == camp_time):
                     for i in range(5):
                         await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
                     await self.bot.change_presence(activity=discord.Game(status[0]))
                 else:
                     await self.bot.change_presence(activity=discord.Game(status[1]))
-                i += 1
 
-    async def getIfPartyTime(self, ctx):
-
-        await self.add_campaign(ctx.guild)
-
+    async def add_campaign(self, ctx):
         campaigns = await self.get_campaign_data()
 
-        time = campaigns[str(ctx.guild.id)]
-
-        now = datetime.now()
-        current_time = now.strftime("%A, %H:%M")
-        if(current_time == time):
-            return True
-        else:
-            return False
-
-    async def add_campaign(self, guild):
-        campaigns = await self.get_campaign_data()
-
-        if str(guild.id) in campaigns:
+        if str(ctx.guild.id) in campaigns:
             return
         else:
-            campaigns[str(guild.id)] = 0
+            campaigns[str(ctx.guild.id)] = {}
+            campaigns[str(ctx.guild.id)]["time"] = 0
+            campaigns[str(ctx.guild.id)]["channel"] = ctx.channel.id
+            await ctx.send("This channel has been set as the main announcement channel. If this is not the channel I should be spamming, go to the appropriate channel and call 'wizard setChannel'")
 
         with open("01TrainingCode/Discord Bot/cogs/campaigns.json", 'w') as f:
             json.dump(campaigns, f)
@@ -66,6 +55,37 @@ class Scheduling(commands.Cog):
         with open("01TrainingCode/Discord Bot/cogs/campaigns.json", 'r') as f:
             campaigns = json.load(f)
         return campaigns
+
+
+    async def getIfPartyTime(self, ctx):
+
+        await self.add_campaign(ctx)
+
+        campaigns = await self.get_campaign_data()
+
+        time = campaigns[str(ctx.guild.id)]["time"]
+
+        now = datetime.now()
+        current_time = now.strftime("%A, %H:%M")
+        if(current_time == time):
+            return True
+        else:
+            return False
+
+    @commands.command()
+    async def setChannel(self, ctx):
+        """Sets the current channel as the main channel"""
+        await self.add_campaign(ctx)
+
+        campaigns = await self.get_campaign_data()
+
+        campaigns[str(ctx.guild.id)]["channel"] = ctx.channel.id
+
+        with open("01TrainingCode/Discord Bot/cogs/campaigns.json", 'w') as f:
+            json.dump(campaigns, f)
+        
+        await ctx.send("This channel is now the main wizard channel.")
+
 
     @commands.command()
     async def getTime(self, ctx):
@@ -80,25 +100,33 @@ class Scheduling(commands.Cog):
     async def getMeetingTime(self, ctx):
         """Gets the meeting time of the server's campaign."""
 
-        await self.add_campaign(ctx.guild)
+        await self.add_campaign(ctx)
 
         campaigns = await self.get_campaign_data()
+        
+        em = discord.Embed(title = "This server's campaign's info:", color=discord.Colour.magenta())
+        
+        await self.bot.wait_until_ready()
 
-        time = campaigns[str(ctx.guild.id)]
+        time = campaigns[str(ctx.guild.id)]["time"]
+        channel = self.bot.get_channel(campaigns[str(ctx.guild.id)]["channel"])
 
-        await ctx.send(f'We meet on {time}')
+        em.add_field(name="Channel: ", value=channel)
+        em.add_field(name="Time: ", value=time)
+
+        await ctx.send(embed=em)
 
     @commands.command()
     async def setMeetingTime(self, ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
         """Sets the meeting time of the server's campaign."""
 
-        await self.add_campaign(ctx.guild)
+        await self.add_campaign(ctx)
 
         timestring = f'{weekday}, {time}'
 
         campaigns = await self.get_campaign_data()
 
-        campaigns[str(ctx.guild.id)] = timestring
+        campaigns[str(ctx.guild.id)]["time"] = timestring
 
         with open("01TrainingCode/Discord Bot/cogs/campaigns.json", 'w') as f:
             json.dump(campaigns, f)
