@@ -1,9 +1,11 @@
 import discord, time
 from discord.ext import commands
+from .Karma import Karma
 
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.Karma = Karma(bot)
     
     @commands.command(aliases=['clear',  'erase', 'purge'])
     async def delete(self, ctx, amount=1):
@@ -31,6 +33,7 @@ class Utility(commands.Cog):
         todos.write(f'{thecommision}\n')
         await ctx.send(f'Added "{thecommision}" to the to-do list.')
         todos.close()
+        self.Karma.add_karma(ctx, 50)
 
     @commands.command()
     async def ping(self, ctx):

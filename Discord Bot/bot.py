@@ -17,7 +17,7 @@ if __name__ == '__main__':
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("I'm sorry, but you didn't give me enough information to perform this command. Do wizard help { command } to see what's required.")
+        await ctx.send("I'm sorry, but you didn't give me the necessary components for the spell. Do wizard help { command } to see what's required.")
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send("I'm sorry, but I either don't know this spell, or you gave me false instructions.")
 

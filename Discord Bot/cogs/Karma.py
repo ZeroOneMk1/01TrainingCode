@@ -11,13 +11,29 @@ class Karma(commands.Cog):
 
         users = await self.get_bank_data()
 
-        karma = users[str(ctx.author.id)]
+        karma = users[str(ctx.author.id)]["karma"]
 
         karma += int(amount)
 
-        users[str(ctx.author.id)] = karma
+        users[str(ctx.author.id)]["karma"] = karma
 
         await ctx.send(f"Your new karma is {karma}")
+
+        with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
+            json.dump(users, f)
+
+    async def add_balance(self, ctx, amount):
+        await self.open_account(ctx.author)
+
+        users = await self.get_bank_data()
+
+        bal = users[str(ctx.author.id)]["balance"]
+
+        bal += int(amount)
+
+        users[str(ctx.author.id)]["balance"] = bal
+
+        await ctx.send(f"Your new balance is {bal}")
 
         with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
@@ -29,7 +45,9 @@ class Karma(commands.Cog):
         if str(author.id) in users:
             return
         else:
-            users[str(author.id)] = 0
+            users[str(author.id)] = {}
+            users[str(author.id)]["karma"] = 0
+            users[str(author.id)]["balance"] = 0
 
         with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
@@ -41,7 +59,9 @@ class Karma(commands.Cog):
         if str(ID) in users:
             return
         else:
-            users[str(ID)] = 0
+            users[str(ID)] = {}
+            users[str(ID)]["karma"] = 0
+            users[str(ID)]["balance"] = 0
 
         with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
@@ -51,25 +71,27 @@ class Karma(commands.Cog):
             users = json.load(f)
         return users
 
-    @commands.command()
+    @commands.command(aliases = ['bal', 'balance'])
     async def karma(self, ctx):
         """Returns your current karma."""
         await self.open_account(ctx.author)
 
         users = await self.get_bank_data()
 
-        karma = users[str(ctx.author.id)]
+        karma = users[str(ctx.author.id)]["karma"]
+        balance = users[str(ctx.author.id)]["balance"]
 
         em = discord.Embed(
             title=f"{ctx.author.name}, this is your karma.", color=discord.Colour.magenta())
         em.add_field(name="Karma", value=karma)
+        em.add_field(name="Balance", value=balance)
 
         await ctx.send(embed=em)
 
 
     @commands.command()
-    async def makeMeRich(self, ctx, bal):
-        """Only for owner, debug."""
+    async def makeMeRich(self, ctx, karma, bal):
+        """Only for daddy, debug."""
         await self.open_account(ctx.author)
 
         try:
@@ -79,7 +101,9 @@ class Karma(commands.Cog):
             return
 
         if(ctx.author.id == 154979334002704384):
-            await self.add_karma(ctx, bal)
+            await self.add_karma(ctx, karma)
+            await self.add_balance(ctx, bal)
+            await ctx.send("Here you go daddy.")
 
         else:
             await ctx.send("You're not my dad!")
@@ -124,24 +148,24 @@ class Karma(commands.Cog):
 
         if amount < 0:
             await ctx.send("HEY! Stealing is BAD! Don't steal!")
-            await self.add_karma(ctx, amount)
+            await self.add_balance(ctx, amount)
         else:
             await self.open_account_by_id(person)
 
             data = await self.get_bank_data()
 
-            if data[str(ctx.author.id)] < amount:
+            if data[str(ctx.author.id)]["balance"] < amount:
                 await ctx.send("I'm sorry, but you don't have that much karma to give.")
             else:
-                await self.add_karma(ctx, amount * -1)
+                await self.add_balance(ctx, amount * -1)
                 
-                karma = data[str(person)]
+                bal = data[str(person)]["balance"]
 
-                karma += int(amount)
+                bal += int(amount)
 
-                data[str(person)] = karma
+                data[str(person)]["balance"] = bal
 
-                await ctx.send(f"Their new karma is {karma}")
+                await ctx.send(f"Their new balance is {bal}")
 
                 with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
                     json.dump(data, f)

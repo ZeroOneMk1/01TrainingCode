@@ -20,7 +20,7 @@ class Miscellaneous(commands.Cog):
 
         if(int(theguess) == temp):
             await ctx.send('Correct! Are you a divination wizard by chance?')
-            await self.karma.add_karma(ctx, 200)
+            await self.karma.add_balance(ctx, 200)
         else:
             await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
 
