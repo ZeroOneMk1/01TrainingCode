@@ -47,16 +47,20 @@ class DnD(commands.Cog):
     @commands.command(aliases=['d', 'dice'])
     async def roll(self, ctx, die=20, amount=1):
         """Rolls some dice."""
-        total = 0
-        rolls = []
-        await ctx.send(":arrow_down: Contacting fate:")
-        for i in range(int(amount)):
-            curr = rd.randint(1, int(die))
-            rolls.append(curr)
-            total += curr
-        await ctx.send(rolls)
-        await ctx.send(f'The total is {total}.')
-        await self.Karma.add_karma(ctx, 1)
+        if amount > 500:
+            await ctx.send("Woah there, that's a lotta dice. This would result in an explosion, so I'd rather not.")
+            return
+        else:
+            total = 0
+            rolls = []
+            await ctx.send(":arrow_down: Contacting fate:")
+            for i in range(int(amount)):
+                curr = rd.randint(1, int(die))
+                rolls.append(curr)
+                total += curr
+            await ctx.send(rolls)
+            await ctx.send(f'The total is {total}.')
+            await self.Karma.add_karma(ctx, 1)
 
 
     @commands.command()
@@ -180,6 +184,7 @@ class DnD(commands.Cog):
 
         await ctx.send(f"If this isn't what you wanted, try this link: \n{searchstring}")
         browser.quit()
+        await self.Karma.add_balance(ctx, 5)
 
 
 def setup(bot):

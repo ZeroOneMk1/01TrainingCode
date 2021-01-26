@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
+from .Karma import Karma
 
 class TextBased(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.Karma = Karma(bot)
     
     @commands.command()
     async def clapify(self, ctx, *, text):
@@ -11,6 +13,7 @@ class TextBased(commands.Cog):
         newtext = text.replace(' ', ':clap:')
         await ctx.channel.purge(limit=1)
         await ctx.send(newtext)
+        await self.Karma.add_karma(ctx, 1)
     
     
     @commands.command(aliases=['say'])
@@ -38,6 +41,7 @@ class TextBased(commands.Cog):
             await ctx.send(f"Woaah there, this is cursed to the {lvl}th level!")
         if(lvl > 8):
             await ctx.send("I'll need a wish spell to unsee this! Anyone have spare GP?")
+        await self.Karma.add_karma(ctx, 1)
     
 
     @commands.command()
@@ -50,12 +54,27 @@ class TextBased(commands.Cog):
     async def nice(self, ctx):
         """nice"""
         await ctx.send('Nice')
+        await self.Karma.add_karma(ctx, 1)
+
 
 
     @commands.command(aliaes=['love', 'live', 'laugh', 'lovelivelaugh', 'lickmyass'])
     async def livelaughlove(self, ctx):
         """just no"""
         await ctx.send("Watch out there! We got a white girl in our hands! I'll cast mold earth to make some 'magic' crystals as a distraction while you get her!")
+        await self.Karma.add_karma(ctx, 1)
+
+
+    @commands.command()
+    async def uwufy(self, ctx, *, text):
+        text = text.replace("r", "w")
+        text = text.replace("l", "w")
+        text = text.replace('ove', 'uv')
+        text = text.replace("u", "uwu")
+        await ctx.send(text)
+        await self.Karma.add_karma(ctx, 1)
+
+
 
 def setup(bot):
     bot.add_cog(TextBased(bot))

@@ -24,5 +24,21 @@ class Miscellaneous(commands.Cog):
         else:
             await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
 
+    @commands.command()
+    async def guess100(self, ctx, theguess):
+        """Guess a random number between 1 and 100."""
+        temp = rd.randint(1, 100)
+        try:
+            int(theguess)
+        except:
+            await ctx.send('The stars didn\'t align, or you were just stupid. Try again, but with a number this time :angry:.')
+            return
+
+        if(int(theguess) == temp):
+            await ctx.send('Correct! Are you a divination wizard by chance?')
+            await self.karma.add_balance(ctx, 5000)
+        else:
+            await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
+
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))

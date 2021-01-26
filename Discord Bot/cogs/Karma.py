@@ -123,6 +123,12 @@ class Karma(commands.Cog):
     @commands.command()
     async def thanks(self, ctx, *, pog=''):
         """Thanks"""
+        with open("01TrainingCode/Discord Bot/thankscount.json", 'r') as f:
+            thankscount = json.load(f)
+        thankscount["thanks"] += 1
+        with open("01TrainingCode/Discord Bot/thankscount.json", 'w') as f:
+            json.dump(thankscount, f)
+        
         await ctx.send("Any time, my student.")
         await self.open_account(ctx.author)
         await self.add_karma(ctx, 50)

@@ -5,7 +5,6 @@ from datetime import datetime
 from discord.ext import commands, tasks
 from .consts import status, guilds
 
-
 class Scheduling(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -104,7 +103,7 @@ class Scheduling(commands.Cog):
 
         campaigns = await self.get_campaign_data()
         
-        em = discord.Embed(title = "This server's campaign's info:", color=discord.Colour.magenta())
+        em = discord.Embed(title = f"{ctx.guild}'s campaign's info:", color=discord.Colour.magenta())
         
         await self.bot.wait_until_ready()
 
