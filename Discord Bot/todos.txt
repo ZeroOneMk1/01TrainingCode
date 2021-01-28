@@ -1,4 +1,2 @@
-refine wikidot for things other than spells
-cap karma per minute to not encourage spam
-shorthand "wiz" - 339384118959800320
+refine wikidot for things other than spells - self
 split help into pages that you can control with reactions? - 339384118959800320

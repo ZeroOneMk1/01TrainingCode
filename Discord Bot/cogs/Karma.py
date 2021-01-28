@@ -73,7 +73,7 @@ class Karma(commands.Cog):
 
     @commands.command(aliases = ['bal', 'balance'])
     async def karma(self, ctx):
-        """Returns your current karma."""
+        """Returns your current karma and money."""
         await self.open_account(ctx.author)
 
         users = await self.get_bank_data()
@@ -91,7 +91,7 @@ class Karma(commands.Cog):
 
     @commands.command()
     async def makeMeRich(self, ctx, karma, bal):
-        """Only for daddy, debug."""
+        """Only for owner, debug."""
         await self.open_account(ctx.author)
 
         try:
@@ -135,7 +135,7 @@ class Karma(commands.Cog):
     
     @commands.command()
     async def gift(self, ctx, person, amount):
-        """Gift a friend with karma!"""
+        """Gift a friend with money!"""
         await self.open_account(ctx.author)
         
         person = person[3:-1]

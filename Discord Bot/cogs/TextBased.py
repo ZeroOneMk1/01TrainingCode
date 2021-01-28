@@ -67,6 +67,7 @@ class TextBased(commands.Cog):
 
     @commands.command()
     async def uwufy(self, ctx, *, text):
+        """UwU nyaa~~ rawr XD"""
         text = text.replace("r", "w")
         text = text.replace("l", "w")
         text = text.replace('ove', 'uv')
