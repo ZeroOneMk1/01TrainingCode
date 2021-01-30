@@ -9,56 +9,47 @@ class Games(commands.Cog):
         self.bot = bot
         self.karma = Karma(bot)
     
-    allgames = ['Checkers']
+    allgames = set()
+    gamestrings = ["Checkers"]
+    for thing in gamestrings:
+        allgames.add(thing)
     
     async def get_game_data(self):
         with open("01TrainingCode/Discord Bot/cogs/games.json", 'r') as f:
             games = json.load(f)
         return games
 
+    async def check_for_existing_game(self, authorID, opponentID, currgame):
+        games = await self.get_game_data()
+
+        i = 0
+
+        while games[str(i)]["Active"] == True:
+            if  games[str(i)]["Game"] == currgame:
+                if games[str(i)]["Players"]['1'] == str(authorID):
+                    if games[str(i)]["Players"]['2'] == str(opponentID):
+                        return True
+                elif games[str(i)]["Players"]['1'] == str(opponentID):
+                    if games[str(i)]["Players"]['2'] == str(authorID):
+                        return True
+            i += 1
+        return False
+
+
     async def startgame(self, ctx, opponentID, currgame):
         games = await self.get_game_data()
 
-        if str(ctx.guild.id) in games:
-            if ctx.author.id in games[str(ctx.guild.id)]['players']:
-                for game in self.allgames:
-                    if game != currgame:
-                        games[str(ctx.guild.id)]['players'][ctx.author.id][game] = False
-                    else:
-                        games[str(ctx.guild.id)]['players'][ctx.author.id][game] = True
-            else:
-                games[str(ctx.guild.id)]['players'][ctx.author.id] = {}
-                for game in self.allgames:
-                    if game != currgame:
-                        games[str(ctx.guild.id)]['players'][ctx.author.id][game] = False
-                    else:
-                        games[str(ctx.guild.id)]['players'][ctx.author.id][game] = True
-            
-            if opponentID in games[str(ctx.guild.id)]['players']:
-                for game in self.allgames:
-                    if game != currgame:
-                        games[str(ctx.guild.id)]['players'][opponentID][game] = False
-                    else:
-                        games[str(ctx.guild.id)]['players'][opponentID][game] = True
-            else:
-                games[str(ctx.guild.id)]['players'][opponentID] = {}
-                for game in self.allgames:
-                    if game != currgame:
-                        games[str(ctx.guild.id)]['players'][opponentID][game] = False
-                    else:
-                        games[str(ctx.guild.id)]['players'][opponentID][game] = True
-        else:
-            games[str(ctx.guild.id)] = {}
-            games[str(ctx.guild.id)]["players"] = {}
-            games[str(ctx.guild.id)]['players'][ctx.author.id] = {}
-            games[str(ctx.guild.id)]['players'][opponentID] = {}
-            for game in self.allgames:
-                if game != currgame:
-                    games[str(ctx.guild.id)]['players'][ctx.author.id][game] = False
-                    games[str(ctx.guild.id)]['players'][opponentID][game] = False
-                else:
-                    games[str(ctx.guild.id)]['players'][ctx.author.id][game] = True
-                    games[str(ctx.guild.id)]['players'][opponentID][game] = True
+        for i in range(0, 256):
+            if games[str(i)]["Active"] == False:
+                games[str(i)]["Active"] = True
+                games[str(i)]["Game"] = currgame
+                games[str(i)]["Players"]['1'] = str(ctx.author.id)
+                games[str(i)]["Players"]['2'] = opponentID
+                if currgame == "Checkers":
+                    games[str(i)]["Data"]['Turn'] = 'White'
+                    #TODO add board repr to json file, make game work. This will take some time.
+                    games[str(i)]["Data"]['Board'] = 'TODO'
+                break
         
         with open("01TrainingCode/Discord Bot/cogs/games.json", 'w') as f:
             json.dump(games, f)
@@ -97,9 +88,38 @@ class Games(commands.Cog):
             await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
 
     @commands.command(aliases = ['checkers', 'Checkers'])
-    async def startCheckers(self, ctx, otherplayer):
+    async def startGame(self, ctx, otherplayer, game):
+        if game not in self.allgames:
+            await ctx.send("I'm sorry, but we either don't have that game, or you misspelled something.\nUse the command getGames to see all available games and their spelling.")
+            return
         otherplayer = otherplayer[3:-1]
-        await self.startgame(ctx, otherplayer, 'Checkers')
+        if not await self.check_for_existing_game(ctx.author.id, otherplayer, game):
+            await self.startgame(ctx, otherplayer, game)
+            await ctx.send(f"You started a new {game} game with <@!{otherplayer}>")
+        else:
+            await ctx.send(f"You already have a game of {game} with this person!")
+
+    @commands.command()
+    async def getGames(self, ctx):
+        await ctx.send(self.allgames)
+
+    @commands.command()
+    async def resetGames(self, ctx):
+        """Debug, only for developer."""
+        if ctx.author.id == 154979334002704384:
+            games = {}
+            for i in range(0, 256):
+                games[i] = {}
+                games[i]["Active"] = False
+                games[i]["Game"] = None
+                games[i]["Players"] = {}
+                games[i]["Players"][1] = None
+                games[i]["Players"][2] = None
+                games[i]["Data"] = {}
+            with open('01TrainingCode/Discord Bot/cogs/games.json', 'w') as f:
+                json.dump(games,f)
+        else:
+            await ctx.send("You don't have the rights to cast that much destruction!")
 
 def setup(bot):
     bot.add_cog(Games(bot))

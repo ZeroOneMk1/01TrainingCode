@@ -146,7 +146,7 @@ class DnD(commands.Cog):
     @commands.command()
     async def map(self, ctx):
         """Returns the current map for the campaign."""
-        await ctx.channel.send(file=discord.File('01TrainingCode\Discord Bot\map.png'))
+        await ctx.channel.send(file=discord.File('01TrainingCode/Discord Bot/map1.png'))
         await self.Karma.add_karma(ctx, 1)
 
     @commands.command()

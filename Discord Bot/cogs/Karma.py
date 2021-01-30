@@ -131,8 +131,15 @@ class Karma(commands.Cog):
         
         await ctx.send("Any time, my student.")
         await self.open_account(ctx.author)
-        await self.add_karma(ctx, 50)
+        await self.add_karma(ctx, 20)
     
+    @commands.command(aliases = ['getThanks', 'getthanks', 'thankscount'])
+    async def thanksCount(self, ctx):
+        with open("01TrainingCode/Discord Bot/thankscount.json", 'r') as f:
+            thankscount = json.load(f)
+        await ctx.send(f"I've been thanked {thankscount['thanks']} times!\nThank you for asking :grin:")
+
+
     @commands.command()
     async def gift(self, ctx, person, amount):
         """Gift a friend with money!"""

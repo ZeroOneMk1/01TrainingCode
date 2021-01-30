@@ -63,3 +63,7 @@ class Game:
             self.turn = WHITE
         else:
             self.turn = RED
+    
+    def __repr__(self):
+        return self.board, self.turn, self.valid_moves
+
