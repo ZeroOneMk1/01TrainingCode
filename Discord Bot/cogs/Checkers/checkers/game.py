@@ -1,9 +1,9 @@
 import pygame
-from .consts import RED, WHITE, BLUE, SQUARE_SIZE
+from .consts import BLUE, SQUARE_SIZE
 from .board import Board
 
 class Game:
-    def __init__(self, win):
+    def __init__(self:
         self._init()
         self.win = win
     
@@ -15,7 +15,7 @@ class Game:
     def _init(self):
         self.selected = None
         self.board = Board()
-        self.turn = RED
+        self.turn = 'RED'
         self.valid_moves = {}
 
     def winner(self):
@@ -59,10 +59,10 @@ class Game:
 
     def change_turn(self):
         self.valid_moves = {}
-        if self.turn == RED:
-            self.turn = WHITE
+        if self.turn == 'RED':
+            self.turn = "WHITE"
         else:
-            self.turn = RED
+            self.turn = "RED"
     
     def __repr__(self):
         return self.board, self.turn, self.valid_moves

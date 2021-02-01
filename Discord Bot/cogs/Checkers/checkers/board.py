@@ -5,29 +5,34 @@ from .piece import Piece
 class Board:
     def __init__(self):
         self.board = []
-        self.red_left = self.white_left = 12
-        self.red_kings = self.white_kings = 0
         self.create_board()
-    
-    def draw_squares(self, win):
-        win.fill(BLACK)
-        for row in range(ROWS):
-            for col in range(row % 2, COLS, 2):
-                pygame.draw.rect(win, RED, (row*SQUARE_SIZE, col *SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def move(self, piece, row, col):
-        self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
-        piece.move(row, col)
 
-        if row == ROWS - 1 or row == 0:
-            piece.make_king()
-            if piece.color == WHITE:
-                self.white_kings += 1
+    def move(self, startrow, startcol, endrow, endcol):
+
+        self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
+
+        if self.winner() != 'no':
+            if self.winner() == WHITE:
+                return 'Red wins!!!'
             else:
-                self.red_kings += 1 
+                return 'Purple wins!!!'
+        else:
+            return 'No winner yet.'
+
+        if endrow == ROWS - 1 or endrow == 0:
+            self.board[endrow][endcol][3] = True
+
+            if self.board[endrow][endcol][0] == WHITE:
+                self.board[endrow][endcol][3] = True
+            else:
+                self.board[endrow][endcol][3] = True
 
     def get_piece(self, row, col):
         return self.board[row][col]
+
+    def overwrite(self, boardarr):
+        self.board = boardarr["Data"]["Board"]
 
     def create_board(self):
         for row in range(ROWS):
@@ -35,51 +40,80 @@ class Board:
             for col in range(COLS):
                 if col % 2 == ((row +  1) % 2):
                     if row < 3:
-                        self.board[row].append(Piece(row, col, WHITE))
+                        self.board[row].append(Piece(row, col, WHITE).__repr__())
                     elif row > 4:
-                        self.board[row].append(Piece(row, col, RED))
+                        self.board[row].append(Piece(row, col, RED).__repr__())
                     else:
                         self.board[row].append(0)
                 else:
                     self.board[row].append(0)
         
-    def draw(self, win):
-        self.draw_squares(win)
+    def draw(self):
+
+        numberemotes = [':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:']
+
+        drawstring = ':zero::one::two::three::four::five::six::seven::eight:\n'
         for row in range(ROWS):
+            drawstring += numberemotes[row]
             for col in range(COLS):
                 piece = self.board[row][col]
                 if piece != 0:
-                    piece.draw(win)
+                    if piece[0] == WHITE:
+                        if piece[3] == False:
+                            drawstring += ':rage:'
+                        else:
+                            drawstring += ':face_with_symbols_over_mouth:'
+                    else:
+                        if piece[3] == False:
+                            drawstring += ':imp:'
+                        else:
+                            drawstring += ':smiling_imp:'
+                elif col % 2 == 0 and row % 2 == 1:
+                    drawstring += ':yellow_square:'
+                elif col % 2 == 1 and row % 2 == 0:
+                    drawstring += ':yellow_square:'
+                else:
+                    drawstring += ':brown_square:'
+            drawstring += '\n'
+
+        return drawstring
 
     def remove(self, pieces):
+        # piece = self.board[row][col]
         for piece in pieces:
-            self.board[piece.row][piece.col] = 0
-            if piece != 0:
-                if piece.color == RED:
-                    self.red_left -= 1
-                else:
-                    self.white_left -= 1
+            piece = 0
     
     def winner(self):
-        if self.red_left <= 0:
+        red_left = 0
+        white_left = 0
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j] != 0:
+                    if self.board[i][j][0] == RED:
+                        red_left += 1
+                    else:
+                        white_left += 1
+        if red_left <= 0:
             return WHITE
-        elif self.white_left <= 0:
+        elif white_left <= 0:
             return RED
+        else:
+            return 'no'
         
         return None 
     
     def get_valid_moves(self, piece):
         moves = {}
-        left = piece.col - 1
-        right = piece.col + 1
-        row = piece.row
+        left = piece[2] - 1
+        right = piece[2] + 1
+        row = piece[1]
 
-        if piece.color == RED or piece.king:
-            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, piece.color, left))
-            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, piece.color, right))
-        if piece.color == WHITE or piece.king:
-            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, piece.color, left))
-            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, piece.color, right))
+        if piece[0] == RED or piece[3]:
+            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, piece[0], left))
+            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, piece[0], right))
+        if piece[0] == WHITE or piece[3]:
+            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, piece[0], left))
+            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, piece[0], right))
     
         return moves
 
@@ -148,3 +182,6 @@ class Board:
             right += 1
         
         return moves
+    
+    def __repr__(self):
+        return self.board
