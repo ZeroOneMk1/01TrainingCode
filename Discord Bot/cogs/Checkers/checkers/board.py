@@ -10,23 +10,36 @@ class Board:
 
     def move(self, startrow, startcol, endrow, endcol):
 
-        self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
+        moves = self.get_valid_moves(self.board[startrow][startcol])
+        
+        endmove = (endrow, endcol)
 
-        if self.winner() != 'no':
-            if self.winner() == WHITE:
-                return 'Red wins!!!'
-            else:
-                return 'Purple wins!!!'
+        if endmove not in moves:
+            return "That's not a valid move, sorry!"
         else:
-            return 'No winner yet.'
+            self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
 
-        if endrow == ROWS - 1 or endrow == 0:
-            self.board[endrow][endcol][3] = True
+            self.board[endrow][endcol][1] = endrow
+            self.board[endrow][endcol][2] = endcol
 
-            if self.board[endrow][endcol][0] == WHITE:
-                self.board[endrow][endcol][3] = True
+            for piece in moves[(endrow, endcol)]:
+                self.board[piece[0]][piece[1]] = 0
+
+            if self.winner() != 'no':
+                if self.winner() == WHITE:
+                    return 'Red wins!!!'
+                else:
+                    return 'Purple wins!!!'
             else:
+                return 'No winner yet.'
+
+            if endrow == ROWS - 1 or endrow == 0:
                 self.board[endrow][endcol][3] = True
+
+                if self.board[endrow][endcol][0] == WHITE:
+                    self.board[endrow][endcol][3] = True
+                else:
+                    self.board[endrow][endcol][3] = True
 
     def get_piece(self, row, col):
         return self.board[row][col]
@@ -79,9 +92,8 @@ class Board:
         return drawstring
 
     def remove(self, pieces):
-        # piece = self.board[row][col]
         for piece in pieces:
-            piece = 0
+            self.board[piece[1]][piece[2]] = 0
     
     def winner(self):
         red_left = 0
@@ -102,19 +114,21 @@ class Board:
         
         return None 
     
+    
     def get_valid_moves(self, piece):
         moves = {}
         left = piece[2] - 1
         right = piece[2] + 1
         row = piece[1]
+        king = piece[3]
+        color = piece[0]
 
-        if piece[0] == RED or piece[3]:
-            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, piece[0], left))
-            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, piece[0], right))
-        if piece[0] == WHITE or piece[3]:
-            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, piece[0], left))
-            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, piece[0], right))
-    
+        if color == RED or king:
+            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, color, left))
+            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, color, right))
+        if color == WHITE or king:
+            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, color, left))
+            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, color, right))
         return moves
 
     def _traverse_left(self, start, stop, step, color, left, skipped=[]):

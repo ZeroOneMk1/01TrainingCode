@@ -162,7 +162,7 @@ class Games(commands.Cog):
                     board = Board()
                     board.overwrite(gamedata[str(gameid)])
                     # TODO        Only aaccept valid moves
-                    await ctx.send(board.move(int(startpos[1]) - 1, int(startpos[0]) - 1, int(endpos[1]) - 1, int(endpos[0]) - 1))
+                    await ctx.send(board.move(ctx, int(startpos[1]) - 1, int(startpos[0]) - 1, int(endpos[1]) - 1, int(endpos[0]) - 1))
                     
                     gamedata[str(gameid)]["Data"]["Board"] = board.__repr__()
                     
@@ -199,6 +199,7 @@ class Games(commands.Cog):
                 games[i]["Data"] = {}
             with open('01TrainingCode/Discord Bot/cogs/games.json', 'w') as f:
                 json.dump(games,f)
+            await ctx.send("All games have been purged.")
         else:
             await ctx.send("You don't have the rights to cast that much destruction!")
 
