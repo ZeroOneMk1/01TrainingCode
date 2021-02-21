@@ -44,7 +44,6 @@ class Utility(commands.Cog):
         else:
             todosfile = open("01TrainingCode/Discord Bot/todos.txt", "r")
             todos = todosfile.read()
-            print(todos)
             await ctx.send("These are the spells I'm currently working on:\n" + todos)
         todosfile.close()
     

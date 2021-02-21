@@ -101,8 +101,8 @@ class Games(commands.Cog):
         else:
             await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
 
-    @commands.command(aliases = ['checkers', 'Checkers'])
-    async def startGame(self, ctx, otherplayer, game):
+    @commands.command()
+    async def startGame(self, ctx, game, otherplayer):
         if game not in self.allgames:
             await ctx.send("I'm sorry, but we either don't have that game, or you misspelled something.\nUse the command getGames to see all available games and their spelling.")
             return
@@ -138,7 +138,7 @@ class Games(commands.Cog):
             await ctx.send(board.draw())
 
     @commands.command()
-    async def move(self, ctx, otherplayer, game, startpos, endpos):
+    async def move(self, ctx, game, otherplayer, startpos, endpos):
         if game not in self.allgames:
             await ctx.send("I'm sorry, but we either don't have that game, or you misspelled something.\nUse the command getGames to see all available games and their spelling.")
             return
@@ -161,18 +161,24 @@ class Games(commands.Cog):
                     
                     board = Board()
                     board.overwrite(gamedata[str(gameid)])
+
+                    turn = gamedata[str(gameid)]["Data"]["Turn"]
+
                     # TODO        Only aaccept valid moves
-                    await ctx.send(board.move(ctx, int(startpos[1]) - 1, int(startpos[0]) - 1, int(endpos[1]) - 1, int(endpos[0]) - 1))
+                    await ctx.send(board.move(int(startpos[1]) - 1, int(startpos[0]) - 1, int(endpos[1]) - 1, int(endpos[0]) - 1, turn))
                     
+                    oldboard = gamedata[str(gameid)]["Data"]["Board"]
+
                     gamedata[str(gameid)]["Data"]["Board"] = board.__repr__()
                     
                     if board.winner() != 'no':
                         gamedata[str(gameid)]["Active"] = False
                         
-                    if gamedata[str(gameid)]["Data"]["Turn"] == '1':
-                        gamedata[str(gameid)]["Data"]["Turn"] = '2'
-                    else:
-                        gamedata[str(gameid)]["Data"]["Turn"] = '1'
+                    if oldboard != gamedata[str(gameid)]["Data"]["Board"]:
+                        if gamedata[str(gameid)]["Data"]["Turn"] == '1':
+                            gamedata[str(gameid)]["Data"]["Turn"] = '2'
+                        else:
+                            gamedata[str(gameid)]["Data"]["Turn"] = '1'
                     
                     with open("01TrainingCode/Discord Bot/cogs/games.json", 'w') as f:
                         json.dump(gamedata, f)

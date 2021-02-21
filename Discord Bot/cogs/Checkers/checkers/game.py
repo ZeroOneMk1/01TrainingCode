@@ -1,16 +1,12 @@
-import pygame
 from .consts import BLUE, SQUARE_SIZE
 from .board import Board
 
 class Game:
     def __init__(self:
         self._init()
-        self.win = win
     
     def update(self):
-        self.board.draw(self.win)
         self.draw_valid_moves(self.valid_moves)
-        pygame.display.update()
 
     def _init(self):
         self.selected = None
@@ -55,7 +51,6 @@ class Game:
     def draw_valid_moves(self, moves):
         for move in moves:
             row, col = move
-            pygame.draw.circle(self.win, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
 
     def change_turn(self):
         self.valid_moves = {}

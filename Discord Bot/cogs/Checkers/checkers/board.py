@@ -1,4 +1,3 @@
-import pygame
 from .consts import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
 from .piece import Piece
 
@@ -8,38 +7,75 @@ class Board:
         self.create_board()
 
 
-    def move(self, startrow, startcol, endrow, endcol):
+    def move(self, startrow, startcol, endrow, endcol, turn):
 
-        moves = self.get_valid_moves(self.board[startrow][startcol])
-        
-        endmove = (endrow, endcol)
+        if turn == '1' and self.board[startrow][startcol][0] == WHITE:
+            moves = self.get_valid_moves(self.board[startrow][startcol])
+            
+            endmove = (endrow, endcol)
 
-        if endmove not in moves:
-            return "That's not a valid move, sorry!"
-        else:
-            self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
-
-            self.board[endrow][endcol][1] = endrow
-            self.board[endrow][endcol][2] = endcol
-
-            for piece in moves[(endrow, endcol)]:
-                self.board[piece[0]][piece[1]] = 0
-
-            if self.winner() != 'no':
-                if self.winner() == WHITE:
-                    return 'Red wins!!!'
-                else:
-                    return 'Purple wins!!!'
+            if endmove not in moves:
+                return "That's not a valid move, sorry!"
             else:
-                return 'No winner yet.'
+                self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
 
-            if endrow == ROWS - 1 or endrow == 0:
-                self.board[endrow][endcol][3] = True
+                self.board[endrow][endcol][1] = endrow
+                self.board[endrow][endcol][2] = endcol
 
-                if self.board[endrow][endcol][0] == WHITE:
-                    self.board[endrow][endcol][3] = True
+                for piece in moves[(endrow, endcol)]:
+                    self.board[piece[1]][piece[2]] = 0
+
+                if self.winner() != 'no':
+                    if self.winner() == WHITE:
+                        return 'Red wins!!!'
+                    else:
+                        return 'Purple wins!!!'
                 else:
+                    return 'No winner yet.'
+
+                if endrow == ROWS - 1 or endrow == 0:
                     self.board[endrow][endcol][3] = True
+
+                    if self.board[endrow][endcol][0] == WHITE:
+                        self.board[endrow][endcol][3] = True
+                    else:
+                        self.board[endrow][endcol][3] = True
+
+        elif turn == '2' and self.board[startrow][startcol][0] == RED:
+
+            moves = self.get_valid_moves(self.board[startrow][startcol])
+            endmove = (endrow, endcol)
+
+            if endmove not in moves:
+                return "That's not a valid move, sorry!"
+            else:
+                self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
+
+                self.board[endrow][endcol][1] = endrow
+                self.board[endrow][endcol][2] = endcol
+
+                for piece in moves[(endrow, endcol)]:
+                    self.board[piece[1]][piece[2]] = 0
+
+                if self.winner() != 'no':
+                    if self.winner() == WHITE:
+                        return 'Red wins!!!'
+                    else:
+                        return 'Purple wins!!!'
+                else:
+                    return 'No winner yet.'
+
+                if endrow == ROWS - 1 or endrow == 0:
+                    self.board[endrow][endcol][3] = True
+
+                    if self.board[endrow][endcol][0] == WHITE:
+                        self.board[endrow][endcol][3] = True
+                    else:
+                        self.board[endrow][endcol][3] = True
+        else:
+            return "This isn't your piece!"
+
+        
 
     def get_piece(self, row, col):
         return self.board[row][col]
@@ -155,7 +191,7 @@ class Board:
                     moves.update(self._traverse_left(r+step, row, step, color, left-1,skipped=last))
                     moves.update(self._traverse_right(r+step, row, step, color, left+1,skipped=last))
                 break
-            elif current.color == color:
+            elif current[0] == color:
                 break
             else:
                 last = [current]
@@ -188,7 +224,7 @@ class Board:
                     moves.update(self._traverse_left(r+step, row, step, color, right-1,skipped=last))
                     moves.update(self._traverse_right(r+step, row, step, color, right+1,skipped=last))
                 break
-            elif current.color == color:
+            elif current[0] == color:
                 break
             else:
                 last = [current]
