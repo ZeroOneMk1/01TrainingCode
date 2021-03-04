@@ -15,7 +15,7 @@ class Scheduling(commands.Cog):
         """Checks if there is a session going on."""
         while True:
 
-            await asyncio.sleep(5)
+            await asyncio.sleep(20)
 
             schedules = await self.get_campaign_data()
 

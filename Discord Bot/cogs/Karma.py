@@ -181,6 +181,64 @@ class Karma(commands.Cog):
 
                 with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
                     json.dump(data, f)
+    
+    @commands.command()
+    async def redeem(self, ctx):
+        await self.open_account(ctx.author)
+
+        users = await self.get_bank_data()
+
+        karma = users[str(ctx.author.id)]["karma"]
+
+        if karma > 10000:
+
+            roles = await ctx.guild.fetch_roles()
+            for role in roles:
+                if role.name == 'Archwizard':
+                    give = role
+                    await ctx.author.add_roles(give)
+                    break
+            else:
+                give = await ctx.guild.create_role(name='Archwizard', colour=discord.Colour.gold(), hoist=True)
+                await ctx.author.add_roles(give)
+
+        elif karma > 1000:
+            roles = await ctx.guild.fetch_roles()
+
+            for role in roles:
+                if role.name == 'Wizard':
+                    give = role
+                    await ctx.author.add_roles(give)
+                    break
+            else:
+                # ? Dooesn't work atm...
+                # pos = 2
+                # for role in roles:
+                #     if role.name == "Apprentice":
+                #         pos = role.position + 1
+                give = await ctx.guild.create_role(name='Wizard', colour=discord.Colour.red(), hoist=True)
+                # await give.edit(position=pos)
+                await ctx.author.add_roles(give)
+
+        elif karma > 100:
+
+            roles = await ctx.guild.fetch_roles()
+            for role in roles:
+                if role.name == 'Apprentice':
+                    give = role
+                    try:
+                        await ctx.author.add_roles(give)
+                    except Exception as e:
+                        print(e)
+                    break
+            else:
+                give = await ctx.guild.create_role(name='Apprentice', colour=discord.Colour.green(), hoist=True)
+                await ctx.author.add_roles(give)
+            
+        else:
+            await ctx.send("Sorry, but you don't have enough experience for a role.")
+
+        
             
 
 
