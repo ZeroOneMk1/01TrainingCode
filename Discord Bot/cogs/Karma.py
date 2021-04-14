@@ -238,8 +238,6 @@ class Karma(commands.Cog):
         else:
             await ctx.send("Sorry, but you don't have enough experience for a role.")
 
-        
-            
 
 
 def setup(bot):
