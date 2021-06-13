@@ -40,7 +40,7 @@ class Player:
         self._halue = value
 
     def printCards(self):
-        print(f"{self._name}'s Cards are: {self._hand.getCards()}")
+        print(f"{self._name}'s Cards are: {self._hand.getCards()}, with a total value of {self._halue}")
     
     def getValue(self):
         return self._halue

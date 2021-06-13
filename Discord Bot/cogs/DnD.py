@@ -44,9 +44,28 @@ class DnD(commands.Cog):
         await self.Karma.add_karma(ctx, 1)
 
     
-    @commands.command(aliases=['d', 'dice'])
-    async def roll(self, ctx, die=20, amount=1):
+    @commands.command(aliases=['d', 'dice', 'r'])
+    async def roll(self, ctx, rollstr):
         """Rolls some dice."""
+
+        try:
+            rollarr = rollstr.split("d")
+            amount = int(rollarr[0])
+            if "+" in rollarr[1]:
+                die = int(rollarr[1].split("+")[0])
+                mod = int(rollarr[1].split("+")[1])
+                op = 1
+            elif "-" in rollarr[1]:
+                die = int(rollarr[1].split("-")[0])
+                mod = int(rollarr[1].split("-")[1])
+                op = -1
+            else:
+                die = int(rollarr[1])
+                op = 0
+        except:
+            await ctx.send("I don't understand that, please use common dice notation.")
+            return
+
         if amount > 500:
             await ctx.send("Woah there, that's a lotta dice. This would result in an explosion, so I'd rather not.")
             return
@@ -55,25 +74,17 @@ class DnD(commands.Cog):
             rolls = []
             await ctx.send(":arrow_down: Contacting fate:")
             for i in range(int(amount)):
-                curr = rd.randint(1, int(die))
+                curr = rd.randint(1, die)
                 rolls.append(curr)
                 total += curr
+            if op == 1:
+                total += mod
+            elif op == -1:
+                total -= mod
+
             await ctx.send(rolls)
             await ctx.send(f'The total is {total}.')
             await self.Karma.add_karma(ctx, 1)
-
-
-    @commands.command()
-    async def check(self, ctx, die=20, mod=0, operator='plus'):
-        """Rolls one dice with a modifier on it."""
-        if(operator == 'plus'):
-            await ctx.send(rd.randint(1, int(die)) + int(mod))
-        elif(operator == 'minus'):
-            await ctx.send(rd.randint(1, int(die)) - int(mod))
-        else:
-            await ctx.send("I don't understand, please try again.")
-        await self.Karma.add_karma(ctx, 1)
-
 
     @commands.command(aliases=['adv'])
     async def advantage(self, ctx, die=20):
@@ -117,7 +128,11 @@ class DnD(commands.Cog):
             stats.append(rolls[0] + rolls[1] + rolls[2])
             rolls.clear()
         stats.sort()
-        await ctx.send(f'Your stats, in ascending order, are: {stats}')
+        summ = 0
+        for stat in stats:
+            summ += stat
+
+        await ctx.send(f'Your stats, in ascending order, are: {stats}, and the sum is: {summ}')
 
 
     @commands.command()

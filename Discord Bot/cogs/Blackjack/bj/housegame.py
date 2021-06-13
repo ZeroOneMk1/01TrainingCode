@@ -1,6 +1,7 @@
 from .player import Player
 from .pot import Pot
 from .deck import Deck
+import json
 
 class Game:
     def __init__(self, size = 1):
@@ -11,6 +12,9 @@ class Game:
         self._running = True
         self._p1playing = True
         self.inround = True
+
+    def jsonify(self):
+        return json.dumps(self.__dict__)
 
     def play(self):
 
@@ -52,6 +56,7 @@ class Game:
                     if not self._house.getValue() > self._p1.getValue():
                         self._house.addCard(self._deck.pickCard())
                         self._house.printCards()
+                        
 
                         if self._house.over():
                             self._p1.win(self._pot.getValue())
