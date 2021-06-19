@@ -3,11 +3,11 @@ import random as rd
 from discord.ext import commands
 from .consts import classes
 from .Karma import Karma
-from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
 
 opts = Options()
-opts.headless = True
+opts.headless = False
 
 class DnD(commands.Cog):
     def __init__(self, bot):
@@ -166,9 +166,13 @@ class DnD(commands.Cog):
 
     @commands.command()
     async def wikidot(self, ctx, *, string):
-        """Searches wikidot and returns the top result. Only works well for spells."""
+        """DOESNT WORK AT THE MOMENT - Searches wikidot and returns the top result. Only works well for spells."""
         searchstring = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
-        browser = Firefox(options=opts)
+        try:
+            browser = Chrome(options=opts)
+        except Exception as e:
+            await ctx.send(e)
+            return
         browser.get(searchstring)
         browser.implicitly_wait(5)
 
