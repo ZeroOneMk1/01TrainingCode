@@ -5,3 +5,5 @@ command to lock wizard to only post in a single channel - 339384118959800320
 Person-based meeting times as well - self
 Balance and Karma Swag - 154979334002704384
 set personal time zone - 339384118959800320
+Make a flask website that the bot can interact with, on which I can write better documentation, and with which I can expand the capabilities of my bot to the next level. - 154979334002704384
+Fix selenium for the raspberry pi - 154979334002704384
