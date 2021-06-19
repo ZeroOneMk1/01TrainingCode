@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=['wizard ', 'wiz '])
+bot = commands.Bot(command_prefix=['wizard ', 'wiz ', 'Wizard ', 'Wiz '])
 
 initial_extensions = ['cogs.DnD',
                       'cogs.Karma',
@@ -38,7 +38,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send("I'm sorry, but I either don't know this spell, or you gave me false instructions.")
 
-token = open('01TrainingCode/Discord Bot/code.txt', 'r')
+token = open('Discord Bot/code.txt', 'r')
 
 @bot.event
 async def on_ready():

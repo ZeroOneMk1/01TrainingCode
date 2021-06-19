@@ -19,7 +19,7 @@ class Karma(commands.Cog):
 
         await ctx.send(f"Your new karma is {karma}")
 
-        with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
+        with open("Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
 
     async def add_balance(self, ctx, amount):
@@ -35,7 +35,7 @@ class Karma(commands.Cog):
 
         await ctx.send(f"Your new balance is {bal}")
 
-        with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
+        with open("Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
     
     async def open_account(self, author):
@@ -49,7 +49,7 @@ class Karma(commands.Cog):
             users[str(author.id)]["karma"] = 0
             users[str(author.id)]["balance"] = 0
 
-        with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
+        with open("Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
 
     async def open_account_by_id(self, ID):
@@ -63,11 +63,11 @@ class Karma(commands.Cog):
             users[str(ID)]["karma"] = 0
             users[str(ID)]["balance"] = 0
 
-        with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
+        with open("Discord Bot/main.json", 'w') as f:
             json.dump(users, f)
 
     async def get_bank_data(self):
-        with open("01TrainingCode/Discord Bot/main.json", 'r') as f:
+        with open("Discord Bot/main.json", 'r') as f:
             users = json.load(f)
         return users
 
@@ -123,10 +123,10 @@ class Karma(commands.Cog):
     @commands.command()
     async def thanks(self, ctx, *, pog=''):
         """Thanks"""
-        with open("01TrainingCode/Discord Bot/thankscount.json", 'r') as f:
+        with open("Discord Bot/thankscount.json", 'r') as f:
             thankscount = json.load(f)
         thankscount["thanks"] += 1
-        with open("01TrainingCode/Discord Bot/thankscount.json", 'w') as f:
+        with open("Discord Bot/thankscount.json", 'w') as f:
             json.dump(thankscount, f)
         
         await ctx.send("Any time, my student.")
@@ -135,7 +135,7 @@ class Karma(commands.Cog):
     
     @commands.command(aliases = ['getThanks', 'getthanks', 'thankscount'])
     async def thanksCount(self, ctx):
-        with open("01TrainingCode/Discord Bot/thankscount.json", 'r') as f:
+        with open("Discord Bot/thankscount.json", 'r') as f:
             thankscount = json.load(f)
         await ctx.send(f"I've been thanked {thankscount['thanks']} times!\nThank you for asking :grin:")
 
@@ -179,7 +179,7 @@ class Karma(commands.Cog):
 
                 await ctx.send(f"Their new balance is {bal}")
 
-                with open("01TrainingCode/Discord Bot/main.json", 'w') as f:
+                with open("Discord Bot/main.json", 'w') as f:
                     json.dump(data, f)
     
     @commands.command()
@@ -197,10 +197,12 @@ class Karma(commands.Cog):
                 if role.name == 'Archwizard':
                     give = role
                     await ctx.author.add_roles(give)
+                    await ctx.send("Congrats, you're now an Archwizard!")
                     break
             else:
                 give = await ctx.guild.create_role(name='Archwizard', colour=discord.Colour.gold(), hoist=True)
                 await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now an Archwizard!")
 
         elif karma > 1000:
             roles = await ctx.guild.fetch_roles()
@@ -209,6 +211,7 @@ class Karma(commands.Cog):
                 if role.name == 'Wizard':
                     give = role
                     await ctx.author.add_roles(give)
+                    await ctx.send("Congrats, you're now a Wizard!")
                     break
             else:
                 # ? Dooesn't work atm...
@@ -219,6 +222,7 @@ class Karma(commands.Cog):
                 give = await ctx.guild.create_role(name='Wizard', colour=discord.Colour.red(), hoist=True)
                 # await give.edit(position=pos)
                 await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now a Wizard!")
 
         elif karma > 100:
 
@@ -228,18 +232,18 @@ class Karma(commands.Cog):
                     give = role
                     try:
                         await ctx.author.add_roles(give)
+                        await ctx.send("Congrats, you're now an Apprentice!")
                     except Exception as e:
                         print(e)
                     break
             else:
                 give = await ctx.guild.create_role(name='Apprentice', colour=discord.Colour.green(), hoist=True)
                 await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now an Apprentice!")
             
         else:
             await ctx.send("Sorry, but you don't have enough experience for a role.")
 
-        
-            
 
 
 def setup(bot):
