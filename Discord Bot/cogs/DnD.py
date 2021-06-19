@@ -25,7 +25,7 @@ class DnD(commands.Cog):
     @commands.command(aliases=['randRace', 'race', 'gimmeRace'])
     async def randomRace(self, ctx):
         """Returns one random race."""
-        racesfile = open("01TrainingCode/Discord Bot/races.txt", "r")
+        racesfile = open("Discord Bot/races.txt", "r")
         races = racesfile.readlines()
         rd.shuffle(races)
         await ctx.send(f"Your random race is:\n```{races[0]}```Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
@@ -36,7 +36,7 @@ class DnD(commands.Cog):
     @commands.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
     async def randomFeat(self, ctx):
         """Returns one random feat."""
-        featsfile = open("01TrainingCode/Discord Bot/feats.txt", "r")
+        featsfile = open("Discord Bot/feats.txt", "r")
         feats = featsfile.readlines()
         rd.shuffle(feats)
         await ctx.send(f"Your random feat is:\n```{feats[0]}```Visit http://www.jsigvard.com/dnd/Feats.html for more information on this feat.")
@@ -147,7 +147,7 @@ class DnD(commands.Cog):
     @commands.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
     async def randomCharacter(self, ctx):
         """Generates a random Character with race, class and stats."""
-        racesfile = open("01TrainingCode/Discord Bot/races.txt",
+        racesfile = open("Discord Bot/races.txt",
                         "r", encoding='utf-8')
         races = racesfile.readlines()
         rd.shuffle(races)
@@ -161,7 +161,7 @@ class DnD(commands.Cog):
     @commands.command()
     async def map(self, ctx):
         """Returns the current map for the campaign."""
-        await ctx.channel.send(file=discord.File('01TrainingCode/Discord Bot/map1.png'))
+        await ctx.channel.send(file=discord.File('Discord Bot/map1.png'))
         await self.Karma.add_karma(ctx, 1)
 
     @commands.command()
