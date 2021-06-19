@@ -197,10 +197,12 @@ class Karma(commands.Cog):
                 if role.name == 'Archwizard':
                     give = role
                     await ctx.author.add_roles(give)
+                    await ctx.send("Congrats, you're now an Archwizard!")
                     break
             else:
                 give = await ctx.guild.create_role(name='Archwizard', colour=discord.Colour.gold(), hoist=True)
                 await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now an Archwizard!")
 
         elif karma > 1000:
             roles = await ctx.guild.fetch_roles()
@@ -209,6 +211,7 @@ class Karma(commands.Cog):
                 if role.name == 'Wizard':
                     give = role
                     await ctx.author.add_roles(give)
+                    await ctx.send("Congrats, you're now a Wizard!")
                     break
             else:
                 # ? Dooesn't work atm...
@@ -219,6 +222,7 @@ class Karma(commands.Cog):
                 give = await ctx.guild.create_role(name='Wizard', colour=discord.Colour.red(), hoist=True)
                 # await give.edit(position=pos)
                 await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now a Wizard!")
 
         elif karma > 100:
 
@@ -228,12 +232,14 @@ class Karma(commands.Cog):
                     give = role
                     try:
                         await ctx.author.add_roles(give)
+                        await ctx.send("Congrats, you're now an Apprentice!")
                     except Exception as e:
                         print(e)
                     break
             else:
                 give = await ctx.guild.create_role(name='Apprentice', colour=discord.Colour.green(), hoist=True)
                 await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now an Apprentice!")
             
         else:
             await ctx.send("Sorry, but you don't have enough experience for a role.")

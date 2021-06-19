@@ -1,5 +1,7 @@
 refine wikidot for things other than spells - self
 split help into pages that you can control with reactions? - 339384118959800320
-pog - 523379610784628736
-Mods being able to turn off commands - 154979334002704384
+Mods being able to turn off commands - self
 command to lock wizard to only post in a single channel - 339384118959800320
+Person-based meeting times as well - self
+Balance and Karma Swag - 154979334002704384
+set personal time zone - 339384118959800320

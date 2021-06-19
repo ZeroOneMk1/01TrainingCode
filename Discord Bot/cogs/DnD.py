@@ -199,7 +199,7 @@ class DnD(commands.Cog):
 
         await ctx.send(f"If this isn't what you wanted, try this link: \n{searchstring}")
         browser.quit()
-        await self.Karma.add_balance(ctx, 5)
+        await self.Karma.add_karma(ctx, 5)
 
 
 def setup(bot):

@@ -28,7 +28,7 @@ class TextBased(commands.Cog):
     @commands.command(aliases=['curse'])
     async def cursed(self, ctx, lvl=0):
         """Immortalizes the cursedness of thy post above."""
-        await ctx.channel.purge(limit=1)
+        # await ctx.channel.purge(limit=1)
         if(abs(lvl) == 0):
             await ctx.send("Wait! Let me cast guidance, cause y'all need Jesus.")
         elif(abs(lvl) == 1):
@@ -76,8 +76,8 @@ class TextBased(commands.Cog):
 
     @commands.command()
     async def uwufy(self, ctx, *, text):
-        await ctx.channel.purge(limit=1)
         """UwU nyaa~~ rawr XD"""
+        await ctx.channel.purge(limit=1)
         text = text.replace("r", "w")
         text = text.replace("l", "w")
         text = text.replace('ove', 'uv')
