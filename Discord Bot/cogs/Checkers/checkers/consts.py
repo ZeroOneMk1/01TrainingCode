@@ -1,5 +1,3 @@
-import pygame
-
 ROWS, COLS = 8, 8
 SQUARE_SIZE = 100
 
