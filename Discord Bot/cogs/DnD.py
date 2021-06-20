@@ -3,9 +3,9 @@ import random as rd
 from discord.ext import commands
 from .consts import classes
 from .Karma import Karma
+import urllib.request
+import re
 
-opts = Options()
-opts.headless = False
 
 class DnD(commands.Cog):
     def __init__(self, bot):
@@ -164,45 +164,64 @@ class DnD(commands.Cog):
 
     @commands.command()
     async def wikidot(self, ctx, *, string):
-        await ctx.send("This thing isnt working at the time.")
-        # """DOESNT WORK AT THE MOMENT - Searches wikidot and returns the top result. Only works well for spells."""
-        # searchstring = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
-        # try:
-        #     # browser = Chrome(options=opts)
-        # except Exception as e:
-        #     await ctx.send(e)
-        #     return
-        # # browser.get(searchstring)
-        # # browser.implicitly_wait(5)
-
-        # try:
-        #     # browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/div/div[1]/div/div[3]/div[1]/div[1]/a').click()
-        # except:
-        #     # browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/div/div[1]/div/div[2]/div[1]/div[1]/a').click()
+        """DOESNT WORK AT THE MOMENT - Searches wikidot and returns the top result."""
+        await ctx.send("This thing is currently WIP.")
+        url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
+        with urllib.request.urlopen(url) as response:
+            html = response.read()
         
-        # # url = browser.current_url
+        urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""", urllib.request.urlopen(url).read().decode("utf-8"))
 
-        # # thingy = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[1]/span')
-        
-        # # em = discord.Embed(title=thingy.text, color=discord.Colour.magenta())
+        result = urllist[0]
 
-        # try:
-        #     if "spell" in url:
-        #         # text = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/p[4]').text
-        #         # title = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/p[2]').text
-        #         em.add_field(name=title, value=text)
-        #     else:
-        #         # text = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/main/div/div/div/div/div[3]/p/strong/em').text
+        print(result)
 
-        #         em.add_field(name="Description:", value=text)
-        # except:
-        #     em.add_field(name="Couldn't find a short enough description.")
+        site = urllib.request.urlopen(result).read().decode("utf-8")
 
-        # await ctx.send(f"This is the top result: \n{url}", embed=em)
+        paragraphs = "<p>" + re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
 
-        # await ctx.send(f"If this isn't what you wanted, try this link: \n{searchstring}")
-        # browser.quit()
-        # await self.Karma.add_karma(ctx, 5)
+        infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
+
+        chunknum = 0
+        printstr = []
+        printstr.append('')
+
+        for thing in infos:
+            tempprintstr = printstr[chunknum] + thing
+            if len(tempprintstr) > 1000:
+                await ctx.send("Result too long. Made a new ~1000 character chunk")
+                chunknum += 1
+                printstr.append(thing)
+                tempprintstr = ''
+            else:
+                printstr[chunknum] += thing
+
+        # await ctx.send(printstr)
+
+        resultname = re.findall(r":([^/]+)", result)[0]
+
+        await ctx.send(f"This is the top result: \n{result}")
+
+        em = discord.Embed(title=f"Result: {resultname}", color=discord.Colour.magenta())
+
+        em.add_field(name = "Description:", value=printstr[0])
+
+        await ctx.send(embed=em)
+
+        try:
+            for i in range(len(printstr) - 1):
+
+                em = discord.Embed(color=discord.Colour.magenta())
+
+                em.add_field(name = "...", value=printstr[i + 1])
+
+                await ctx.send(embed=em)
+        except Exception as e:
+            await ctx.send(e)
+
+        await ctx.send(f"If this isn't what you wanted, try this link: \n{url}")
+
+        await self.Karma.add_karma(ctx, 5)
 
 
 def setup(bot):
