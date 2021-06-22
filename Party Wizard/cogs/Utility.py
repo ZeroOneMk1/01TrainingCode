@@ -10,7 +10,7 @@ class Utility(commands.Cog):
         self.Scheduling = Scheduling(bot)
 
     def is_person(self, m):
-        with open("Discord Bot/person.json", 'r') as f:
+        with open("Party Wizard/person.json", 'r') as f:
                 person = json.load(f)
         return m.author.id == person["person"]
 
@@ -22,10 +22,10 @@ class Utility(commands.Cog):
                 
                 person = person[3:-1]
 
-                with open("Discord Bot/person.json", 'r') as f:
+                with open("Party Wizard/person.json", 'r') as f:
                     deleted = json.load(f)
                 deleted["person"] = int(person)
-                with open("Discord Bot/person.json", 'w') as f:
+                with open("Party Wizard/person.json", 'w') as f:
                     json.dump(deleted, f)
                 
                 await ctx.channel.purge(limit=amount+1, check=self.is_person)
@@ -38,11 +38,11 @@ class Utility(commands.Cog):
     @commands.command(aliases=['commissions', 'toDo', 'toDos'])
     async def todos(self, ctx):
         """Returns the current active commissions."""
-        todos = open("Discord Bot/todos.txt", "r")
+        todos = open("Party Wizard/todos.txt", "r")
         if(todos.read() == ''):
             await ctx.send("I have completed all spells. Commission more for me to start working again.")
         else:
-            todosfile = open("Discord Bot/todos.txt", "r")
+            todosfile = open("Party Wizard/todos.txt", "r")
             todos = todosfile.read()
             await ctx.send("These are the spells I'm currently working on:\n" + todos)
         todosfile.close()
@@ -50,7 +50,7 @@ class Utility(commands.Cog):
     @commands.command()
     async def commission(self, ctx, *, thecommision):
         """Sends text to a text file on my computer."""
-        todos = open("Discord Bot/todos.txt", "a")
+        todos = open("Party Wizard/todos.txt", "a")
         todos.write(f'{thecommision} - {ctx.author.id}\n')
         await ctx.send(f'Added "{thecommision}" to the to-do list.')
         todos.close()

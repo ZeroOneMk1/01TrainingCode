@@ -19,7 +19,7 @@ class Karma(commands.Cog):
 
         await ctx.send(f"Your new karma is {karma}")
 
-        with open("Discord Bot/main.json", 'w') as f:
+        with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
 
     async def add_balance(self, ctx, amount):
@@ -35,7 +35,7 @@ class Karma(commands.Cog):
 
         await ctx.send(f"Your new balance is {bal}")
 
-        with open("Discord Bot/main.json", 'w') as f:
+        with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
     
     async def open_account(self, author):
@@ -49,7 +49,7 @@ class Karma(commands.Cog):
             users[str(author.id)]["karma"] = 0
             users[str(author.id)]["balance"] = 0
 
-        with open("Discord Bot/main.json", 'w') as f:
+        with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
 
     async def open_account_by_id(self, ID):
@@ -63,11 +63,11 @@ class Karma(commands.Cog):
             users[str(ID)]["karma"] = 0
             users[str(ID)]["balance"] = 0
 
-        with open("Discord Bot/main.json", 'w') as f:
+        with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
 
     async def get_bank_data(self):
-        with open("Discord Bot/main.json", 'r') as f:
+        with open("Party Wizard/main.json", 'r') as f:
             users = json.load(f)
         return users
 
@@ -123,10 +123,10 @@ class Karma(commands.Cog):
     @commands.command()
     async def thanks(self, ctx, *, pog=''):
         """Thanks"""
-        with open("Discord Bot/thankscount.json", 'r') as f:
+        with open("Party Wizard/thankscount.json", 'r') as f:
             thankscount = json.load(f)
         thankscount["thanks"] += 1
-        with open("Discord Bot/thankscount.json", 'w') as f:
+        with open("Party Wizard/thankscount.json", 'w') as f:
             json.dump(thankscount, f)
         
         await ctx.send("Any time, my student.")
@@ -135,7 +135,7 @@ class Karma(commands.Cog):
     
     @commands.command(aliases = ['getThanks', 'getthanks', 'thankscount'])
     async def thanksCount(self, ctx):
-        with open("Discord Bot/thankscount.json", 'r') as f:
+        with open("Party Wizard/thankscount.json", 'r') as f:
             thankscount = json.load(f)
         await ctx.send(f"I've been thanked {thankscount['thanks']} times!\nThank you for asking :grin:")
 
@@ -179,7 +179,7 @@ class Karma(commands.Cog):
 
                 await ctx.send(f"Their new balance is {bal}")
 
-                with open("Discord Bot/main.json", 'w') as f:
+                with open("Party Wizard/main.json", 'w') as f:
                     json.dump(data, f)
     
     @commands.command()

@@ -38,7 +38,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send("I'm sorry, but I either don't know this spell, or you gave me false instructions.")
 
-token = open('Discord Bot/code.txt', 'r')
+token = open('Party Wizard/code.txt', 'r')
 
 @bot.event
 async def on_ready():

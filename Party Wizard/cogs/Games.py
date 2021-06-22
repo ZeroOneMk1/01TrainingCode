@@ -16,7 +16,7 @@ class Games(commands.Cog):
         allgames.add(thing)
     
     async def get_game_data(self):
-        with open("Discord Bot/cogs/games.json", 'r') as f:
+        with open("Party Wizard/cogs/games.json", 'r') as f:
             games = json.load(f)
         return games
 
@@ -66,7 +66,7 @@ class Games(commands.Cog):
                     #TODO make game work. This will take some time.
                 break
         
-        with open("Discord Bot/cogs/games.json", 'w') as f:
+        with open("Party Wizard/cogs/games.json", 'w') as f:
             json.dump(games, f)
 
     @commands.command()
@@ -180,7 +180,7 @@ class Games(commands.Cog):
                         else:
                             gamedata[str(gameid)]["Data"]["Turn"] = '1'
                     
-                    with open("Discord Bot/cogs/games.json", 'w') as f:
+                    with open("Party Wizard/cogs/games.json", 'w') as f:
                         json.dump(gamedata, f)
                     await ctx.send(board.draw())
                 else:
@@ -203,7 +203,7 @@ class Games(commands.Cog):
                 games[i]["Players"][1] = None
                 games[i]["Players"][2] = None
                 games[i]["Data"] = {}
-            with open('Discord Bot/cogs/games.json', 'w') as f:
+            with open('Party Wizard/cogs/games.json', 'w') as f:
                 json.dump(games,f)
             await ctx.send("All games have been purged.")
         else:

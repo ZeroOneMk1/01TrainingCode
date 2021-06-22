@@ -47,11 +47,11 @@ class Scheduling(commands.Cog):
             campaigns[str(ctx.guild.id)]["channel"] = ctx.channel.id
             await ctx.send("This channel has been set as the main announcement channel. If this is not the channel I should be spamming, go to the appropriate channel and call 'wizard setChannel'")
 
-        with open("Discord Bot/cogs/campaigns.json", 'w') as f:
+        with open("Party Wizard/cogs/campaigns.json", 'w') as f:
             json.dump(campaigns, f)
 
     async def get_campaign_data(self):
-        with open("Discord Bot/cogs/campaigns.json", 'r') as f:
+        with open("Party Wizard/cogs/campaigns.json", 'r') as f:
             campaigns = json.load(f)
         return campaigns
 
@@ -80,7 +80,7 @@ class Scheduling(commands.Cog):
 
         campaigns[str(ctx.guild.id)]["channel"] = ctx.channel.id
 
-        with open("Discord Bot/cogs/campaigns.json", 'w') as f:
+        with open("Party Wizard/cogs/campaigns.json", 'w') as f:
             json.dump(campaigns, f)
         
         await ctx.send("This channel is now the main wizard channel.")
@@ -127,7 +127,7 @@ class Scheduling(commands.Cog):
 
         campaigns[str(ctx.guild.id)]["time"] = timestring
 
-        with open("Discord Bot/cogs/campaigns.json", 'w') as f:
+        with open("Party Wizard/cogs/campaigns.json", 'w') as f:
             json.dump(campaigns, f)
 
         await ctx.send(f"Changed the meeting time to {weekday}, {time}")
