@@ -8,7 +8,7 @@ class Utility(commands.Cog):
         self.Scheduling = Scheduling(bot)
 
     def is_person(self, m):
-        with open("InfoSec Bot/person.json", 'r') as f:
+        with open("person.json", 'r') as f:
                 person = json.load(f)
         return m.author.id == person["person"]
 
@@ -20,10 +20,10 @@ class Utility(commands.Cog):
                 
                 person = person[3:-1]
 
-                with open("InfoSec Bot/person.json", 'r') as f:
+                with open("person.json", 'r') as f:
                     deleted = json.load(f)
                 deleted["person"] = int(person)
-                with open("InfoSec Bot/person.json", 'w') as f:
+                with open("person.json", 'w') as f:
                     json.dump(deleted, f)
                 
                 await ctx.channel.purge(limit=amount+1, check=self.is_person)
@@ -36,11 +36,11 @@ class Utility(commands.Cog):
     @commands.command(aliases=['commissions', 'toDo', 'toDos'])
     async def todos(self, ctx):
         """Returns the current active commissions."""
-        todos = open("InfoSec Bot/todos.txt", "r")
+        todos = open("todos.txt", "r")
         if(todos.read() == ''):
             await ctx.send("We have completed all todos. Commission more for us to start working again.")
         else:
-            todosfile = open("InfoSec Bot/todos.txt", "r")
+            todosfile = open("todos.txt", "r")
             todos = todosfile.read()
             await ctx.send("These are the things we're currently working on:\n" + todos)
         todosfile.close()
@@ -48,7 +48,7 @@ class Utility(commands.Cog):
     @commands.command()
     async def commission(self, ctx, *, thecommision):
         """Sends text to a text file on the server."""
-        todos = open("InfoSec Bot/todos.txt", "a")
+        todos = open("todos.txt", "a")
         todos.write(f'{thecommision} - {ctx.author.id}\n')
         await ctx.send(f'Added "{thecommision}" to the to-do list.')
         todos.close()
