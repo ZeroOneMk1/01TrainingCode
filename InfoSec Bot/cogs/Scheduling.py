@@ -47,11 +47,11 @@ class Scheduling(commands.Cog):
             meetings[str(ctx.guild.id)]["channel"] = ctx.channel.id
             await ctx.send("This channel has been set as the main announcement channel. If this is not the channel I should be spamming, go to the appropriate channel and call '>setChannel'")
 
-        with open("InfoSec Bot/cogs/meetings.json", 'w') as f:
+        with open("cogs/meetings.json", 'w') as f:
             json.dump(meetings, f)
 
     async def get_meeting_data(self):
-        with open("InfoSec Bot/cogs/meetings.json", 'r') as f:
+        with open("cogs/meetings.json", 'r') as f:
             meetings = json.load(f)
         return meetings
 
@@ -80,7 +80,7 @@ class Scheduling(commands.Cog):
 
         meetings[str(ctx.guild.id)]["channel"] = ctx.channel.id
 
-        with open("InfoSec Bot/cogs/meetings.json", 'w') as f:
+        with open("cogs/meetings.json", 'w') as f:
             json.dump(meetings, f)
         
         await ctx.send("This channel is now the main announcement channel.")
@@ -127,7 +127,7 @@ class Scheduling(commands.Cog):
 
         meetings[str(ctx.guild.id)]["time"] = timestring
 
-        with open("InfoSec Bot/cogs/meetings.json", 'w') as f:
+        with open("cogs/meetings.json", 'w') as f:
             json.dump(meetings, f)
 
         await ctx.send(f"Changed the meeting time to {weekday}, {time}")

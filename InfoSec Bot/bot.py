@@ -36,7 +36,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send("I'm sorry, but I either don't know this command, or you gave me false instructions.")
 
-token = open('InfoSec Bot/code.txt', 'r')
+token = open('code.txt', 'r')
 
 
 @bot.event
