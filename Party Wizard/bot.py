@@ -8,7 +8,8 @@ initial_extensions = ['cogs.DnD',
                       'cogs.Games', 
                       'cogs.Scheduling', 
                       'cogs.TextBased', 
-                      'cogs.Utility']
+                      'cogs.Utility',
+                      'cogs.BitD']
 
 if __name__ == '__main__':
     for extension in initial_extensions:
