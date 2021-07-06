@@ -13,7 +13,7 @@ class BitD(commands.Cog):
     async def clock(self, ctx, *description):
         """Makes a new clock according to your specifications."""
 
-        name = description[0]
+        name = description[0].lower()
         size = int(description[1])
 
         try:
@@ -35,15 +35,20 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+        
+        await self.Karma.add_karma(ctx, 2)
+
 
     @commands.command()    
     async def tick(self, ctx, *description):
         """Chages a specific Clock's phase by a specified value"""
         await self.open_channel_by_id(ctx.channel.id)
 
-        clocks = await self.get_clocks_data()
+        name = description[0].lower()
 
-        name = description[0]
+        clocks = await self.get_clocks_data()
+        
+        size = clocks[str(ctx.channel.id)][name]['size']
         
         if name not in clocks[str(ctx.channel.id)]:
             await ctx.send("I'm sorry, but this clock doesn't exist. Maybe you mispronounced it?")
@@ -63,14 +68,40 @@ class BitD(commands.Cog):
 
         if newvalue >= clocks[str(ctx.channel.id)][name]["size"]:
             await ctx.send("Ding Ding Ding! This clock has reached its end!")
+            try:
+                await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+            except:
+                pass
+            
             clocks[str(ctx.channel.id)].pop(name)
         else:
             clocks[str(ctx.channel.id)][name]["phase"] = newvalue
+
+
+            if size == 4 or size == 6 or size == 8:
+
+                if newvalue >=0 and newvalue <= size:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{newvalue}.png"))
+                elif newvalue < 0:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-0.png"))
+                else:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+            elif size > 0:
+                sendstring = ''
+                for _ in range(newvalue):
+                    sendstring += ":black_large_square:"
+                for _ in range(size - newvalue):
+                    sendstring += ":white_large_square:"
+                await ctx.send(sendstring)
+            else:
+                await ctx.send("I'm sorry, but the clock has a negative size, so I can't show it.")
 
             await ctx.send(f"The new phase value for this clock is {newvalue}")
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+        
+        await self.Karma.add_karma(ctx, 1)
 
     @commands.command()
     async def clocks(self, ctx):
@@ -79,12 +110,24 @@ class BitD(commands.Cog):
 
         clocks = await self.get_clocks_data()
 
-        await ctx.send(clocks[str(ctx.channel.id)])
+        sendstring = ''
+
+        if clocks[str(ctx.channel.id)] == {}:
+            await ctx.send("Couldn't find any clocks in this channel.")
+        else:
+            for clock in clocks[str(ctx.channel.id)]:
+                sendstring += f"Clock '{clock}':\n   Size: {clocks[str(ctx.channel.id)][clock]['size']}\n    Phase: {clocks[str(ctx.channel.id)][clock]['phase']}\n"
+
+            await ctx.send(sendstring)
+        
+        await self.Karma.add_karma(ctx, 1)
 
     @commands.command()    
     async def kill(self, ctx, name):
         """Deletes the specified clock."""
         await self.open_channel_by_id(ctx.channel.id)
+
+        name = name.lower()
 
         clocks = await self.get_clocks_data()
 
@@ -98,6 +141,9 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+    
+        await self.Karma.add_karma(ctx, 2)
+
 
     async def get_clocks_data(self):
         with open("Party Wizard/clocks.json", 'r') as f:
@@ -115,6 +161,7 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+        
     
 
         
