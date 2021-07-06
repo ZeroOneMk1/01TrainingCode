@@ -42,8 +42,10 @@ class BitD(commands.Cog):
         await self.open_channel_by_id(ctx.channel.id)
 
         clocks = await self.get_clocks_data()
-
+        
         name = description[0]
+
+        size = clocks[str(ctx.channel.id)][name]['size']
         
         if name not in clocks[str(ctx.channel.id)]:
             await ctx.send("I'm sorry, but this clock doesn't exist. Maybe you mispronounced it?")
@@ -63,9 +65,30 @@ class BitD(commands.Cog):
 
         if newvalue >= clocks[str(ctx.channel.id)][name]["size"]:
             await ctx.send("Ding Ding Ding! This clock has reached its end!")
+            try:
+                await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
             clocks[str(ctx.channel.id)].pop(name)
         else:
             clocks[str(ctx.channel.id)][name]["phase"] = newvalue
+
+
+            if size == 4 or size == 6 or size == 8:
+
+                if newvalue >=0 and newvalue <= size:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{newvalue}.png"))
+                elif newvalue < 0:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-0.png"))
+                else:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+            elif size > 0:
+                sendstring = ''
+                for _ in range(newvalue):
+                    sendstring += ":black_large_square:"
+                for _ in range(size - newvalue):
+                    sendstring += ":white_large_square:"
+                await ctx.send(sendstring)
+            else:
+                await ctx.send("I'm sorry, but the clock has a negative size, so I can't show it.")
 
             await ctx.send(f"The new phase value for this clock is {newvalue}")
 
