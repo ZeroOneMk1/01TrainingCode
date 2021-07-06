@@ -13,7 +13,7 @@ class BitD(commands.Cog):
     async def clock(self, ctx, *description):
         """Makes a new clock according to your specifications."""
 
-        name = description[0]
+        name = description[0].lower()
         size = int(description[1])
 
         try:
@@ -35,16 +35,19 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+        
+        await self.Karma.add_karma(ctx, 2)
+
 
     @commands.command()    
     async def tick(self, ctx, *description):
         """Chages a specific Clock's phase by a specified value"""
         await self.open_channel_by_id(ctx.channel.id)
 
+        name = description[0].lower()
+
         clocks = await self.get_clocks_data()
         
-        name = description[0]
-
         size = clocks[str(ctx.channel.id)][name]['size']
         
         if name not in clocks[str(ctx.channel.id)]:
@@ -67,6 +70,9 @@ class BitD(commands.Cog):
             await ctx.send("Ding Ding Ding! This clock has reached its end!")
             try:
                 await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+            except:
+                pass
+            
             clocks[str(ctx.channel.id)].pop(name)
         else:
             clocks[str(ctx.channel.id)][name]["phase"] = newvalue
@@ -94,6 +100,8 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+        
+        await self.Karma.add_karma(ctx, 1)
 
     @commands.command()
     async def clocks(self, ctx):
@@ -102,12 +110,24 @@ class BitD(commands.Cog):
 
         clocks = await self.get_clocks_data()
 
-        await ctx.send(clocks[str(ctx.channel.id)])
+        sendstring = ''
+
+        if clocks[str(ctx.channel.id)] == {}:
+            await ctx.send("Couldn't find any clocks in this channel.")
+        else:
+            for clock in clocks[str(ctx.channel.id)]:
+                sendstring += f"Clock '{clock}':\n   Size: {clocks[str(ctx.channel.id)][clock]['size']}\n    Phase: {clocks[str(ctx.channel.id)][clock]['phase']}\n"
+
+            await ctx.send(sendstring)
+        
+        await self.Karma.add_karma(ctx, 1)
 
     @commands.command()    
     async def kill(self, ctx, name):
         """Deletes the specified clock."""
         await self.open_channel_by_id(ctx.channel.id)
+
+        name = name.lower()
 
         clocks = await self.get_clocks_data()
 
@@ -121,6 +141,9 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+    
+        await self.Karma.add_karma(ctx, 2)
+
 
     async def get_clocks_data(self):
         with open("Party Wizard/clocks.json", 'r') as f:
@@ -138,6 +161,7 @@ class BitD(commands.Cog):
 
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
+        
     
 
         
