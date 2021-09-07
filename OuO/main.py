@@ -122,10 +122,18 @@ class Deck():
 
         self.card_editor.size_hint = (.7, .7)
         self.card_editor.pos_hint = {"center_x": .5, "center_y": .5}
+
+        self.card_editor.anti_clickthrough = Button()
+        self.card_editor.anti_clickthrough.size_hint = (None, None)
+        self.card_editor.anti_clickthrough.size = (dp(10000), dp(10000))
+        self.card_editor.anti_clickthrough.pos = (-5000, -5000)
+        self.card_editor.anti_clickthrough.background_normal = ''
+        self.card_editor.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.card_editor.add_widget(self.card_editor.anti_clickthrough)
+
         
         self.card_editor.background_rectangle = BackgroundLGRAY()
         
-
 
         self.card_editor.add_widget(self.card_editor.background_rectangle)
 
@@ -388,8 +396,9 @@ class DecksMenu(RelativeLayout):
         self.top_bar.width = dp(500)
         self.top_bar.background_normal = ''
         self.top_bar.background_color = colors.GRAY
-        self.top_bar.font_color = colors.WHITE
-        self.top_bar.font_size = 30
+        self.top_bar.foreground_color = colors.WHITE
+        self.top_bar.font_name = "Comfortaa"
+        self.top_bar.font_size = 40
 
         self.top_loc.add_widget(self.top_bar)
         self.top_loc.add_widget(self.search_button)
@@ -453,6 +462,16 @@ class SettingsPage(RelativeLayout):
 
         self.size_hint = (.7, .7)
         self.pos_hint = {"center_x": .5, "center_y": .5}
+
+
+        self.anti_clickthrough = Button()
+        self.anti_clickthrough.size_hint = (None, None)
+        self.anti_clickthrough.size = (dp(10000), dp(10000))
+        self.anti_clickthrough.pos = (-5000, -5000)
+        self.anti_clickthrough.background_normal = ''
+        self.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.add_widget(self.anti_clickthrough)
+
         
         self.background_rectangle = BackgroundLGRAY()
         
@@ -502,6 +521,14 @@ class DeckAddPage(RelativeLayout):
 
         self.size_hint = (.7, .7)
         self.pos_hint = {"center_x": .5, "center_y": .5}
+
+        self.anti_clickthrough = Button()
+        self.anti_clickthrough.size_hint = (None, None)
+        self.anti_clickthrough.size = (dp(10000), dp(10000))
+        self.anti_clickthrough.pos = (-5000, -5000)
+        self.anti_clickthrough.background_normal = ''
+        self.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.add_widget(self.anti_clickthrough)
         
         self.background_rectangle = BackgroundLGRAY()
         
@@ -633,6 +660,14 @@ class StatsPage(RelativeLayout):
         self.size_hint = (.7, .7)
         self.pos_hint = {"center_x": .5, "center_y": .5}
         
+        self.anti_clickthrough = Button()
+        self.anti_clickthrough.size_hint = (None, None)
+        self.anti_clickthrough.size = (dp(10000), dp(10000))
+        self.anti_clickthrough.pos = (-5000, -5000)
+        self.anti_clickthrough.background_normal = ''
+        self.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.add_widget(self.anti_clickthrough)
+
         self.background_rectangle = BackgroundLGRAY()
         
 
