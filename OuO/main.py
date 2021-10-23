@@ -1,6 +1,7 @@
 from kivy.config import Config
 Config.set('kivy', 'exit_on_escape', '0')
 
+
 from kivy.app import App
 from kivy.metrics import dp
 from kivy.uix.button import Button
@@ -104,14 +105,11 @@ class Deck():
 
         self.name = content["name"]
         self.pot = content["pot"]
-        self.cards = content["cards"]
+        self.cards = [Card(x) for x in content["cards"]]
         self.importance = content["importance"]
         self.learning_rate = content["learning_rate"]
 
-        self.whole = self.cards
-        self.untouched = [self.cards[card] for card in self.cards if self.cards[card].get_due() == "New"]
-        self.covered = [self.cards[card] for card in self.cards if self.cards[card].get_due() != "New"]
-        self.due = [self.cards[card] for card in self.cards if self.cards[card].is_due()]
+        self.determine_cards()
 
         self.anchors = Anchors()
 
@@ -123,12 +121,7 @@ class Deck():
         self.card_editor.size_hint = (.7, .7)
         self.card_editor.pos_hint = {"center_x": .5, "center_y": .5}
 
-        self.card_editor.anti_clickthrough = Button()
-        self.card_editor.anti_clickthrough.size_hint = (None, None)
-        self.card_editor.anti_clickthrough.size = (dp(10000), dp(10000))
-        self.card_editor.anti_clickthrough.pos = (-5000, -5000)
-        self.card_editor.anti_clickthrough.background_normal = ''
-        self.card_editor.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.card_editor.anti_clickthrough = AntiClickthrough()
         self.card_editor.add_widget(self.card_editor.anti_clickthrough)
 
         
@@ -172,8 +165,18 @@ class Deck():
 
         self.card_editor.anchors.positions[0].add_widget(self.card_editor.confirm)
 
-        self.card_editor.face_inputs = BoxLayout()
-        self.card_editor.face_inputs.orientation = "vertical"
+        self.card_editor.face_inputs_scroller = ScrollView()
+
+        self.card_editor.face_inputs_scroller.size = (self.card_editor.width - 100, dp(300))
+
+        self.card_editor.face_inputs_scroller.bar_color = colors.WHITE
+        self.card_editor.face_inputs_scroller.bar_width = dp(12)
+        self.card_editor.face_inputs_scroller.scroll_distance = dp(80)
+
+        self.card_editor.face_inputs = StackLayout()
+        self.card_editor.face_inputs.bind(minimum_height=self.card_editor.face_inputs.setter('height'))
+        self.card_editor.face_inputs.orientation = "tb-lr"
+        self.card_editor.face_inputs.padding = dp(50)
 
         self.card_editor.faces = []
 
@@ -195,7 +198,8 @@ class Deck():
         self.card_editor.add_widget(self.card_editor.title)
         self.card_editor.add_widget(self.card_editor.anchors.positions[0])
         self.card_editor.add_widget(self.card_editor.anchors.positions[2])
-        self.card_editor.add_widget(self.card_editor.face_inputs)
+        self.card_editor.face_inputs_scroller.add_widget(self.card_editor.face_inputs)
+        self.card_editor.add_widget(self.card_editor.face_inputs_scroller)
         self.card_editor.add_widget(self.card_editor.add_input_button)
 
 
@@ -241,6 +245,12 @@ class Deck():
 
         self.cardview.add_widget(self.anchors)
 
+    def determine_cards(self):
+        self.whole = self.cards
+        self.untouched = [card for card in self.cards if card.get_due() == "New"]
+        self.covered = [card for card in self.cards if card.get_due() != "New"]
+        self.due = [card for card in self.cards if card.is_due()]
+
     def fromdict(self, content: dict) -> None:
         self.name = content["name"]
         self.pot = content["pot"]
@@ -270,7 +280,7 @@ class Deck():
         index = len(self.card_editor.faces)
         self.card_editor.faces.append(TextInput())
 
-        self.card_editor.faces[index].font_name = "Comfortaa"
+        self.card_editor.faces[index].font_name = "ArialUnicode"
         self.card_editor.faces[index].hint_text = f"Face {index + 1}"
         self.card_editor.faces[index].background_normal = ''
         self.card_editor.faces[index].background_color = colors.GRAY
@@ -297,9 +307,15 @@ class Deck():
         self.cards.append(content)
 
     def create_card(self):
-        temp = {}
+        temp = {
+            "faces": [face.text for face in self.card_editor.faces],
+            "type": 0,
+            "proficiency": 0,
+            "due": "New"
+        }
         # TODO
-        self.add_card(temp)
+        self.add_card(Card(temp))
+        self.determine_cards()
 
     def open_card_edit(self):
         print("a")
@@ -464,12 +480,7 @@ class SettingsPage(RelativeLayout):
         self.pos_hint = {"center_x": .5, "center_y": .5}
 
 
-        self.anti_clickthrough = Button()
-        self.anti_clickthrough.size_hint = (None, None)
-        self.anti_clickthrough.size = (dp(10000), dp(10000))
-        self.anti_clickthrough.pos = (-5000, -5000)
-        self.anti_clickthrough.background_normal = ''
-        self.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.anti_clickthrough = AntiClickthrough()
         self.add_widget(self.anti_clickthrough)
 
         
@@ -522,12 +533,7 @@ class DeckAddPage(RelativeLayout):
         self.size_hint = (.7, .7)
         self.pos_hint = {"center_x": .5, "center_y": .5}
 
-        self.anti_clickthrough = Button()
-        self.anti_clickthrough.size_hint = (None, None)
-        self.anti_clickthrough.size = (dp(10000), dp(10000))
-        self.anti_clickthrough.pos = (-5000, -5000)
-        self.anti_clickthrough.background_normal = ''
-        self.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.anti_clickthrough = AntiClickthrough()
         self.add_widget(self.anti_clickthrough)
         
         self.background_rectangle = BackgroundLGRAY()
@@ -660,12 +666,7 @@ class StatsPage(RelativeLayout):
         self.size_hint = (.7, .7)
         self.pos_hint = {"center_x": .5, "center_y": .5}
         
-        self.anti_clickthrough = Button()
-        self.anti_clickthrough.size_hint = (None, None)
-        self.anti_clickthrough.size = (dp(10000), dp(10000))
-        self.anti_clickthrough.pos = (-5000, -5000)
-        self.anti_clickthrough.background_normal = ''
-        self.anti_clickthrough.background_color = (0, 0, 0, 0)
+        self.anti_clickthrough = AntiClickthrough()
         self.add_widget(self.anti_clickthrough)
 
         self.background_rectangle = BackgroundLGRAY()
@@ -796,6 +797,9 @@ class BackgroundGRAY(Widget):
     pass
 
 class BackgroundLGRAY(Widget):
+    pass
+
+class AntiClickthrough(Button):
     pass
 
 class LoginBox(AnchorLayout):
