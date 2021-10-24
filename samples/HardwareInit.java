@@ -20,12 +20,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Motor channel:  Left  drive motor:        "left"
+ * Motor channel:  Right drive motor:        "right"
  */
+
 public class HardwareInit
 {
     /* Public OpMode members. */
@@ -37,8 +35,7 @@ public class HardwareInit
     
     // public Servo Finger = null;
     // public Servo Finger2 = null;
-
-
+    
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
