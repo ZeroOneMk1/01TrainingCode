@@ -31,8 +31,8 @@ public class HardwareInit
     /* Public OpMode members. */
     
     // Declare Motors and Servos
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
+    public DcMotor  leftDrive   = null;
+    public DcMotor  rightDrive  = null;
     
     
     // public Servo Finger = null;
@@ -55,25 +55,25 @@ public class HardwareInit
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor    = hwMap.get(DcMotor.class, "left");
-        rightMotor   = hwMap.get(DcMotor.class, "right");
+        leftDrive    = hwMap.get(DcMotor.class, "left");
+        rightDrive   = hwMap.get(DcMotor.class, "right");
 
         // Set direction of Motors
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Set the 0 power behavior of motors
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
 
 
        // Define and initialize ALL installed servos.

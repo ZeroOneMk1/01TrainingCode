@@ -79,13 +79,13 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         
         //Setting motor power values to variable values
 
-        robot.leftMotor.setPower(leftSpeed);
-        robot.rightMotor.setPower(rightSpeed);
+        robot.leftDrive.setPower(leftSpeed);
+        robot.rightDrive.setPower(rightSpeed);
         
         /* Telemetry is output onto the phone */
         
-        telemetry.addData("Left", "%.2f", robot.leftMotor.getPower());
-        telemetry.addData("Right", "%.2f", robot.rightMotor.getPower());
+        telemetry.addData("Left", "%.2f", robot.leftDrive.getPower());
+        telemetry.addData("Right", "%.2f", robot.rightDrive.getPower());
         telemetry.addData("Max Speed", "%.2f", slowness);
     }
 
