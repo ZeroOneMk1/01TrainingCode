@@ -30,11 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.math;
+import java.lang.Math;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -68,7 +69,7 @@ import java.math;
 public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwareInit         robot   = new HardwareInit();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
 
@@ -195,7 +196,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         int newLeftTarget;
         int newRightTarget;
 
-        int radians = degrees / 180 * Math.PI;
+        double radians = degrees / 180 * Math.PI;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
