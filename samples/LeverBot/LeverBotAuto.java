@@ -137,7 +137,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
      */
 
     public void encoder_lift_lever(double speed, double angle, double timeoutS){
-        int newLiftTarget;
+        int newLeverTarget;
 
         double rotationsIntended = degrees / 360;
 
@@ -149,8 +149,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLiftTarget = robot.lift.getCurrentPosition() + (int)(target);
-            robot.lift.setTargetPosition(newLiftTarget);
+            newLeverTarget = robot.lift.getCurrentPosition() + (int)(target);
+            robot.lift.setTargetPosition(newLeverTarget);
 
             // Turn On RUN_TO_POSITION
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -170,7 +170,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                    (robot.lift.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d", newLiftTarget);
+                telemetry.addData("Path1",  "Running to %7d", newLeverTarget);
                 telemetry.addData("Path2",  "Running at %7d",
                                             robot.lift.getCurrentPosition());
                 telemetry.update();
