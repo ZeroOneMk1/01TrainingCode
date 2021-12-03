@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import java.lang.Math;
 
-@TeleOp(name = "Pushbot: Teleop Mechanum", group = "Pushbot")
+@TeleOp(name = "Pushbot: Teleop One-stick", group = "Pushbot")
 //@Disabled
 public class PushbotTeleopTank_Iterative extends OpMode {
 
@@ -52,11 +52,12 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         //characters -> 'q', 'f'  (char)
         
         //maximum speed set to .3 so that the robot isnt too fast
-        slowness = .3;
         
         //maximum speed increases to .8 when  left stick is held
         if(gamepad1.left_stick_button){
             slowness = .8;
+        }else{
+            slowness = .3;
         }
 
         //Single stick drive variable allocation

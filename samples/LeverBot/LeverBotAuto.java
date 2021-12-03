@@ -135,6 +135,57 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
+
+    public void encoder_lift_lever(double speed, double angle, double timeoutS){
+        int newLiftTarget;
+
+        double rotationsIntended = degrees / 360;
+
+        double rotationsMotor = rotationsIntended * GEAR_RATIO;
+
+        double target = rotationsMotor * COUNTS_PER_MOTOR_REV;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLiftTarget = robot.lift.getCurrentPosition() + (int)(target);
+            robot.lift.setTargetPosition(newLiftTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.lift.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                   (runtime.seconds() < timeoutS) &&
+                   (robot.lift.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d", newLiftTarget);
+                telemetry.addData("Path2",  "Running at %7d",
+                                            robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.lift.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            sleep(250);   // optional pause after each move
+        }
+    }
+
     public void encoder_drive_tank(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -146,7 +197,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)
             newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
