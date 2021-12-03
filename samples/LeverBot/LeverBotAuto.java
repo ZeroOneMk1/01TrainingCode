@@ -64,12 +64,12 @@ import java.lang.Math;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="Pushbot: Leverbot Auto", group="LeverBot")
 @Disabled
-public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class LeverBotAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareInit         robot   = new HardwareInit();   // Use a Pushbot's hardware
+    HardwareInit_3Motors         robot   = new HardwareInit_3Motors();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
 
@@ -84,6 +84,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     ROBOT_CIRCUMFERENCE     = 4.0;
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    static final double     GEAR_RATIO              = 3.0;
 
     @Override
     public void runOpMode() {
@@ -136,7 +137,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
 
-    public void encoder_lift_lever(double speed, double angle, double timeoutS){
+    public void encoder_lift_lever(double speed, double degrees, double timeoutS){
         int newLeverTarget;
 
         double rotationsIntended = degrees / 360;
@@ -149,15 +150,15 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeverTarget = robot.lift.getCurrentPosition() + (int)(target);
-            robot.lift.setTargetPosition(newLeverTarget);
+            newLeverTarget = robot.lever.getCurrentPosition() + (int)(target);
+            robot.lever.setTargetPosition(newLeverTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lever.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.lift.setPower(Math.abs(speed));
+            robot.lever.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -167,20 +168,20 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.lift.isBusy())) {
+                   (robot.lever.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d", newLeverTarget);
                 telemetry.addData("Path2",  "Running at %7d",
-                                            robot.lift.getCurrentPosition());
+                                            robot.lever.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            robot.lift.setPower(0);
+            robot.lever.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.lever.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move
         }
@@ -197,7 +198,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);

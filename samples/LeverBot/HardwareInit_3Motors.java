@@ -43,7 +43,7 @@ public class HardwareInit_3Motors
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareInit(){
+    public HardwareInit_3Motors(){
 
     }
 

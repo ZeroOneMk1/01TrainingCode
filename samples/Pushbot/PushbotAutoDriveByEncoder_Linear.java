@@ -84,7 +84,6 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     ROBOT_CIRCUMFERENCE     = 4.0;
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-    static final double     GEAR_RATIO              = 3.0;
 
     @Override
     public void runOpMode() {
