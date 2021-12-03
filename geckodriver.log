@@ -10604,3 +10604,4 @@ console.log: WebExtensions: reset-default-search: No addons in our list are inst
 console.log: WebExtensions: reset-default-search: starting.
 console.log: WebExtensions: reset-default-search: No addons in our list are installed.
 1638497530749	Marionette	INFO	Stopped listening on port 49533
+1638520949466	addons.xpi	ERROR	System addon update list error Error: Failed downloading XML, status: 0, reason: timeout

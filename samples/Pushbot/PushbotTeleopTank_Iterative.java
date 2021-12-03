@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import java.lang.Math;
 
-@TeleOp(name = "Pushbot: Teleop One-stick", group = "Pushbot")
+@TeleOp(name = "Pushbot: Teleop", group = "Pushbot")
 //@Disabled
 public class PushbotTeleopTank_Iterative extends OpMode {
 
