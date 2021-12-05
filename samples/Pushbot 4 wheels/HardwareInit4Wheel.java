@@ -24,13 +24,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Right drive motor:        "right"
  */
 
-public class HardwareInit
+public class HardwareInit4Wheel
 {
     /* Public OpMode members. */
     
     // Declare Motors and Servos
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
+    public DcMotor  lbDrive   = null;
+    public DcMotor  rbDrive  = null;
+    public DcMotor  lfDrive   = null;
+    public DcMotor  rfDrive  = null;
     
     
     // public Servo Finger = null;
@@ -42,7 +44,7 @@ public class HardwareInit
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareInit(){
+    public HardwareInit4Wheel(){
 
     }
 
@@ -52,25 +54,43 @@ public class HardwareInit
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive    = hwMap.get(DcMotor.class, "left");
-        rightDrive   = hwMap.get(DcMotor.class, "right");
+        lbDrive    = hwMap.get(DcMotor.class, "leftBackMotor");
+        rbDrive   = hwMap.get(DcMotor.class, "rightBackMotor");
+        lfDrive   = hwMap.get(DcMotor.class, "leftFrontMotor");
+        rfDrive   = hwMap.get(DcMotor.class, "rightFrontMotor");
 
         // Set direction of Motors
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        lbDrive.setDirection(DcMotor.Direction.REVERSE);
+        rbDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Set the 0 power behavior of motors
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lbDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rbDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        lbDrive.setPower(0);
+        rbDrive.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDriveetMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        lbDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        rbDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+
+        lfDrive.setDirection(DcMotor.Direction.REVERSE);
+        rfDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        // Set the 0 power behavior of motors
+        lfDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rfDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Set all motors to zero power
+        lfDrive.setPower(0);
+        rfDrive.setPower(0);
+
+        // Set all motors to run without encoders.
+        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        lfDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        rfDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
 
 
        // Define and initialize ALL installed servos.

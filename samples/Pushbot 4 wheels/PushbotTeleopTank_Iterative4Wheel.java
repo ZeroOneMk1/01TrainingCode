@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import java.lang.Math;
 
-@TeleOp(name = "Pushbot: Teleop", group = "Pushbot")
+@TeleOp(name = "Pushbot: Teleop 4 Wheel", group = "Pushbot")
 //@Disabled
-public class PushbotTeleopTank_Iterative extends OpMode {
+public class PushbotTeleopTank_Iterative4Wheel extends OpMode {
 
     /* Declare OpMode members. */
-    HardwareInit robot = new HardwareInit(); // use the class created to define a Pushbot's hardware
+    HardwareInit4Wheel robot = new HardwareInit4Wheel(); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     double slowness = .3;
@@ -81,12 +81,14 @@ public class PushbotTeleopTank_Iterative extends OpMode {
         //Setting motor power values to variable values
 
         robot.lbDrive.setPower(leftSpeed);
-        robot.rightDrive.setPower(rightSpeed);
+        robot.rbDrive.setPower(rightSpeed);
+        robot.lfDrive.setPower(leftSpeed);
+        robot.rfDrive.setPower(rightSpeed);
         
         /* Telemetry is output onto the phone */
         
         telemetry.addData("Left", "%.2f", robot.lbDrive.getPower());
-        telemetry.addData("Right", "%.2f", robot.rightDrive.getPower());
+        telemetry.addData("Right", "%.2f", robot.rbDrive.getPower());
         telemetry.addData("Max Speed", "%.2f", slowness);
     }
 
