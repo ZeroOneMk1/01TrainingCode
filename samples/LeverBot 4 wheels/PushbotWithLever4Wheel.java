@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import java.lang.Math;
 
-@TeleOp(name = "Leverbot: Teleop", group = "LeverBot")
+@TeleOp(name = "Leverbot: Teleop 4 Wheel", group = "LeverBot")
 //@Disabled
-public class PushbotWithLever extends OpMode {
+public class PushbotWithLever4Wheel extends OpMode {
 
     /* Declare OpMode members. */
-    HardwareInit_3Motors robot = new HardwareInit_3Motors(); // use the class created to define a Pushbot's hardware
+    HardwareInit_5Motors robot = new HardwareInit_5Motors(); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -72,12 +72,6 @@ public class PushbotWithLever extends OpMode {
             slowness = .3;
         }
         
-        if(gamepad1.right_bumper){
-            leverslow = .1;
-        }else{
-            leverslow = .2;
-        }
-
         //Single stick drive variable allocation
         double drive = - gamepad1.left_stick_y;
         double side = gamepad1.left_stick_x;
@@ -97,27 +91,30 @@ public class PushbotWithLever extends OpMode {
         }
         
         if(gamepad1.b){
-            encoder_lift_lever(1, -5, 2);
+            encoder_lift_lever(1, -0.9, 1);
         }else if (gamepad1.a){
-            encoder_lift_lever(1, 5, 2);
+            encoder_lift_lever(1, 0.9, 1);
         }
         
         leverSpeed = gamepad1.right_stick_y * leverslow;
-        
-        
-
 
         //Setting motor power values to variable values
 
-        robot.leftDrive.setPower(leftSpeed);
-        robot.rightDrive.setPower(rightSpeed);
+        robot.leftBack.setPower(leftSpeed);
+        robot.rightBack.setPower(rightSpeed);
+        robot.leftFront.setPower(leftSpeed);
+        robot.rightFront.setPower(rightSpeed);
         robot.lever.setPower(leverSpeed);
         
         /* Telemetry is output onto the phone */
         
-        telemetry.addData("Left", "%.2f", robot.leftDrive.getPower());
-        telemetry.addData("Right", "%.2f", robot.rightDrive.getPower());
-        telemetry.addData("Max Speed", "%.2f", slowness);
+        telemetry.addData("leftBack", "%.2f", robot.leftBack.getPower());
+        telemetry.addData("rightBack", "%.2f", robot.rightBack.getPower());
+        telemetry.addData("leftFront", "%.2f", robot.leftFront.getPower());
+        telemetry.addData("rightFront", "%.2f", robot.rightFront.getPower());
+        telemetry.addData("lever", "%.2f", robot.lever.getPower());
+        telemetry.addData("Max Speed", "%.1f", slowness);
+        
     }
 
     @Override
@@ -132,7 +129,7 @@ public class PushbotWithLever extends OpMode {
 
             double rotationsMotor = rotationsIntended /* GEAR_RATIO*/;
 
-            double target = rotationsMotor * COUNTS_PER_MOTOR_REV + rotationsMotor / Math.abs(rotationsMotor) * COUNTS_PER_MOTOR_REV / 40;
+            double target = rotationsMotor * COUNTS_PER_MOTOR_REV;
 
             // Ensure that the opmode is still active
 

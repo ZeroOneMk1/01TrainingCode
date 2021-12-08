@@ -24,14 +24,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Right drive motor:        "right"
  */
 
-public class HardwareInit_3Motors
+public class HardwareInit_5Motors
 {
     /* Public OpMode members. */
     
     // Declare Motors and Servos
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  lever       = null;
+    public DcMotor  leftBack   = null;
+    public DcMotor  rightBack  = null;
+    public DcMotor  leftFront  = null;
+    public DcMotor  rightFront = null;
+    public DcMotor  lever      = null;
     
     
     // public Servo Finger = null;
@@ -43,7 +45,7 @@ public class HardwareInit_3Motors
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareInit_3Motors(){
+    public HardwareInit_5Motors(){
 
     }
 
@@ -53,30 +55,50 @@ public class HardwareInit_3Motors
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive    = hwMap.get(DcMotor.class, "left");
-        rightDrive   = hwMap.get(DcMotor.class, "right");
+        leftBack    = hwMap.get(DcMotor.class, "left");
+        rightBack   = hwMap.get(DcMotor.class, "right");
         lever   = hwMap.get(DcMotor.class, "lever");
 
         // Set direction of Motors
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
         lever.setDirection(DcMotor.Direction.FORWARD);
 
         // Set the 0 power behavior of motors
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lever.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
         lever.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//ENCODER?
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//ENCODER?
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
         lever.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//ENCODER?
+
+        leftFront    = hwMap.get(DcMotor.class, "leftF");
+        rightFront   = hwMap.get(DcMotor.class, "rightF");
+
+        // Set direction of Motors
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+
+        // Set the 0 power behavior of motors
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Set all motors to zero power
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+
+        // Set all motors to run without encoders.
+        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);//ENCODER?
 
 
        // Define and initialize ALL installed servos.

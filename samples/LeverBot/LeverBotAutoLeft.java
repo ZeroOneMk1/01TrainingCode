@@ -64,9 +64,9 @@ import java.lang.Math;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Leverbot: Auto", group="LeverBot")
-@Disabled
-public class LeverBotAuto extends LinearOpMode {
+@Autonomous(name="Leverbot: Auto Leftside", group="LeverBot")
+// @Disabled
+public class LeverBotAutoLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareInit_3Motors         robot   = new HardwareInit_3Motors();   // Use a Pushbot's hardware
@@ -83,7 +83,7 @@ public class LeverBotAuto extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     ROBOT_CIRCUMFERENCE     = 4.0;
     static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     TURN_SPEED              = 1;
     static final double     GEAR_RATIO              = 3.0;
 
     @Override
@@ -118,9 +118,10 @@ public class LeverBotAuto extends LinearOpMode {
 
         //EXAMPLES FOR THINGS YOU CAN DO WITH THE encoderDrive METHOD:
 
-        encoder_drive_tank(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoder_turn_by_angle(TURN_SPEED,  45, 4.0);     // S2: Turn right by a 45 degree angle with 4 Sec timeout
-        encoder_drive_tank(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoder_lift_lever(0.1, -1.8, 1);
+        encoder_drive_tank(DRIVE_SPEED,  7,  7, 6.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoder_turn_by_angle(TURN_SPEED,  90, 4.0);     // S2: Turn right by a 45 degree angle with 4 Sec timeout
+        encoder_drive_tank(DRIVE_SPEED, 5, 5, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
 
 
