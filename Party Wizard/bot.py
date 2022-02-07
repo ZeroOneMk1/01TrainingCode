@@ -45,5 +45,5 @@ token = open('Party Wizard/code.txt', 'r')
 async def on_ready():
     print("Ready")
 
-
-bot.run(token.read())
+if __name__ == '__main__':
+    bot.run(token.read())

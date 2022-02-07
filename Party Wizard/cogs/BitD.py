@@ -162,9 +162,7 @@ class BitD(commands.Cog):
         with open("Party Wizard/clocks.json", 'w') as f:
             json.dump(clocks, f)
         
-    
 
-        
 
 class Clock():
     def __init__(self, size, phase):

@@ -164,8 +164,8 @@ class DnD(commands.Cog):
 
     @commands.command()
     async def wikidot(self, ctx, *, string):
-        """DOESNT WORK AT THE MOMENT - Searches wikidot and returns the top result."""
-        await ctx.send("This thing is currently WIP.")
+        """Searches wikidot and returns the top result."""
+        await ctx.send("This thing is currently WIP. Not everything will be as neat as expected.")
         url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
         with urllib.request.urlopen(url) as response:
             html = response.read()
