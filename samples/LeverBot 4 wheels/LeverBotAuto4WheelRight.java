@@ -254,8 +254,10 @@ public class LeverBotAuto4WheelRight extends LinearOpMode {
     public void encoder_turn_by_angle(double speed,
                              double degrees,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
 
         double radians = degrees / 180 * Math.PI;
 
@@ -263,13 +265,15 @@ public class LeverBotAuto4WheelRight extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftBack.getCurrentPosition() + (int)(radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
-            newRightTarget = robot.rightBack.getCurrentPosition() + (int)(-radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
+            newLeftBackTarget = robot.leftBack.getCurrentPosition() + (int)(radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
+            newRightBackTarget = robot.rightBack.getCurrentPosition() + (int)(-radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
+            newLeftFrontTarget = robot.leftFront.getCurrentPosition() + (int)(radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
+            newRightFrontTarget = robot.rightFront.getCurrentPosition() + (int)(-radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
             
-            robot.leftBack.setTargetPosition(newLeftTarget);
-            robot.rightBack.setTargetPosition(newRightTarget);
-            robot.leftFront.setTargetPosition(newLeftTarget);
-            robot.rightFront.setTargetPosition(newRightTarget);
+            robot.leftBack.setTargetPosition(newLeftBackTarget);
+            robot.rightBack.setTargetPosition(newRightBackTarget);
+            robot.leftFront.setTargetPosition(newLeftFrontTarget);
+            robot.rightFront.setTargetPosition(newRightFrontTarget);
 
             // Turn On RUN_TO_POSITION
             robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -294,12 +298,7 @@ public class LeverBotAuto4WheelRight extends LinearOpMode {
                    (runtime.seconds() < timeoutS) &&
                    (robot.leftBack.isBusy() || robot.rightBack.isBusy())) {
 
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftBack.getCurrentPosition(),
-                                            robot.rightBack.getCurrentPosition());
-                telemetry.update();
+
             }
 
             // Stop all motion;

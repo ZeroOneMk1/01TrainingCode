@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Hardware;
@@ -16,6 +17,7 @@ public class PushbotWithLever4Wheel extends OpMode {
     /* Declare OpMode members. */
     HardwareInit_5Motors robot = new HardwareInit_5Motors(); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
+    private AndroidTextToSpeech androidTextToSpeech;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -38,6 +40,8 @@ public class PushbotWithLever4Wheel extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         telemetry.addData("Say", "Hello Driver");
+        androidTextToSpeech = new AndroidTextToSpeech();
+        androidTextToSpeech.initialize();
     }
 
     @Override
@@ -46,6 +50,7 @@ public class PushbotWithLever4Wheel extends OpMode {
 
     @Override
     public void start() {
+        androidTextToSpeech.speak("Get ready for an ass-whooping!");
     }
 
     @Override
@@ -90,10 +95,24 @@ public class PushbotWithLever4Wheel extends OpMode {
             rightSpeed = 0;
         }
         
-        if(gamepad1.b){
-            encoder_lift_lever(1, -0.9, 1);
-        }else if (gamepad1.a){
-            encoder_lift_lever(1, 0.9, 1);
+        // if(gamepad1.b){
+        //     encoder_lift_lever(1, -0.9, 1);
+        // }else if (gamepad1.a){
+        //     encoder_lift_lever(1, 0.9, 1);
+        // }
+
+        if(gamepad1.x){
+            androidTextToSpeech.speak("oo woo!"); //says uwu
+        }else if(gamepad1.y){
+            androidTextToSpeech.speak("oh woe!"); //says owo
+        }else if(gamepad1.right_bumper){
+            androidTextToSpeech.speak("poggers!");
+        }else if(gamepad1.left_bumper){
+            androidTextToSpeech.speak("get forked!");
+        }else if(gamepad1.a){
+            androidTextToSpeech.speak("Awooga!");
+        }else if(gamepad1.b){
+            androidTextToSpeech.speak("Help me stepbro, I'm stuck!");
         }
         
         leverSpeed = gamepad1.right_stick_y * leverslow;
@@ -119,6 +138,7 @@ public class PushbotWithLever4Wheel extends OpMode {
 
     @Override
     public void stop() {
+        androidTextToSpeech.speak("GG EASY!");
     }
 
     public void encoder_lift_lever(double speed, double degrees, double timeoutS){

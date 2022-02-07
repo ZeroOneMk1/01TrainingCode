@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.Math;
+import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -70,7 +71,7 @@ public class LeverBotAuto4WheelLeft extends LinearOpMode {
     /* Declare OpMode members. */
     HardwareInit_5Motors         robot   = new HardwareInit_5Motors();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-
+    private AndroidTextToSpeech androidTextToSpeech;
 
     //A bunch of variables with constants inside
 
@@ -93,6 +94,7 @@ public class LeverBotAuto4WheelLeft extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        androidTextToSpeech = new AndroidTextToSpeech();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
