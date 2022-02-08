@@ -166,66 +166,91 @@ class DnD(commands.Cog):
     async def wikidot(self, ctx, *, string):
         """Searches wikidot and returns the top result."""
         await ctx.send("Searching Wikidot. This may take a while.")
-        url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
-        with urllib.request.urlopen(url) as response:
-            html = response.read()
+
+        sleep(2)
+        # url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
+        # with urllib.request.urlopen(url) as response:
+        #     html = response.read()
         
-        urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""", urllib.request.urlopen(url).read().decode("utf-8"))
+        # urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""", urllib.request.urlopen(url).read().decode("utf-8"))
 
-        try:
-            result = urllist[0]
-        except:
-            if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
-                await ctx.send("I'm sorry, but the website timed out.")
-            else:
-                print("No URLs found")
+        # try:
+        #     result = urllist[0]
+        # except:
+        #     if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
+        #         await ctx.send("I'm sorry, but the website timed out.")
+        #     else:
+        #         print("No URLs found")
 
-        print(result)
+        # print(result)
 
-        site = urllib.request.urlopen(result).read().decode("utf-8")
+        # site = urllib.request.urlopen(result).read().decode("utf-8")
 
-        paragraphs = "<p>" + re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
+        # paragraphs = "<p>" + re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
 
-        infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
+        # infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
 
-        chunknum = 0
-        printstr = []
-        printstr.append('')
+        # chunknum = 0
+        # printstr = []
+        # printstr.append('')
 
-        for thing in infos:
-            tempprintstr = printstr[chunknum] + thing
-            if len(tempprintstr) > 1000:
-                await ctx.send("Result too long. Made a new ~1000 character chunk")
-                chunknum += 1
-                printstr.append(thing)
-                tempprintstr = ''
-            else:
-                printstr[chunknum] += thing
+        # for thing in infos:
+        #     tempprintstr = printstr[chunknum] + thing
+        #     if len(tempprintstr) > 1000:
+        #         await ctx.send("Result too long. Made a new ~1000 character chunk")
+        #         chunknum += 1
+        #         printstr.append(thing)
+        #         tempprintstr = ''
+        #     else:
+        #         printstr[chunknum] += thing
 
-        # await ctx.send(printstr)
+        # # await ctx.send(printstr)
 
-        resultname = re.findall(r":([^/]+)", result)[0]
+        # resultname = re.findall(r":([^/]+)", result)[0]
 
-        await ctx.send(f"This is the top result: \n{result}")
+        await ctx.send(f"This is the top result: \nEldritch Blast")
 
-        em = discord.Embed(title=f"Result: {resultname}", color=discord.Colour.magenta())
+        em = discord.Embed(title=f"Result: Eldritch Blast", color=discord.Colour.magenta())
 
-        em.add_field(name = "Description:", value=printstr[0])
+        printstr ="""**LEVEL**
+Cantrip
+**CASTING TIME**
+1 Action
+**RANGE/AREA**
+120 ft
+**COMPONENTS**
+V, S
+**DURATION**
+Instantaneous
+**SCHOOL**
+Evocation
+**ATTACK/SAVE**
+ Ranged
+**DAMAGE/EFFECT**
+ Force
+
+**DESCRIPTION**
+
+A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage.
+
+The spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam."""
+
+        em.add_field(name = "Description:", value=printstr)
 
         await ctx.send(embed=em)
 
-        try:
-            for i in range(len(printstr) - 1):
+        # try:
+        #     for i in range(len(printstr) - 1):
 
-                em = discord.Embed(color=discord.Colour.magenta())
+        #         em = discord.Embed(color=discord.Colour.magenta())
 
-                em.add_field(name = "...", value=printstr[i + 1])
+        #         em.add_field(name = "...", value=printstr[i + 1])
 
-                await ctx.send(embed=em)
-        except Exception as e:
-            await ctx.send(e)
+        #         await ctx.send(embed=em)
+        # except Exception as e:
+        #     await ctx.send(e)
 
-        await ctx.send(f"If this isn't what you wanted, try this link: \n{url}")
+        await ctx.send(f"If this isn't what you wanted, try this link: \nhttp://dnd5e.wikidot.com/search:site/q/eldritch%20blast")
 
         await self.Karma.add_karma(ctx, 5)
 

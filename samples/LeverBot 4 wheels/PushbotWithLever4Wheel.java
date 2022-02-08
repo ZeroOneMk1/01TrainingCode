@@ -56,18 +56,6 @@ public class PushbotWithLever4Wheel extends OpMode {
     @Override
     public void loop() {
         
-        //Data Types!
-        
-        //Integers 0, -1, 399, 53729, 1325, 003452, -9999, 38  (int)
-        
-        //Double 3.32570, (double)
-        
-        //Boolean True, false (boolean)
-        
-        //Strings  ->  "Banana", "Pineapple", "serjokgnnbwpi"  (String)
-        
-        //characters -> 'q', 'f'  (char)
-        
         //maximum speed set to .3 so that the robot isnt too fast
         
         //maximum speed increases to .8 when  left stick is held

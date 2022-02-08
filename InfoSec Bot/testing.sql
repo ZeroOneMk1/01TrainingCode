@@ -1,1 +1,1 @@
-SELECT * FROM logins WHERE username ='ad'||'min' AND password ='' OR 1 LIKE 2/*'
+SELECT * FROM logins WHERE username ='admin' AND password =''

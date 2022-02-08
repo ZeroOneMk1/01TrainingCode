@@ -13,19 +13,19 @@ public class Graded_assignment {
         int a[][] = new int[n][n];
 
         while (n - dep * 2 > 0) {
-            for (int i = dep /* <-- FIRST ONE IS THIS */; i < n - dep /* <-- BECAUSE YOURE ALREADY USING LESS THAN, YOU DONT NEED THE -1 */; i++) {
+            for (int i = dep ; i < n - dep ; i++) {
                 a[dep][i] = z;
                 z++;
             }
-            for (int j = 1 + dep; j < n - dep /* <-- BECAUSE YOURE ALREADY USING LESS THAN, YOU DONT NEED THE -1 */; j++) {
+            for (int j = 1 + dep; j < n - dep ; j++) {
                 a[j][n - dep - 1] = z;
                 z++;
             }
-            for (int q = n - dep - 2; q >= dep /* <-- THIS NEEDS TO BE GREATER _OR EQUAL_ */; q--) {
+            for (int q = n - dep - 2; q >= dep ; q--) {
                 a[n - dep - 1][q] = z;
                 z++;
             }
-            for (int w = n - dep - 2; w > dep /* <-- BECAUSE YOURE ALREADY USING GREATER THAN, YOU DONT NEED THE +1*/ ; w--) {
+            for (int w = n - dep - 2; w > dep  ; w--) {
                 a[w][dep] = z;
                 z++;
             }
