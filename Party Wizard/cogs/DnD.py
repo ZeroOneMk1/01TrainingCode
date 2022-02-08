@@ -3,6 +3,7 @@ import random as rd
 from discord.ext import commands
 from .consts import classes
 from .Karma import Karma
+from time import sleep
 import urllib.request
 import re
 
