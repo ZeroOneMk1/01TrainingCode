@@ -165,14 +165,20 @@ class DnD(commands.Cog):
     @commands.command()
     async def wikidot(self, ctx, *, string):
         """Searches wikidot and returns the top result."""
-        await ctx.send("This thing is currently WIP. Not everything will be as neat as expected.")
+        await ctx.send("Searching Wikidot. This may take a while.")
         url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
         with urllib.request.urlopen(url) as response:
             html = response.read()
         
         urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""", urllib.request.urlopen(url).read().decode("utf-8"))
 
-        result = urllist[0]
+        try:
+            result = urllist[0]
+        except:
+            if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
+                await ctx.send("I'm sorry, but the website timed out.")
+            else:
+                print("No URLs found")
 
         print(result)
 

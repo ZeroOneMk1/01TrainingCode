@@ -29,11 +29,15 @@ class Scheduling(commands.Cog):
 
                 camp_time = schedules[campaign]["time"]
 
+                # print(camp_time, current_time)
+
                 if(current_time == camp_time):
+                    # print("match")
                     for i in range(5):
                         await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
                     await self.bot.change_presence(activity=discord.Game(status[0]))
                 else:
+                    # print("No match")
                     await self.bot.change_presence(activity=discord.Game(status[1]))
 
     async def add_campaign(self, ctx):
