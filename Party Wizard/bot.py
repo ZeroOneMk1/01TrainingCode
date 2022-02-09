@@ -3,12 +3,15 @@ from discord.ext import commands
 
 token = open('Party Wizard/code.txt', 'r')
 
+intents = discord.Intents.default()
+intents.members = True
+
 tokenstr = token.read()
 
 if tokenstr[0] != "O":
-    bot = commands.Bot(command_prefix=['wizard ', 'wiz ', 'Wizard ', 'Wiz '])
+    bot = commands.Bot(command_prefix=['wizard ', 'wiz ', 'Wizard ', 'Wiz '], intents=intents)
 else:
-    bot = commands.Bot(command_prefix=['test ', 't ', 'T ', 'Astolfo ', 'astolfo ', 'Test '])
+    bot = commands.Bot(command_prefix=['test ', 't ', 'T ', 'Astolfo ', 'astolfo ', 'Test '], intents=intents)
 
 initial_extensions = ['cogs.DnD',
                       'cogs.Karma',
