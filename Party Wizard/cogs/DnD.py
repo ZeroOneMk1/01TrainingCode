@@ -46,9 +46,6 @@ class DnD(commands.Cog):
     async def roll(self, ctx, rollstr):
         """Rolls some dice."""
 
-        if "-" in rollstr:
-            await ctx.send("I don't support subtraction yet. Please do that yourself")
-            return
 
         rollsarr = rollstr.split("+")
 
@@ -62,9 +59,19 @@ class DnD(commands.Cog):
             try:
                 rollarr = roll.split("d")
                 for _ in range(int(rollarr[0])):
+
+                    try:
+                        temp = rollarr[1].split("-")
+                        rollarr[1] = temp[0]
+                        rollarr.append(temp[1])
+                    except:
+                        rollarr.append(0)
+
                     curr = rd.randint(1, int(rollarr[1]))
                     rolls.append(curr)
                     total += curr
+                    total -= int(rollarr[2])
+
             except:
 
                 try:
