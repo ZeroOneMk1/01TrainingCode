@@ -5,6 +5,7 @@ from .consts import classes
 from .Karma import Karma
 import urllib.request
 import re
+import json
 
 
 class DnD(commands.Cog):
@@ -158,6 +159,80 @@ class DnD(commands.Cog):
         """Returns the current map for the campaign."""
         await ctx.channel.send(file=discord.File('Party Wizard/map1.png'))
         await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=["boo", 'Boo', 'boo!', 'Boo!'])
+    async def loserboard(self, ctx, loser="Check"):
+        """Adds one tick to this person in the loserboard."""
+
+        await self.add_loserboard(ctx)
+
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = await self.get_loserboard_data()
+            f.close()
+
+        if loser != "Check":
+
+            loser_id = loser[3:-1]
+
+            try:
+                int(loser_id)
+            except:
+                await ctx.send("Please ping the person you want to add to the loserboard, or write nothing if you just want to read it.")
+
+            try:
+
+                losercount = loserboards[str(ctx.guild.id)][loser_id]
+
+            except:
+
+                loserboards[str(ctx.guild.id)][loser_id] = 0
+                losercount = 0
+
+            losercount += 1
+
+            loserboards[str(ctx.guild.id)][loser_id] = losercount
+
+            with open("Party Wizard/cogs/loserboards.json", 'w') as f:
+
+                json.dump(loserboards, f)
+
+            await self.print_losers(ctx)
+
+        else:
+
+            await self.print_losers(ctx)
+
+    async def print_losers(self, ctx):
+
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = await self.get_loserboard_data()
+            f.close()
+
+        sendstr = "LOSERBOARD:\n```"
+
+        for person in loserboards[str(ctx.guild.id)]:
+
+            sendstr += f"{ctx.guild.get_member(int(person)).display_name} - {loserboards[str(ctx.guild.id)][person]}\n"
+
+        sendstr += "```"
+
+        await ctx.send(sendstr)
+
+    async def add_loserboard(self, ctx):
+        loserboards = await self.get_loserboard_data()
+
+        if str(ctx.guild.id) in loserboards:
+            return
+        else:
+            loserboards[str(ctx.guild.id)] = {}
+
+        with open("Party Wizard/cogs/loserboards.json", 'w') as f:
+            json.dump(loserboards, f)
+
+    async def get_loserboard_data(self):
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = json.load(f)
+        return loserboards
 
     @commands.command()
     async def wikidot(self, ctx, *, string):
