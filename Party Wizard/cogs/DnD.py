@@ -11,14 +11,13 @@ class DnD(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.Karma = Karma(bot)
-    
+
     @commands.command(aliases=['randClass', 'class', 'gimme class'])
     async def randomClass(self, ctx):
         """Returns one random class."""
         rd.shuffle(classes)
         await ctx.send("Your random class is " + classes[0])
         await self.Karma.add_karma(ctx, 1)
-
 
     @commands.command(aliases=['randRace', 'race', 'gimmeRace'])
     async def randomRace(self, ctx):
@@ -30,7 +29,6 @@ class DnD(commands.Cog):
         racesfile.close()
         await self.Karma.add_karma(ctx, 1)
 
-
     @commands.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
     async def randomFeat(self, ctx):
         """Returns one random feat."""
@@ -41,11 +39,9 @@ class DnD(commands.Cog):
         featsfile.close()
         await self.Karma.add_karma(ctx, 1)
 
-    
     @commands.command(aliases=['d', 'dice', 'r'])
     async def roll(self, ctx, rollstr):
         """Rolls some dice."""
-
 
         rollsarr = rollstr.split("+")
 
@@ -70,7 +66,8 @@ class DnD(commands.Cog):
                     curr = rd.randint(1, int(rollarr[1]))
                     rolls.append(curr)
                     total += curr
-                    total -= int(rollarr[2])
+
+                total -= int(rollarr[2])
 
             except:
 
@@ -82,8 +79,6 @@ class DnD(commands.Cog):
 
                     await ctx.send("I don't understand that, please use common dice notation.")
                     return
-
-        
 
         await ctx.send(rolls)
         await ctx.send(f'The total is {total}.')
@@ -102,7 +97,6 @@ class DnD(commands.Cog):
             await ctx.send('Final: ' + str(curr1))
         await self.Karma.add_karma(ctx, 1)
 
-
     @commands.command(aliases=['disadv'])
     async def disadvantage(self, ctx, die=20):
         """Rolls with disadvantage."""
@@ -115,7 +109,6 @@ class DnD(commands.Cog):
         else:
             await ctx.send('Final: ' + str(curr1))
         await self.Karma.add_karma(ctx, 1)
-
 
     @commands.command(aliases=['stats', 'rollstats', 'randomstats', 'randstats'])
     async def rollStats(self, ctx):
@@ -137,7 +130,6 @@ class DnD(commands.Cog):
 
         await ctx.send(f'Your stats, in ascending order, are: {stats}, and the sum is: {summ}')
 
-
     @commands.command()
     async def rollHP(self, ctx, lvl, dice, conmod):
         """Rolls the maximum HP for your character."""
@@ -151,7 +143,7 @@ class DnD(commands.Cog):
     async def randomCharacter(self, ctx):
         """Generates a random Character with race, class and stats."""
         racesfile = open("Party Wizard/races.txt",
-                        "r", encoding='utf-8')
+                         "r", encoding='utf-8')
         races = racesfile.readlines()
         rd.shuffle(races)
         rd.shuffle(classes)
@@ -172,11 +164,13 @@ class DnD(commands.Cog):
         """Searches wikidot and returns the top result."""
         await ctx.send("Searching Wikidot. This may take a while.")
 
-        url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
+        url = "http://dnd5e.wikidot.com/search:site/q/" + \
+            string.replace(' ', '%20')
         with urllib.request.urlopen(url) as response:
             html = response.read()
-        
-        urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""", urllib.request.urlopen(url).read().decode("utf-8"))
+
+        urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""",
+                             urllib.request.urlopen(url).read().decode("utf-8"))
 
         try:
             result = urllist[0]
@@ -190,7 +184,8 @@ class DnD(commands.Cog):
 
         site = urllib.request.urlopen(result).read().decode("utf-8")
 
-        paragraphs = "<p>" + re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
+        paragraphs = "<p>" + \
+            re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
 
         infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
 
@@ -212,9 +207,10 @@ class DnD(commands.Cog):
 
         await ctx.send(f"This is the top result: \n{resultname}")
 
-        em = discord.Embed(title=f"Result: {resultname}", color=discord.Colour.magenta())
+        em = discord.Embed(
+            title=f"Result: {resultname}", color=discord.Colour.magenta())
 
-        em.add_field(name = "Description:", value=printstr)
+        em.add_field(name="Description:", value=printstr)
 
         await ctx.send(embed=em)
 
@@ -223,7 +219,7 @@ class DnD(commands.Cog):
 
                 em = discord.Embed(color=discord.Colour.magenta())
 
-                em.add_field(name = "...", value=printstr[i + 1])
+                em.add_field(name="...", value=printstr[i + 1])
 
                 await ctx.send(embed=em)
         except Exception as e:
