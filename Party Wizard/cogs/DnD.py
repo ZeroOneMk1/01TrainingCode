@@ -6,20 +6,20 @@ from .Karma import Karma
 from time import sleep
 import urllib.request
 import re
+import json
 
 
 class DnD(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.Karma = Karma(bot)
-    
+
     @commands.command(aliases=['randClass', 'class', 'gimme class'])
     async def randomClass(self, ctx):
         """Returns one random class."""
         rd.shuffle(classes)
         await ctx.send("Your random class is " + classes[0])
         await self.Karma.add_karma(ctx, 1)
-
 
     @commands.command(aliases=['randRace', 'race', 'gimmeRace'])
     async def randomRace(self, ctx):
@@ -31,7 +31,6 @@ class DnD(commands.Cog):
         racesfile.close()
         await self.Karma.add_karma(ctx, 1)
 
-
     @commands.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
     async def randomFeat(self, ctx):
         """Returns one random feat."""
@@ -42,48 +41,50 @@ class DnD(commands.Cog):
         featsfile.close()
         await self.Karma.add_karma(ctx, 1)
 
-    
     @commands.command(aliases=['d', 'dice', 'r'])
     async def roll(self, ctx, rollstr):
         """Rolls some dice."""
 
-        try:
-            rollarr = rollstr.split("d")
-            amount = int(rollarr[0])
-            if "+" in rollarr[1]:
-                die = int(rollarr[1].split("+")[0])
-                mod = int(rollarr[1].split("+")[1])
-                op = 1
-            elif "-" in rollarr[1]:
-                die = int(rollarr[1].split("-")[0])
-                mod = int(rollarr[1].split("-")[1])
-                op = -1
-            else:
-                die = int(rollarr[1])
-                op = 0
-        except:
-            await ctx.send("I don't understand that, please use common dice notation.")
-            return
+        rollsarr = rollstr.split("+")
 
-        if amount > 500:
-            await ctx.send("Woah there, that's a lotta dice. This would result in an explosion, so I'd rather not.")
-            return
-        else:
-            total = 0
-            rolls = []
-            await ctx.send(":arrow_down: Contacting fate:")
-            for i in range(int(amount)):
-                curr = rd.randint(1, die)
-                rolls.append(curr)
-                total += curr
-            if op == 1:
-                total += mod
-            elif op == -1:
-                total -= mod
+        await ctx.send(":arrow_down: Contacting fate:")
 
-            await ctx.send(rolls)
-            await ctx.send(f'The total is {total}.')
-            await self.Karma.add_karma(ctx, 1)
+        total = 0
+        rolls = []
+
+        for roll in rollsarr:
+
+            try:
+                rollarr = roll.split("d")
+                for _ in range(int(rollarr[0])):
+
+                    try:
+                        temp = rollarr[1].split("-")
+                        rollarr[1] = temp[0]
+                        rollarr.append(temp[1])
+                    except:
+                        rollarr.append(0)
+
+                    curr = rd.randint(1, int(rollarr[1]))
+                    rolls.append(curr)
+                    total += curr
+
+                total -= int(rollarr[2])
+
+            except:
+
+                try:
+
+                    total += int(roll)
+
+                except:
+
+                    await ctx.send("I don't understand that, please use common dice notation.")
+                    return
+
+        await ctx.send(rolls)
+        await ctx.send(f'The total is {total}.')
+        await self.Karma.add_karma(ctx, 1)
 
     @commands.command(aliases=['adv'])
     async def advantage(self, ctx, die=20):
@@ -98,7 +99,6 @@ class DnD(commands.Cog):
             await ctx.send('Final: ' + str(curr1))
         await self.Karma.add_karma(ctx, 1)
 
-
     @commands.command(aliases=['disadv'])
     async def disadvantage(self, ctx, die=20):
         """Rolls with disadvantage."""
@@ -111,7 +111,6 @@ class DnD(commands.Cog):
         else:
             await ctx.send('Final: ' + str(curr1))
         await self.Karma.add_karma(ctx, 1)
-
 
     @commands.command(aliases=['stats', 'rollstats', 'randomstats', 'randstats'])
     async def rollStats(self, ctx):
@@ -133,7 +132,6 @@ class DnD(commands.Cog):
 
         await ctx.send(f'Your stats, in ascending order, are: {stats}, and the sum is: {summ}')
 
-
     @commands.command()
     async def rollHP(self, ctx, lvl, dice, conmod):
         """Rolls the maximum HP for your character."""
@@ -147,7 +145,7 @@ class DnD(commands.Cog):
     async def randomCharacter(self, ctx):
         """Generates a random Character with race, class and stats."""
         racesfile = open("Party Wizard/races.txt",
-                        "r", encoding='utf-8')
+                         "r", encoding='utf-8')
         races = racesfile.readlines()
         rd.shuffle(races)
         rd.shuffle(classes)
@@ -163,95 +161,147 @@ class DnD(commands.Cog):
         await ctx.channel.send(file=discord.File('Party Wizard/map1.png'))
         await self.Karma.add_karma(ctx, 1)
 
+    @commands.command(aliases=["boo", 'Boo', 'boo!', 'Boo!'])
+    async def loserboard(self, ctx, loser="Check"):
+        """Adds one tick to this person in the loserboard."""
+
+        await self.add_loserboard(ctx)
+
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = await self.get_loserboard_data()
+            f.close()
+
+        if loser != "Check":
+
+            loser_id = loser[3:-1]
+
+            try:
+                int(loser_id)
+            except:
+                await ctx.send("Please ping the person you want to add to the loserboard, or write nothing if you just want to read it.")
+
+            try:
+
+                losercount = loserboards[str(ctx.guild.id)][loser_id]
+
+            except:
+
+                loserboards[str(ctx.guild.id)][loser_id] = 0
+                losercount = 0
+
+            losercount += 1
+
+            loserboards[str(ctx.guild.id)][loser_id] = losercount
+
+            with open("Party Wizard/cogs/loserboards.json", 'w') as f:
+
+                json.dump(loserboards, f)
+
+            await self.print_losers(ctx)
+
+        else:
+
+            await self.print_losers(ctx)
+
+    async def print_losers(self, ctx):
+
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = await self.get_loserboard_data()
+            f.close()
+
+        sendstr = "LOSERBOARD:\n```"
+
+        for person in loserboards[str(ctx.guild.id)]:
+
+            sendstr += f"{ctx.guild.get_member(int(person)).display_name} - {loserboards[str(ctx.guild.id)][person]}\n"
+
+        sendstr += "```"
+
+        await ctx.send(sendstr)
+
+    async def add_loserboard(self, ctx):
+        loserboards = await self.get_loserboard_data()
+
+        if str(ctx.guild.id) in loserboards:
+            return
+        else:
+            loserboards[str(ctx.guild.id)] = {}
+
+        with open("Party Wizard/cogs/loserboards.json", 'w') as f:
+            json.dump(loserboards, f)
+
+    async def get_loserboard_data(self):
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = json.load(f)
+        return loserboards
+
     @commands.command()
     async def wikidot(self, ctx, *, string):
         """Searches wikidot and returns the top result."""
         await ctx.send("Searching Wikidot. This may take a while.")
 
-        sleep(2)
-        # url = "http://dnd5e.wikidot.com/search:site/q/" + string.replace(' ', '%20')
-        # with urllib.request.urlopen(url) as response:
-        #     html = response.read()
-        
-        # urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""", urllib.request.urlopen(url).read().decode("utf-8"))
+        url = "http://dnd5e.wikidot.com/search:site/q/" + \
+            string.replace(' ', '%20')
+        with urllib.request.urlopen(url) as response:
+            html = response.read()
 
-        # try:
-        #     result = urllist[0]
-        # except:
-        #     if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
-        #         await ctx.send("I'm sorry, but the website timed out.")
-        #     else:
-        #         print("No URLs found")
+        urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""",
+                             urllib.request.urlopen(url).read().decode("utf-8"))
 
-        # print(result)
+        try:
+            result = urllist[0]
+        except:
+            if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
+                await ctx.send("I'm sorry, but the website timed out.")
+            else:
+                print("No URLs found")
 
-        # site = urllib.request.urlopen(result).read().decode("utf-8")
+        print(result)
 
-        # paragraphs = "<p>" + re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
+        site = urllib.request.urlopen(result).read().decode("utf-8")
 
-        # infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
+        paragraphs = "<p>" + \
+            re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
 
-        # chunknum = 0
-        # printstr = []
-        # printstr.append('')
+        infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
 
-        # for thing in infos:
-        #     tempprintstr = printstr[chunknum] + thing
-        #     if len(tempprintstr) > 1000:
-        #         await ctx.send("Result too long. Made a new ~1000 character chunk")
-        #         chunknum += 1
-        #         printstr.append(thing)
-        #         tempprintstr = ''
-        #     else:
-        #         printstr[chunknum] += thing
+        chunknum = 0
+        printstr = []
+        printstr.append('')
 
-        # # await ctx.send(printstr)
+        for thing in infos:
+            tempprintstr = printstr[chunknum] + thing
+            if len(tempprintstr) > 1000:
+                await ctx.send("Result too long. Made a new ~1000 character chunk")
+                chunknum += 1
+                printstr.append(thing)
+                tempprintstr = ''
+            else:
+                printstr[chunknum] += thing
 
-        # resultname = re.findall(r":([^/]+)", result)[0]
+        resultname = re.findall(r":([^/]+)", result)[0]
 
-        await ctx.send(f"This is the top result: \nEldritch Blast")
+        await ctx.send(f"This is the top result: \n{resultname}")
 
-        em = discord.Embed(title=f"Result: Eldritch Blast", color=discord.Colour.magenta())
+        em = discord.Embed(
+            title=f"Result: {resultname}", color=discord.Colour.magenta())
 
-        printstr ="""**LEVEL**
-Cantrip
-**CASTING TIME**
-1 Action
-**RANGE/AREA**
-120 ft
-**COMPONENTS**
-V, S
-**DURATION**
-Instantaneous
-**SCHOOL**
-Evocation
-**ATTACK/SAVE**
- Ranged
-**DAMAGE/EFFECT**
- Force
-
-**DESCRIPTION**
-
-A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage.
-
-The spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam."""
-
-        em.add_field(name = "Description:", value=printstr)
+        em.add_field(name="Description:", value=printstr)
 
         await ctx.send(embed=em)
 
-        # try:
-        #     for i in range(len(printstr) - 1):
+        try:
+            for i in range(len(printstr) - 1):
 
-        #         em = discord.Embed(color=discord.Colour.magenta())
+                em = discord.Embed(color=discord.Colour.magenta())
 
-        #         em.add_field(name = "...", value=printstr[i + 1])
+                em.add_field(name="...", value=printstr[i + 1])
 
-        #         await ctx.send(embed=em)
-        # except Exception as e:
-        #     await ctx.send(e)
+                await ctx.send(embed=em)
+        except Exception as e:
+            await ctx.send(e)
 
-        await ctx.send(f"If this isn't what you wanted, try this link: \nhttp://dnd5e.wikidot.com/search:site/q/eldritch%20blast")
+        await ctx.send(f"If this isn't what you wanted, try this link: \n{url}")
 
         await self.Karma.add_karma(ctx, 5)
 
