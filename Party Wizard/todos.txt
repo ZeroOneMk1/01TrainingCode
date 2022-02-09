@@ -6,9 +6,5 @@ Person-based meeting times as well - self
 Balance and Karma Swag - 154979334002704384
 set personal time zone - 339384118959800320
 Make a flask website that the bot can interact with, on which I can write better documentation, and with which I can expand the capabilities of my bot to the next level. - 154979334002704384
-Fix selenium for the raspberry pi - 154979334002704384
 make randstats unsorted, add modifiers to advanage - Harrison
-losercounter - 523379610784628736
-loser counter to count a leaderboards of people who dont turn up as well as some commands like total, leaderboards etc - 339384118959800320
-get more than 1 type of dice in a roll working - 339384118959800320
 Init that gets typed in by the players - 154979334002704384
