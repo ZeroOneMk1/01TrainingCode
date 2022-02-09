@@ -1,7 +1,14 @@
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=['wizard ', 'wiz ', 'Wizard ', 'Wiz '])
+token = open('Party Wizard/code.txt', 'r')
+
+tokenstr = token.read()
+
+if tokenstr[0] != "O":
+    bot = commands.Bot(command_prefix=['wizard ', 'wiz ', 'Wizard ', 'Wiz '])
+else:
+    bot = commands.Bot(command_prefix=['test ', 't ', 'T ', 'Astolfo ', 'astolfo ', 'Test '])
 
 initial_extensions = ['cogs.DnD',
                       'cogs.Karma',
