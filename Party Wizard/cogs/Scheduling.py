@@ -1,9 +1,9 @@
 import discord
 import json
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta, time, timezone
 from discord.ext import commands, tasks
-from .consts import status, guilds
+from .consts import status, weekdays
 
 class Scheduling(commands.Cog):
     def __init__(self, bot):
@@ -25,7 +25,7 @@ class Scheduling(commands.Cog):
 
                 channel = self.bot.get_channel(schedules[campaign]["channel"])
 
-                current_time = datetime.now().strftime("%A, %H:%M")
+                current_time = (datetime.now() - timedelta(hours=8)).strftime("%A, %H:%M")
 
                 camp_time = schedules[campaign]["time"]
 
@@ -68,7 +68,7 @@ class Scheduling(commands.Cog):
 
         time = campaigns[str(ctx.guild.id)]["time"]
 
-        now = datetime.now()
+        now = datetime.now() - timedelta(hours=8)
         current_time = now.strftime("%A, %H:%M")
         if(current_time == time):
             return True
@@ -95,12 +95,12 @@ class Scheduling(commands.Cog):
         """Gets the current time."""
         now = datetime.now()
         current_time = now.strftime("%H:%M")
-        await ctx.send("Current Time = " + current_time)
+        await ctx.send("Current time at my location = " + current_time)
         current_day = now.strftime("%A")
         await ctx.send("It's " + current_day + " today.")
 
     @commands.command()
-    async def getMeetingTime(self, ctx):
+    async def getMeetingTime(self, ctx, timezone = "0"):
         """Gets the meeting time of the server's campaign."""
 
         await self.add_campaign(ctx)
@@ -111,19 +111,34 @@ class Scheduling(commands.Cog):
         
         await self.bot.wait_until_ready()
 
-        time = campaigns[str(ctx.guild.id)]["time"]
+        daytime = campaigns[str(ctx.guild.id)]["time"]
+
+        day, time = daytime.split(", ")[0], daytime.split(", ")[1]
+
+        day, time = await self.convert_times_to_tz(day, time, timezone)
+
+        daytime = f"{day}, {time}"
+
         channel = self.bot.get_channel(campaigns[str(ctx.guild.id)]["channel"])
 
+        if int(timezone) == 0:
+            timezone = ""
+        elif "+" not in timezone and "-" not in timezone:
+            timezone = "+" + timezone
+            
+
         em.add_field(name="Channel: ", value=channel)
-        em.add_field(name="Time: ", value=time)
+        em.add_field(name="Time: ", value=f"{daytime} (GMT{timezone})")
 
         await ctx.send(embed=em)
 
     @commands.command()
-    async def setMeetingTime(self, ctx, weekday=datetime.now().strftime('%A'), time=datetime.now().strftime('%H:%M')):
+    async def setMeetingTime(self, ctx, weekday=(datetime.now() - timedelta(hours=8)).strftime('%A'), time=(datetime.now() - timedelta(hours=8)).strftime('%H:%M'), timezone = "0"):
         """Sets the meeting time of the server's campaign."""
 
         await self.add_campaign(ctx)
+
+        weekday, time = await self.convert_times_from_tz(weekday, time, timezone)
 
         timestring = f'{weekday}, {time}'
 
@@ -134,7 +149,34 @@ class Scheduling(commands.Cog):
         with open("Party Wizard/cogs/campaigns.json", 'w') as f:
             json.dump(campaigns, f)
 
-        await ctx.send(f"Changed the meeting time to {weekday}, {time}")
+        await ctx.send(f"Changed the meeting time to {weekday}, {time} GMT")
+
+    async def convert_times_from_tz(self, weekday, time, timezone):
+
+        if int(time.split(":")[0]) - int(timezone) > 23:
+            weekday = weekdays[(weekdays.index(weekday) - 1) % 7]
+            
+        elif int(time.split(":")[0]) - int(timezone) < 0:
+            weekday = weekdays[(weekdays.index(weekday) + 1) % 7]
+        
+        if (int(time.split(':')[0]) - int(timezone)) % 24 < 10:
+            time = f"0{(int(time.split(':')[0]) - int(timezone)) % 24}:{time.split(':')[1]}"     
+        else:
+            time = f"{(int(time.split(':')[0]) - int(timezone)) % 24}:{time.split(':')[1]}"     
+
+        return weekday, time
+    
+    async def convert_times_to_tz(self, weekday, time, timezone):
+
+        if int(time.split(":")[0]) + int(timezone) > 23:
+            weekday = weekdays[(weekdays.index(weekday) + 1) % 7]
+        elif int(time.split(":")[0]) + int(timezone) < 0:
+            weekday = weekdays[(weekdays.index(weekday) - 1) % 7]
+
+        time = f"{(int(time.split(':')[0]) + int(timezone)) % 24}:{time.split(':')[1]}"
+
+        return weekday, time
+
 
     @commands.command(aliases=['partyTime?', 'pogTime?', 'time?'])
     async def partyTime(self, ctx):
