@@ -81,7 +81,7 @@ class DnD(commands.Cog):
                     await ctx.send("I don't understand that, please use common dice notation.")
                     return
 
-        await ctx.send(rolls)
+        await ctx.send(f"Rolls: {rolls}")
         await ctx.send(f'The total is {total}.')
         await self.Karma.add_karma(ctx, 1)
 
