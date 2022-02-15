@@ -3,6 +3,7 @@ import random as rd
 from nextcord.ext import commands
 from .consts import classes
 from .Karma import Karma
+from time import sleep
 import urllib.request
 import re
 import json
@@ -211,9 +212,11 @@ class DnD(commands.Cog):
 
         sendstr = "LOSERBOARD:\n```"
 
-        for person in loserboards[str(ctx.guild.id)]:
+        sorted_loserboard = sorted(loserboards[str(ctx.guild.id)].items(), key=lambda x: x[1], reverse=True)
 
-            sendstr += f"{ctx.guild.get_member(int(person)).display_name} - {loserboards[str(ctx.guild.id)][person]}\n"
+        for person in sorted_loserboard:
+
+            sendstr += f"{ctx.guild.get_member(int(person[0])).display_name} - {person[1]}\n"
 
         sendstr += "```"
 
