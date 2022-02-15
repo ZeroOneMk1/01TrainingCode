@@ -1,8 +1,8 @@
-import discord
+import nextcord
 import json
 import asyncio
 from datetime import datetime, timedelta, time, timezone
-from discord.ext import commands, tasks
+from nextcord.ext import commands, tasks
 from .consts import status, weekdays
 
 class Scheduling(commands.Cog):
@@ -35,10 +35,10 @@ class Scheduling(commands.Cog):
                     # print("match")
                     for i in range(5):
                         await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
-                    await self.bot.change_presence(activity=discord.Game(status[0]))
+                    await self.bot.change_presence(activity=nextcord.Game(status[0]))
                 else:
                     # print("No match")
-                    await self.bot.change_presence(activity=discord.Game(status[1]))
+                    await self.bot.change_presence(activity=nextcord.Game(status[1]))
 
     async def add_campaign(self, ctx):
         campaigns = await self.get_campaign_data()
@@ -107,7 +107,7 @@ class Scheduling(commands.Cog):
 
         campaigns = await self.get_campaign_data()
         
-        em = discord.Embed(title = f"{ctx.guild}'s campaign's info:", color=discord.Colour.magenta())
+        em = nextcord.Embed(title = f"{ctx.guild}'s campaign's info:", color=nextcord.Colour.magenta())
         
         await self.bot.wait_until_ready()
 

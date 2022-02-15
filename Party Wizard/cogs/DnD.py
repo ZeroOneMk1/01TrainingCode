@@ -1,11 +1,12 @@
-import discord
+import nextcord
 import random as rd
-from discord.ext import commands
+from nextcord.ext import commands
 from .consts import classes
 from .Karma import Karma
 import urllib.request
 import re
 import json
+from nextcord.ui import Button, View
 
 
 class DnD(commands.Cog):
@@ -157,7 +158,7 @@ class DnD(commands.Cog):
     @commands.command()
     async def map(self, ctx):
         """Returns the current map for the campaign."""
-        await ctx.channel.send(file=discord.File('Party Wizard/map1.png'))
+        await ctx.channel.send(file=nextcord.File('Party Wizard/map1.png'))
         await self.Karma.add_karma(ctx, 1)
 
     @commands.command(aliases=["boo", 'Boo', 'boo!', 'Boo!'])
@@ -251,7 +252,15 @@ class DnD(commands.Cog):
             result = urllist[0]
         except:
             if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
+
                 await ctx.send("I'm sorry, but the website timed out.")
+
+                button = Button(label="go to Wikidot", url=url)
+                view = View()
+                view.add_item(button)
+
+                await ctx.send("There's a chance this link works better than it did for me:", view=view)
+
             else:
                 print("No URLs found")
 
@@ -282,8 +291,8 @@ class DnD(commands.Cog):
 
         await ctx.send(f"This is the top result: \n{resultname}")
 
-        em = discord.Embed(
-            title=f"Result: {resultname}", color=discord.Colour.magenta())
+        em = nextcord.Embed(
+            title=f"Result: {resultname}", color=nextcord.Colour.magenta())
 
         em.add_field(name="Description:", value=printstr)
 
@@ -292,15 +301,18 @@ class DnD(commands.Cog):
         try:
             for i in range(len(printstr) - 1):
 
-                em = discord.Embed(color=discord.Colour.magenta())
+                em = nextcord.Embed(color=nextcord.Colour.magenta())
 
                 em.add_field(name="...", value=printstr[i + 1])
 
                 await ctx.send(embed=em)
         except Exception as e:
             await ctx.send(e)
+        
+        button = Button(label="go to Wikidot", url=url)
+        view = View(button)
 
-        await ctx.send(f"If this isn't what you wanted, try this link: \n{url}")
+        await ctx.send(f"If this isn't what you wanted, try this link:", view=view)
 
         await self.Karma.add_karma(ctx, 5)
 

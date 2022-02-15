@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 
 token = open('Party Wizard/code.txt', 'r')
 
-intents = discord.Intents.default()
+intents = nextcord.Intents.default()
 intents.members = True
 
 tokenstr = token.read()

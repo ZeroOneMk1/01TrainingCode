@@ -1,6 +1,6 @@
-import discord
+import nextcord
 import json
-from discord.ext import commands
+from nextcord.ext import commands
 from .Karma import Karma
 
 class BitD(commands.Cog):
@@ -69,7 +69,7 @@ class BitD(commands.Cog):
         if newvalue >= clocks[str(ctx.channel.id)][name]["size"]:
             await ctx.send("Ding Ding Ding! This clock has reached its end!")
             try:
-                await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+                await ctx.send(file=nextcord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
             except:
                 pass
             
@@ -81,11 +81,11 @@ class BitD(commands.Cog):
             if size == 4 or size == 6 or size == 8:
 
                 if newvalue >=0 and newvalue <= size:
-                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{newvalue}.png"))
+                    await ctx.send(file=nextcord.File(f"Party Wizard/PClocks/Progress Clock {size}-{newvalue}.png"))
                 elif newvalue < 0:
-                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-0.png"))
+                    await ctx.send(file=nextcord.File(f"Party Wizard/PClocks/Progress Clock {size}-0.png"))
                 else:
-                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+                    await ctx.send(file=nextcord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
             elif size > 0:
                 sendstring = ''
                 for _ in range(newvalue):

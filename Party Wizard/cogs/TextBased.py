@@ -1,6 +1,7 @@
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 from .Karma import Karma
+import traceback
 
 class TextBased(commands.Cog):
     def __init__(self, bot):
@@ -83,8 +84,22 @@ class TextBased(commands.Cog):
         text = text.replace('ove', 'uv')
         await ctx.send(text)
         await self.Karma.add_karma(ctx, 1)
+    
+    @commands.command()
+    async def test_button(self, ctx):
+        button = nextcord.ui.Button(label="Test", style=nextcord.ButtonStyle.primary)
 
+        async def test_callback(interaction):
+            await interaction.response.send_message("Responded", ephemeral=True)
 
+        button.callback = test_callback
+        
+        view = nextcord.ui.View()
+        view.add_item(button)
+        
+        await ctx.send("BUUTON", view=view)
+        
+    
 
 def setup(bot):
     bot.add_cog(TextBased(bot))

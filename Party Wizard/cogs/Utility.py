@@ -1,5 +1,5 @@
-import discord, time, json
-from discord.ext import commands
+import nextcord, time, json
+from nextcord.ext import commands
 from .Karma import Karma
 from .Scheduling import Scheduling
 

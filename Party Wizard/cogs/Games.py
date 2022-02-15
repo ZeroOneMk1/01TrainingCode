@@ -1,6 +1,6 @@
-import discord, json
+import nextcord, json
 import random as rd
-from discord.ext import commands
+from nextcord.ext import commands
 from .Karma import Karma
 from .Checkers.checkers.board import Board
 

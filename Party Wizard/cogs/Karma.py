@@ -1,6 +1,6 @@
-import discord, json, asyncio
+import nextcord, json, asyncio
 import random as rd
-from discord.ext import commands
+from nextcord.ext import commands
 
 class Karma(commands.Cog):
     def __init__(self, bot):
@@ -81,8 +81,8 @@ class Karma(commands.Cog):
         karma = users[str(ctx.author.id)]["karma"]
         balance = users[str(ctx.author.id)]["balance"]
 
-        em = discord.Embed(
-            title=f"{ctx.author.name}, this is your karma.", color=discord.Colour.magenta())
+        em = nextcord.Embed(
+            title=f"{ctx.author.name}, this is your karma.", color=nextcord.Colour.magenta())
         em.add_field(name="Karma", value=karma)
         em.add_field(name="Balance", value=balance)
 
@@ -200,7 +200,7 @@ class Karma(commands.Cog):
                     await ctx.send("Congrats, you're now an Archwizard!")
                     break
             else:
-                give = await ctx.guild.create_role(name='Archwizard', colour=discord.Colour.gold(), hoist=True)
+                give = await ctx.guild.create_role(name='Archwizard', colour=nextcord.Colour.gold(), hoist=True)
                 await ctx.author.add_roles(give)
                 await ctx.send("Congrats, you're now an Archwizard!")
 
@@ -219,7 +219,7 @@ class Karma(commands.Cog):
                 # for role in roles:
                 #     if role.name == "Apprentice":
                 #         pos = role.position + 1
-                give = await ctx.guild.create_role(name='Wizard', colour=discord.Colour.red(), hoist=True)
+                give = await ctx.guild.create_role(name='Wizard', colour=nextcord.Colour.red(), hoist=True)
                 # await give.edit(position=pos)
                 await ctx.author.add_roles(give)
                 await ctx.send("Congrats, you're now a Wizard!")
@@ -237,7 +237,7 @@ class Karma(commands.Cog):
                         print(e)
                     break
             else:
-                give = await ctx.guild.create_role(name='Apprentice', colour=discord.Colour.green(), hoist=True)
+                give = await ctx.guild.create_role(name='Apprentice', colour=nextcord.Colour.green(), hoist=True)
                 await ctx.author.add_roles(give)
                 await ctx.send("Congrats, you're now an Apprentice!")
             
