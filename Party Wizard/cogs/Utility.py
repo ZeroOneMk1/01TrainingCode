@@ -12,13 +12,12 @@ class Utility(commands.Cog):
     def is_person(self, m):
         with open("Party Wizard/person.json", 'r') as f:
                 person = json.load(f)
-        return m.author.id == person["person"]
+        return m.user.id == person["person"]
 
-    @commands.command(aliases=['clear',  'erase', 'purge'])
-    async def delete(self, ctx, amount=1, person = None):
-        """Deletes messages."""
-        if ctx.author.guild_permissions.administrator == True or ctx.author.id == 154979334002704384 or ctx.author.guild_permissions.manage_messages == True:
-            if person is not None:
+    @nextcord.slash_command(name="clean", description="Deletes messages.")
+    async def clear(self, ctx, amount=1, person = "None"):
+        if ctx.user.id == 154979334002704384 or ctx.user.guild_permissions.manage_messages == True:
+            if person != "None":
                 
                 person = person[3:-1]
 
@@ -35,9 +34,8 @@ class Utility(commands.Cog):
             await ctx.send("You're not allowed to use this spell!")
     
 
-    @commands.command(aliases=['commissions', 'toDo', 'toDos'])
+    @nextcord.slash_command(name="todos", description="Returns the current active commissions.")
     async def todos(self, ctx):
-        """Returns the current active commissions."""
         todos = open("Party Wizard/todos.txt", "r")
         if(todos.read() == ''):
             await ctx.send("I have completed all spells. Commission more for me to start working again.")
@@ -47,33 +45,29 @@ class Utility(commands.Cog):
             await ctx.send("These are the spells I'm currently working on:\n" + todos)
         todosfile.close()
     
-    @commands.command()
-    async def commission(self, ctx, *, thecommision):
-        """Sends text to a text file on my computer."""
+    @nextcord.slash_command(name="commission", description="Sends text to a text file on my computer.")
+    async def commission(self, ctx, thecommision):
         todos = open("Party Wizard/todos.txt", "a")
-        todos.write(f'{thecommision} - {ctx.author.id}\n')
+        todos.write(f'{thecommision} - {ctx.user.id}\n')
         await ctx.send(f'Added "{thecommision}" to the to-do list.')
         todos.close()
         await self.Karma.add_karma(ctx, 50)
 
-    @commands.command()
+    @nextcord.slash_command(name="ping", description="Sends latency")
     async def ping(self, ctx):
-        """Sends latency"""
         await ctx.send(f'{int(self.bot.latency * 1000)}ms latency.')
     
 
-    @commands.command(aliases=['sleep', 'nappytime', 'naptime', 'nap'])
+    @nextcord.slash_command(name="stop", description="Stops the bot for 60s")
     async def stop(self, ctx):
-        """Stops the bot for 60s"""
         await ctx.send(':sleeping:Sleeping for 60 seconds, see you then!')
         time.sleep(60)
         await self.Karma.add_karma(ctx, 1)
     
-    @commands.command()
-    async def broadcast(self, ctx, *, message):
-        """Broadcasts message to all wizard channels"""
+    @nextcord.slash_command(name="broadcast", description="Broadcasts message to all wizard channels")
+    async def broadcast(self, ctx, message):
         campaigns = await self.Scheduling.get_campaign_data()
-        if(ctx.author.id == 154979334002704384):
+        if(ctx.user.id == 154979334002704384):
             for campaign in campaigns:
                 await self.bot.wait_until_ready()
                 channel = self.bot.get_channel(campaigns[campaign]["channel"])
@@ -82,10 +76,9 @@ class Utility(commands.Cog):
         else:
             await ctx.send("Only the dev can use this.")
     
-    @commands.command()
+    @nextcord.slash_command(name="bot_link", description="Gives the bot invite link.")
     async def botLink(self, ctx):
-        """Gives the bot invite link."""
-        await ctx.send("Invite me to your server :grin: \nhttps://discord.com/api/oauth2/authorize?client_id=791887063901274123&permissions=8&scope=bot")
+        await ctx.send("Invite me to your server :grin: \nhttps://discord.com/api/oauth2/authorize?client_id=791887063901274123&permissions=8&scope=bot%20applications.commands")
 
 
 

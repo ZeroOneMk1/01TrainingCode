@@ -24,8 +24,9 @@ initial_extensions = ['cogs.DnD',
 if __name__ == '__main__':
     for extension in initial_extensions:
         bot.load_extension(extension)
+        print(f"{extension} added")
 
-@bot.command(aliases = ['shelp', 'sh', 'short_help', 'shorthelp', 'hlp'])
+@bot.slash_command(name="short_help", description="Shorter help page.", guild_ids=[706471625544957972])
 async def shortHelp(ctx):
     cogs =  []
 

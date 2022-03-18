@@ -7,47 +7,47 @@ class Karma(commands.Cog):
         self.bot = bot
     
     async def add_karma(self, ctx, amount):
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
 
         users = await self.get_bank_data()
 
-        karma = users[str(ctx.author.id)]["karma"]
+        karma = users[str(ctx.user.id)]["karma"]
 
         karma += int(amount)
 
-        users[str(ctx.author.id)]["karma"] = karma
+        users[str(ctx.user.id)]["karma"] = karma
 
-        await ctx.send(f"Your new karma is {karma}")
+        await ctx.followup.send(f"Your new karma is {karma}", ephemeral=True)
 
         with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
 
     async def add_balance(self, ctx, amount):
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
 
         users = await self.get_bank_data()
         
-        bal = users[str(ctx.author.id)]["balance"]
+        bal = users[str(ctx.user.id)]["balance"]
 
         bal += int(amount)
 
-        users[str(ctx.author.id)]["balance"] = bal
+        users[str(ctx.user.id)]["balance"] = bal
 
         await ctx.send(f"Your new balance is {bal}")
 
         with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
     
-    async def open_account(self, author):
+    async def open_account(self, user):
 
         users = await self.get_bank_data()
 
-        if str(author.id) in users:
+        if str(user.id) in users:
             return
         else:
-            users[str(author.id)] = {}
-            users[str(author.id)]["karma"] = 0
-            users[str(author.id)]["balance"] = 0
+            users[str(user.id)] = {}
+            users[str(user.id)]["karma"] = 0
+            users[str(user.id)]["balance"] = 0
 
         with open("Party Wizard/main.json", 'w') as f:
             json.dump(users, f)
@@ -71,28 +71,28 @@ class Karma(commands.Cog):
             users = json.load(f)
         return users
 
-    @commands.command(aliases = ['bal', 'balance'])
+    @nextcord.slash_command(name="balance", description="Returns your karma and your balance.")
     async def karma(self, ctx):
         """Returns your current karma and money."""
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
 
         users = await self.get_bank_data()
 
-        karma = users[str(ctx.author.id)]["karma"]
-        balance = users[str(ctx.author.id)]["balance"]
+        karma = users[str(ctx.user.id)]["karma"]
+        balance = users[str(ctx.user.id)]["balance"]
 
         em = nextcord.Embed(
-            title=f"{ctx.author.name}, this is your karma.", color=nextcord.Colour.magenta())
+            title=f"{ctx.user.name}, this is your karma.", color=nextcord.Colour.magenta())
         em.add_field(name="Karma", value=karma)
         em.add_field(name="Balance", value=balance)
 
         await ctx.send(embed=em)
 
 
-    @commands.command()
+    @nextcord.slash_command(name="make_me_rich", description="Only for owner, debug.", guild_ids=[706471625544957972])
     async def makeMeRich(self, ctx, karma, bal):
-        """Only for owner, debug."""
-        await self.open_account(ctx.author)
+        tester = 1
+        await self.open_account(ctx.user)
 
         try:
             pog = int(bal)
@@ -100,7 +100,7 @@ class Karma(commands.Cog):
             await ctx.send("Fuck off.")
             return
 
-        if(ctx.author.id == 154979334002704384):
+        if(ctx.user.id == 154979334002704384):
             await self.add_karma(ctx, karma)
             await self.add_balance(ctx, bal)
             await ctx.send("Here you go daddy.")
@@ -109,10 +109,9 @@ class Karma(commands.Cog):
             await ctx.send("You're not my dad!")
 
 
-    @commands.command()
+    @nextcord.slash_command(name="beg", description="Gives a random amount of money for some verbal abuse.")
     async def beg(self, ctx):
-        """Gives a random amount of money."""
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
 
         scraps = rd.randint(1, 10)
 
@@ -120,9 +119,8 @@ class Karma(commands.Cog):
         await ctx.send("Peasant...")
 
 
-    @commands.command()
-    async def thanks(self, ctx, *, pog=''):
-        """Thanks"""
+    @nextcord.slash_command(name="thanks", description="Thanks!")
+    async def thanks(self, ctx, pog=''):
         with open("Party Wizard/thankscount.json", 'r') as f:
             thankscount = json.load(f)
         thankscount["thanks"] += 1
@@ -130,20 +128,19 @@ class Karma(commands.Cog):
             json.dump(thankscount, f)
         
         await ctx.send("Any time, my student.")
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
         await self.add_karma(ctx, 20)
     
-    @commands.command(aliases = ['getThanks', 'getthanks', 'thankscount'])
+    @nextcord.slash_command(name="thanks_count", description="Returns the number of thanks.")
     async def thanksCount(self, ctx):
         with open("Party Wizard/thankscount.json", 'r') as f:
             thankscount = json.load(f)
         await ctx.send(f"I've been thanked {thankscount['thanks']} times!\nThank you for asking :grin:")
 
 
-    @commands.command()
+    @nextcord.slash_command(name="gift", description="Gift a friend your money!")
     async def gift(self, ctx, person, amount):
-        """Gift a friend with money!"""
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
         
         person = person[3:-1]
 
@@ -166,7 +163,7 @@ class Karma(commands.Cog):
             await self.open_account_by_id(person)
             data = await self.get_bank_data()
 
-            if data[str(ctx.author.id)]["balance"] < amount:
+            if data[str(ctx.user.id)]["balance"] < amount:
                 await ctx.send("I'm sorry, but you don't have that much karma to give.")
             else:
                 await self.add_balance(ctx, amount * -1)
@@ -182,13 +179,13 @@ class Karma(commands.Cog):
                 with open("Party Wizard/main.json", 'w') as f:
                     json.dump(data, f)
     
-    @commands.command()
+    @nextcord.slash_command(name="redeem", description="Redeem your levels using Karma")
     async def redeem(self, ctx):
-        await self.open_account(ctx.author)
+        await self.open_account(ctx.user)
 
         users = await self.get_bank_data()
 
-        karma = users[str(ctx.author.id)]["karma"]
+        karma = users[str(ctx.user.id)]["karma"]
 
         if karma > 10000:
 
@@ -196,12 +193,12 @@ class Karma(commands.Cog):
             for role in roles:
                 if role.name == 'Archwizard':
                     give = role
-                    await ctx.author.add_roles(give)
+                    await ctx.user.add_roles(give)
                     await ctx.send("Congrats, you're now an Archwizard!")
                     break
             else:
                 give = await ctx.guild.create_role(name='Archwizard', colour=nextcord.Colour.gold(), hoist=True)
-                await ctx.author.add_roles(give)
+                await ctx.user.add_roles(give)
                 await ctx.send("Congrats, you're now an Archwizard!")
 
         elif karma > 1000:
@@ -210,7 +207,7 @@ class Karma(commands.Cog):
             for role in roles:
                 if role.name == 'Wizard':
                     give = role
-                    await ctx.author.add_roles(give)
+                    await ctx.user.add_roles(give)
                     await ctx.send("Congrats, you're now a Wizard!")
                     break
             else:
@@ -221,7 +218,7 @@ class Karma(commands.Cog):
                 #         pos = role.position + 1
                 give = await ctx.guild.create_role(name='Wizard', colour=nextcord.Colour.red(), hoist=True)
                 # await give.edit(position=pos)
-                await ctx.author.add_roles(give)
+                await ctx.user.add_roles(give)
                 await ctx.send("Congrats, you're now a Wizard!")
 
         elif karma > 100:
@@ -231,14 +228,14 @@ class Karma(commands.Cog):
                 if role.name == 'Apprentice':
                     give = role
                     try:
-                        await ctx.author.add_roles(give)
+                        await ctx.user.add_roles(give)
                         await ctx.send("Congrats, you're now an Apprentice!")
                     except Exception as e:
                         print(e)
                     break
             else:
                 give = await ctx.guild.create_role(name='Apprentice', colour=nextcord.Colour.green(), hoist=True)
-                await ctx.author.add_roles(give)
+                await ctx.user.add_roles(give)
                 await ctx.send("Congrats, you're now an Apprentice!")
             
         else:

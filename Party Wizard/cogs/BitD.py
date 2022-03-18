@@ -9,9 +9,8 @@ class BitD(commands.Cog):
         self.bot = bot
         self.Karma = Karma(bot)
     
-    @commands.command()
+    @nextcord.slash_command(name="clock", description="Makes a new clock according to your specifications.")
     async def clock(self, ctx, *description):
-        """Makes a new clock according to your specifications."""
 
         name = description[0].lower()
         size = int(description[1])
@@ -39,9 +38,8 @@ class BitD(commands.Cog):
         await self.Karma.add_karma(ctx, 2)
 
 
-    @commands.command()    
+    @nextcord.slash_command(name="tick", description="Chages a specific Clock's phase by a specified value")    
     async def tick(self, ctx, *description):
-        """Chages a specific Clock's phase by a specified value"""
         await self.open_channel_by_id(ctx.channel.id)
 
         name = description[0].lower()
@@ -103,9 +101,8 @@ class BitD(commands.Cog):
         
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command()
+    @nextcord.slash_command(name="clocks", description="Returns all clocks in the channel in a dictionary format.")
     async def clocks(self, ctx):
-        """Returns all clocks in the channel in a dictionary format. May be hard to read."""
         await self.open_channel_by_id(ctx.channel.id)
 
         clocks = await self.get_clocks_data()
@@ -122,9 +119,8 @@ class BitD(commands.Cog):
         
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command()    
+    @nextcord.slash_command(name="kill", description="Deletes the specified clock.")    
     async def kill(self, ctx, name):
-        """Deletes the specified clock."""
         await self.open_channel_by_id(ctx.channel.id)
 
         name = name.lower()

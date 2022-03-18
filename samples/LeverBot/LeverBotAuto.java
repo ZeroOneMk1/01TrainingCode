@@ -64,9 +64,9 @@ import java.lang.Math;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Leverbot: Auto Rightside", group="LeverBot")
+@Autonomous(name="Leverbot: Auto", group="LeverBot")
 // @Disabled
-public class LeverBotAutoRight extends LinearOpMode {
+public class LeverBotAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareInit_3Motors         robot   = new HardwareInit_3Motors();   // Use a Pushbot's hardware
@@ -77,14 +77,14 @@ public class LeverBotAutoRight extends LinearOpMode {
 
     //Set these to the valuese in your code
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     ROBOT_CIRCUMFERENCE     = 4.0;
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_CM       = 10.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_CM           = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                                                      (WHEEL_DIAMETER_CM * 3.1415);
+    static final double     ROBOT_DIAMETER_CM       = 39.0;
+    static final double     ROBOT_CIRCUMFERENCE_CM     = 3.1415 * ROBOT_DIAMETER_CM;
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 1;
-    static final double     GEAR_RATIO              = 3.0;
 
     @Override
     public void runOpMode() {
@@ -119,10 +119,10 @@ public class LeverBotAutoRight extends LinearOpMode {
         //EXAMPLES FOR THINGS YOU CAN DO WITH THE encoderDrive METHOD:
 
         encoder_lift_lever(0.1, -1.8, 1);
-        encoder_turn_by_angle(TURN_SPEED,  20, 2.0);     // S2: Turn right by a 45 degree angle with 4 Sec timeout
-        encoder_drive_tank(DRIVE_SPEED, 1, 1, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        // encoder_turn_by_angle(TURN_SPEED,  20, 2.0);     // S2: Turn right by a 45 degree angle with 4 Sec timeout
+        encoder_drive_tank(DRIVE_SPEED, 3, 3, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         encoder_lift_lever(0.1, 1, 1);
-        encoder_drive_tank(DRIVE_SPEED, -1, -1, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoder_drive_tank(DRIVE_SPEED, -3, -3, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
 
 
@@ -144,9 +144,7 @@ public class LeverBotAutoRight extends LinearOpMode {
 
         double rotationsIntended = degrees / 360;
 
-        double rotationsMotor = rotationsIntended * GEAR_RATIO;
-
-        double target = rotationsMotor * COUNTS_PER_MOTOR_REV;
+        double target = rotationsIntended * COUNTS_PER_MOTOR_REV;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -185,12 +183,12 @@ public class LeverBotAutoRight extends LinearOpMode {
             // Turn off RUN_TO_POSITION
             robot.lever.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);   // optional pause after each move
+            // sleep(250);   // optional pause after each move
         }
     }
 
     public void encoder_drive_tank(double speed,
-                             double leftInches, double rightInches,
+                             double leftCM, double rightCM,
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
@@ -200,8 +198,8 @@ public class LeverBotAutoRight extends LinearOpMode {
 
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftCM * COUNTS_PER_CM);
+            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightCM * COUNTS_PER_CM);
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
 
@@ -256,8 +254,8 @@ public class LeverBotAutoRight extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(-radians * ROBOT_CIRCUMFERENCE * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(radians * ROBOT_CIRCUMFERENCE_CM * COUNTS_PER_CM);
+            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(-radians * ROBOT_CIRCUMFERENCE_CM * COUNTS_PER_CM);
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
 
