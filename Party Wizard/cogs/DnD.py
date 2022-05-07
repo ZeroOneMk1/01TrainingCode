@@ -1,12 +1,13 @@
-import discord
+import nextcord
 import random as rd
-from discord.ext import commands
+from nextcord.ext import commands
 from .consts import classes
 from .Karma import Karma
 from time import sleep
 import urllib.request
 import re
 import json
+from nextcord.ui import Button, View
 
 
 class DnD(commands.Cog):
@@ -14,16 +15,14 @@ class DnD(commands.Cog):
         self.bot = bot
         self.Karma = Karma(bot)
 
-    @commands.command(aliases=['randClass', 'class', 'gimme class'])
+    @nextcord.slash_command(name="random_class", description="Returns one random class.")
     async def randomClass(self, ctx):
-        """Returns one random class."""
         rd.shuffle(classes)
         await ctx.send("Your random class is " + classes[0])
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['randRace', 'race', 'gimmeRace'])
+    @nextcord.slash_command(name="random_race", description="Returns one random race.")
     async def randomRace(self, ctx):
-        """Returns one random race."""
         racesfile = open("Party Wizard/races.txt", "r")
         races = racesfile.readlines()
         rd.shuffle(races)
@@ -31,9 +30,8 @@ class DnD(commands.Cog):
         racesfile.close()
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
+    @nextcord.slash_command(name="random_feat", description="Returns one random feat.")
     async def randomFeat(self, ctx):
-        """Returns one random feat."""
         featsfile = open("Party Wizard/feats.txt", "r")
         feats = featsfile.readlines()
         rd.shuffle(feats)
@@ -41,13 +39,12 @@ class DnD(commands.Cog):
         featsfile.close()
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['d', 'dice', 'r'])
+    @nextcord.slash_command(name="roll", description="Rolls some dice.")
     async def roll(self, ctx, rollstr):
-        """Rolls some dice."""
 
         rollsarr = rollstr.split("+")
 
-        await ctx.send(":arrow_down: Contacting fate:")
+        await ctx.send(f":arrow_down: Contacting fate on {rollstr}:")
 
         total = 0
         rolls = []
@@ -82,13 +79,12 @@ class DnD(commands.Cog):
                     await ctx.send("I don't understand that, please use common dice notation.")
                     return
 
-        await ctx.send(f"Rolls: {rolls}")
+        await self.print_long(ctx, str(rolls))
         await ctx.send(f'The total is {total}.')
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['adv'])
+    @nextcord.slash_command(name="advantage", description="Rolls with advantage")
     async def advantage(self, ctx, die=20):
-        """Rolls with advantage"""
         await ctx.send(":arrow_down: Contacting fate, with advantage:")
         curr1 = rd.randint(1, int(die))
         curr2 = rd.randint(1, int(die))
@@ -99,9 +95,8 @@ class DnD(commands.Cog):
             await ctx.send('Final: ' + str(curr1))
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['disadv'])
+    @nextcord.slash_command(name="disadvantage", description="Rolls with disadvantage.")
     async def disadvantage(self, ctx, die=20):
-        """Rolls with disadvantage."""
         await ctx.send(":arrow_down: Contacting fate, with disadvantage:")
         curr1 = rd.randint(1, int(die))
         curr2 = rd.randint(1, int(die))
@@ -112,9 +107,8 @@ class DnD(commands.Cog):
             await ctx.send('Final: ' + str(curr1))
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['stats', 'rollstats', 'randomstats', 'randstats'])
+    @nextcord.slash_command(name="stats", description="Rolls an array of 6 4d6 drop lowest stats.")
     async def rollStats(self, ctx):
-        """Rolls an array of 6 4d6 drop lowest stats."""
         await ctx.send(":arrow_down: Contacting fate:")
         rolls = []
         stats = []
@@ -132,18 +126,16 @@ class DnD(commands.Cog):
 
         await ctx.send(f'Your stats, in ascending order, are: {stats}, and the sum is: {summ}')
 
-    @commands.command()
+    @nextcord.slash_command(name="roll_hp", description="Rolls the RAW maximum HP for your character.")
     async def rollHP(self, ctx, lvl, dice, conmod):
-        """Rolls the maximum HP for your character."""
         sum = int(dice) + int(conmod)
         for i in range(int(lvl) - 1):
             sum += rd.randint(1, int(dice)) + int(conmod)
         await ctx.send("Your maximum HP is: " + str(sum))
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
+    @nextcord.slash_command(name="random_character", description="Generates a random Character with race, class and stats.")
     async def randomCharacter(self, ctx):
-        """Generates a random Character with race, class and stats."""
         racesfile = open("Party Wizard/races.txt",
                          "r", encoding='utf-8')
         races = racesfile.readlines()
@@ -155,15 +147,13 @@ class DnD(commands.Cog):
         racesfile.close()
         await self.Karma.add_karma(ctx, 5)
 
-    @commands.command()
+    @nextcord.slash_command(name="map", description="Returns the current map for the campaign.")
     async def map(self, ctx):
-        """Returns the current map for the campaign."""
-        await ctx.channel.send(file=discord.File('Party Wizard/map1.png'))
+        await ctx.channel.send(file=nextcord.File('Party Wizard/map1.png'))
         await self.Karma.add_karma(ctx, 1)
 
-    @commands.command(aliases=["boo", 'Boo', 'boo!', 'Boo!'])
+    @nextcord.slash_command(name="boo", description="Adds one tick to this person in the loserboard.")
     async def loserboard(self, ctx, loser="Check"):
-        """Adds one tick to this person in the loserboard."""
 
         await self.add_loserboard(ctx)
 
@@ -237,9 +227,8 @@ class DnD(commands.Cog):
             loserboards = json.load(f)
         return loserboards
 
-    @commands.command()
-    async def wikidot(self, ctx, *, string):
-        """Searches wikidot and returns the top result."""
+    @nextcord.slash_command(name="wikidot", description="Searches wikidot and returns the top result. VERY UNRELIABLE.")
+    async def wikidot(self, ctx, string):
         await ctx.send("Searching Wikidot. This may take a while.")
 
         url = "http://dnd5e.wikidot.com/search:site/q/" + \
@@ -254,7 +243,15 @@ class DnD(commands.Cog):
             result = urllist[0]
         except:
             if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
+
                 await ctx.send("I'm sorry, but the website timed out.")
+
+                button = Button(label="go to Wikidot", url=url)
+                view = View()
+                view.add_item(button)
+
+                await ctx.send("There's a chance this link works better than it did for me:", view=view)
+
             else:
                 print("No URLs found")
 
@@ -285,8 +282,8 @@ class DnD(commands.Cog):
 
         await ctx.send(f"This is the top result: \n{resultname}")
 
-        em = discord.Embed(
-            title=f"Result: {resultname}", color=discord.Colour.magenta())
+        em = nextcord.Embed(
+            title=f"Result: {resultname}", color=nextcord.Colour.magenta())
 
         em.add_field(name="Description:", value=printstr)
 
@@ -295,17 +292,47 @@ class DnD(commands.Cog):
         try:
             for i in range(len(printstr) - 1):
 
-                em = discord.Embed(color=discord.Colour.magenta())
+                em = nextcord.Embed(color=nextcord.Colour.magenta())
 
                 em.add_field(name="...", value=printstr[i + 1])
 
                 await ctx.send(embed=em)
         except Exception as e:
             await ctx.send(e)
+        
+        button = Button(label="go to Wikidot", url=url)
+        view = View(button)
 
-        await ctx.send(f"If this isn't what you wanted, try this link: \n{url}")
+        await ctx.send(f"If this isn't what you wanted, try this link:", view=view)
 
         await self.Karma.add_karma(ctx, 5)
+
+    async def print_long(self, ctx, to_be_printed: str):
+
+        chunknum = 0
+        printstr = []
+        printstr.append('')
+
+        for char in to_be_printed:
+            tempprintstr = printstr[chunknum] + char
+            if len(tempprintstr) > 1000:
+                await ctx.send("Result too long. Made a new ~1000 character chunk")
+                chunknum += 1
+                printstr.append(char)
+                tempprintstr = ''
+            else:
+                printstr[chunknum] += char
+        
+        try:
+            for i in range(len(printstr)):
+
+                em = nextcord.Embed(color=nextcord.Colour.magenta())
+
+                em.add_field(name="Rolls", value=printstr[i])
+
+                await ctx.send(embed=em)
+        except Exception as e:
+            await ctx.send(e)
 
 
 def setup(bot):

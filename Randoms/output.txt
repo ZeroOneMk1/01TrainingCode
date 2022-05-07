@@ -1,0 +1,2188 @@
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/clocks.json:
+
+{"706471625544957975": {}, "856139553004847107": {"money": {"size": 4, "phase": 2}, "coolbrew": {"size": 8, "phase": 4}, "gym": {"size": 6, "phase": 3}, "gacha": {"size": 8, "phase": 2}}, "880729840163123221": {}, "792311682898460693": {}, "936115492547096576": {"show": {"size": 6, "phase": 2}, "example": {"size": 6, "phase": 1}, "example2": {"size": 8, "phase": 4}}}
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/feats.txt:
+
+Actor
+Alert
+Athlete
+Barbed Hide (UA: Feats for Races)
+Bountiful Luck (UA: Feats for Races)
+Bountiful Luck (XGE)
+Charger
+Critter Friend (UA: Feats for Races)
+Crossbow Expert
+Defensive Duelist
+Dragon Fear (UA: Feats for Races)
+Dragon Fear (XGE)
+Dragon Hide (UA: Feats for Races)
+Dragon Hide (XGE)
+Dragon Wings (UA: Feats for Races)
+Drow Hide Magic (XGE)
+Drow High Magic (UA: Feats for Races)
+Dual Wielder
+Dungeon Delver
+Durable
+Dwarf Resilience (UA: Feats for Races)
+Dwarven Fortitude (XGE)
+Elemental Adept
+Elven Accuracy (UA: Feats for Races)
+Elven Accuracy (XGE)
+Everybody's Friend (UA: Feats for Races)
+Fade Away (UA: Feats for Races)
+Fade Away (XGE)
+Fey Teleportation (UA: Feats for Races)
+Fey Teleportation (XGE)
+Flames of Phlegethos (UA: Feats for Races)
+Flames of Phlegethos (XGE)
+Grappler
+Great Weapon Master
+Grudge-Bearer (UA: Feats for Races)
+Healer
+Heavily Armored
+Heavy Armor Master
+Human Determination (UA: Feats for Races)
+Infernal Constitution (UA: Feats for Races)
+Infernal Constitution (XGE)
+Inspiring Leader
+Keen Mind
+Lightly Armored
+Linguist
+Lucky
+Mage Slayer
+Magic Initiate
+Martial Adept
+Medium Armor Master
+Mobile
+Moderately Armored
+Mounted Combatant
+Observant
+Orchish Fury (XGE)
+Orcish Aggression (UA: Feats for Races)
+Orcish Fury (UA: Feats for Races)
+Polearm Master
+Prodigy (UA: Feats for Races)
+Prodigy (XGE)
+Resilient
+Ritual Caster
+Savage Attacker
+Second Chance (UA: Feats for Races)
+Second Chance (XGE)
+Sentinel
+Sharpshooter
+Shield Master
+Skilled
+Skulker
+Spell Sniper
+Squat Nimbleness (UA: Feats for Races)
+Squat Nimbleness (XGE)
+Tavern Brawler
+Tough
+War Caster
+Weapon Master
+Wonder Maker (UA: Feats for Races)
+Wood Elf Magic (UA: Feats for Races)
+Wood Elf Magic (XGE)
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/todos.txt:
+
+split help into pages that you can control with reactions? - 339384118959800320
+Mods being able to turn off commands - 339384118959800320
+command to lock wizard to only post in a single channel - 339384118959800320
+Person-based meeting times as well - self
+Balance and Karma Swag - 154979334002704384
+set server time zones - 339384118959800320
+Make a flask website that the bot can interact with, on which I can write better documentation, and with which I can expand the capabilities of my bot to the next level. - 154979334002704384
+make randstats unsorted, add modifiers to advanage - Harrison
+Init that gets typed in by the players - 154979334002704384
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/main.json:
+
+{"154979334002704384": {"karma": 880, "balance": 5505}, "529768845741654016": {"karma": 3, "balance": 1400}, "339384118959800320": {"karma": 709, "balance": 0}, "372642886648332288": {"karma": 287, "balance": 100}, "225167302042189835": {"karma": 12, "balance": 0}, "382423340050153481": {"karma": 161, "balance": 0}, "462853108918124574": {"karma": 0, "balance": 420}, "523379610784628736": {"karma": 203, "balance": 0}, "756337859916595200": {"karma": 5, "balance": 0}, "597355789782351882": {"karma": 3, "balance": 0}, "460337338376257536": {"karma": 1, "balance": 0}, "297305355703025664": {"karma": 4, "balance": 0}, "248958288429842432": {"karma": 2, "balance": 0}, "248732427495800833": {"karma": 25, "balance": 0}, "314445123050012674": {"karma": 18, "balance": 0}}
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/code.txt:
+
+REMOVED
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/thankscount.json:
+
+{"thanks": 35}
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/person.json:
+
+REMOVED
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/bjgames.json:
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/bot.py:
+
+import discord
+from discord.ext import commands
+
+token = open('Party Wizard/code.txt', 'r')
+
+intents = discord.Intents.default()
+intents.members = True
+
+tokenstr = token.read()
+
+if tokenstr[0] != "O":
+    bot = commands.Bot(command_prefix=['wizard ', 'wiz ', 'Wizard ', 'Wiz '], intents=intents)
+else:
+    bot = commands.Bot(command_prefix=['test ', 't ', 'T ', 'Astolfo ', 'astolfo ', 'Test '], intents=intents)
+
+initial_extensions = ['cogs.DnD',
+                      'cogs.Karma',
+                      'cogs.Games', 
+                      'cogs.Scheduling', 
+                      'cogs.TextBased', 
+                      'cogs.Utility',
+                      'cogs.BitD']
+
+if __name__ == '__main__':
+    for extension in initial_extensions:
+        bot.load_extension(extension)
+
+@bot.command(aliases = ['shelp', 'sh', 'short_help', 'shorthelp', 'hlp'])
+async def shortHelp(ctx):
+    cogs =  []
+
+    for i in range(len(initial_extensions)):
+        currcog = initial_extensions[i][5:]
+        cogs.append(currcog)
+    
+    sendstr = "The current categories are: \n```"
+
+    for cog in cogs:
+        sendstr += f" - {cog}\n"
+    
+    sendstr += "```Write 'wizard help <category>' to get more info."
+
+    await ctx.send(sendstr)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("I'm sorry, but you didn't give me the necessary components for the spell. Do wizard help { command } to see what's required.")
+    elif isinstance(error, commands.CommandNotFound):
+        await ctx.send("I'm sorry, but I either don't know this spell, or you gave me false instructions.")
+
+token = open('Party Wizard/code.txt', 'r')
+
+@bot.event
+async def on_ready():
+    print("Ready")
+
+if __name__ == '__main__':
+    bot.run(token.read())
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/codepi.txt:
+
+REMOVED: PRIVATE TOKEN!
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/races.txt:
+
+REMOVED BECAUSE IT'S 1500 LINES LONG
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/loserboards.json:
+
+{"706471625544957972": {"154979334002704384": 11}}
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/games.json:
+
+{"0": {"Active": true, "Game": "Checkers", "Players": {"1": "154979334002704384", "2": "529768845741654016"}, "Data": {"Turn": "2", "Board": [[0, ["WHITE", 0, 1, false], 0, ["WHITE", 0, 3, false], 0, ["WHITE", 0, 5, false], 0, ["WHITE", 0, 7, false]], [["WHITE", 1, 0, false], 0, ["WHITE", 1, 2, false], 0, ["WHITE", 1, 4, false], 0, ["WHITE", 1, 6, false], 0], [0, ["WHITE", 2, 1, false], 0, ["WHITE", 2, 3, false], 0, ["WHITE", 2, 5, false], 0, ["WHITE", 2, 7, false]], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [["RED", 5, 0, false], 0, ["RED", 5, 2, false], 0, ["RED", 5, 4, false], 0, ["RED", 5, 6, false], 0], [0, ["RED", 6, 1, false], 0, ["RED", 6, 3, false], 0, ["RED", 6, 5, false], 0, ["RED", 6, 7, false]], [["RED", 7, 0, false], 0, ["RED", 7, 2, false], 0, ["RED", 7, 4, false], 0, ["RED", 7, 6, false], 0]]}}, "1": {"Active": true, "Game": "Checkers", "Players": {"1": "154979334002704384", "2": "791887063901274123"}, "Data": {"Turn": "1", "Board": [[0, ["WHITE", 0, 1, false], 0, ["WHITE", 0, 3, false], 0, ["WHITE", 0, 5, false], 0, ["WHITE", 0, 7, false]], [["WHITE", 1, 0, false], 0, ["WHITE", 1, 2, false], 0, ["WHITE", 1, 4, false], 0, ["WHITE", 1, 6, false], 0], [0, ["WHITE", 2, 1, false], 0, 0, 0, ["WHITE", 2, 5, false], 0, ["WHITE", 2, 7, false]], [0, 0, 0, 0, ["WHITE", 3, 4, false], 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [["RED", 5, 0, false], 0, ["RED", 5, 2, false], 0, ["RED", 5, 4, false], 0, ["RED", 5, 6, false], 0], [0, ["RED", 6, 1, false], 0, ["RED", 6, 3, false], 0, ["RED", 6, 5, false], 0, ["RED", 6, 7, false]], [["RED", 7, 0, false], 0, ["RED", 7, 2, false], 0, ["RED", 7, 4, false], 0, ["RED", 7, 6, false], 0]]}}, "2": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "3": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "4": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "5": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "6": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "7": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "8": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "9": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "10": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "11": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "12": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "13": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "14": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "15": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "16": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "17": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "18": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "19": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "20": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "21": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "22": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "23": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "24": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "25": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "26": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "27": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "28": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "29": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "30": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "31": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "32": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "33": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "34": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "35": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "36": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "37": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "38": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "39": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "40": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "41": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "42": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "43": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "44": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "45": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "46": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "47": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "48": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "49": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "50": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "51": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "52": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "53": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "54": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "55": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "56": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "57": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "58": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "59": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "60": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "61": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "62": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "63": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "64": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "65": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "66": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "67": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "68": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "69": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "70": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "71": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "72": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "73": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "74": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "75": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "76": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "77": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "78": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "79": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "80": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "81": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "82": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "83": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "84": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "85": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "86": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "87": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "88": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "89": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "90": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "91": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "92": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "93": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "94": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "95": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "96": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "97": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "98": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "99": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "100": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "101": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "102": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "103": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "104": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "105": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "106": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "107": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "108": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "109": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "110": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "111": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "112": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "113": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "114": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "115": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "116": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "117": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "118": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "119": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "120": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "121": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "122": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "123": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "124": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "125": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "126": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "127": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "128": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "129": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "130": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "131": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "132": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "133": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "134": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "135": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "136": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "137": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "138": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "139": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "140": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "141": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "142": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "143": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "144": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "145": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "146": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "147": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "148": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "149": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "150": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "151": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "152": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "153": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "154": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "155": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "156": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "157": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "158": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "159": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "160": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "161": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "162": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "163": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "164": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "165": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "166": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "167": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "168": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "169": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "170": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "171": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "172": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "173": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "174": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "175": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "176": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "177": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "178": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "179": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "180": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "181": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "182": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "183": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "184": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "185": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "186": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "187": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "188": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "189": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "190": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "191": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "192": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "193": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "194": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "195": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "196": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "197": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "198": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "199": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "200": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "201": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "202": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "203": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "204": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "205": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "206": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "207": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "208": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "209": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "210": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "211": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "212": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "213": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "214": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "215": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "216": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "217": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "218": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "219": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "220": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "221": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "222": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "223": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "224": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "225": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "226": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "227": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "228": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "229": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "230": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "231": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "232": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "233": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "234": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "235": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "236": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "237": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "238": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "239": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "240": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "241": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "242": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "243": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "244": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "245": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "246": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "247": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "248": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "249": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "250": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "251": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "252": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "253": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "254": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}, "255": {"Active": false, "Game": null, "Players": {"1": null, "2": null}, "Data": {}}}
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Utility.py:
+
+import discord, time, json
+from discord.ext import commands
+from .Karma import Karma
+from .Scheduling import Scheduling
+
+class Utility(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.Karma = Karma(bot)
+        self.Scheduling = Scheduling(bot)
+
+    def is_person(self, m):
+        with open("Party Wizard/person.json", 'r') as f:
+                person = json.load(f)
+        return m.author.id == person["person"]
+
+    @commands.command(aliases=['clear',  'erase', 'purge'])
+    async def delete(self, ctx, amount=1, person = None):
+        """Deletes messages."""
+        if ctx.author.guild_permissions.administrator == True or ctx.author.id == 154979334002704384 or ctx.author.guild_permissions.manage_messages == True:
+            if person is not None:
+                
+                person = person[3:-1]
+
+                with open("Party Wizard/person.json", 'r') as f:
+                    deleted = json.load(f)
+                deleted["person"] = int(person)
+                with open("Party Wizard/person.json", 'w') as f:
+                    json.dump(deleted, f)
+                
+                await ctx.channel.purge(limit=amount+1, check=self.is_person)
+            else:
+                await ctx.channel.purge(limit=amount+1)
+        else:
+            await ctx.send("You're not allowed to use this spell!")
+    
+
+    @commands.command(aliases=['commissions', 'toDo', 'toDos'])
+    async def todos(self, ctx):
+        """Returns the current active commissions."""
+        todos = open("Party Wizard/todos.txt", "r")
+        if(todos.read() == ''):
+            await ctx.send("I have completed all spells. Commission more for me to start working again.")
+        else:
+            todosfile = open("Party Wizard/todos.txt", "r")
+            todos = todosfile.read()
+            await ctx.send("These are the spells I'm currently working on:\n" + todos)
+        todosfile.close()
+    
+    @commands.command()
+    async def commission(self, ctx, *, thecommision):
+        """Sends text to a text file on my computer."""
+        todos = open("Party Wizard/todos.txt", "a")
+        todos.write(f'{thecommision} - {ctx.author.id}\n')
+        await ctx.send(f'Added "{thecommision}" to the to-do list.')
+        todos.close()
+        await self.Karma.add_karma(ctx, 50)
+
+    @commands.command()
+    async def ping(self, ctx):
+        """Sends latency"""
+        await ctx.send(f'{int(self.bot.latency * 1000)}ms latency.')
+    
+
+    @commands.command(aliases=['sleep', 'nappytime', 'naptime', 'nap'])
+    async def stop(self, ctx):
+        """Stops the bot for 60s"""
+        await ctx.send(':sleeping:Sleeping for 60 seconds, see you then!')
+        time.sleep(60)
+        await self.Karma.add_karma(ctx, 1)
+    
+    @commands.command()
+    async def broadcast(self, ctx, *, message):
+        """Broadcasts message to all wizard channels"""
+        campaigns = await self.Scheduling.get_campaign_data()
+        if(ctx.author.id == 154979334002704384):
+            for campaign in campaigns:
+                await self.bot.wait_until_ready()
+                channel = self.bot.get_channel(campaigns[campaign]["channel"])
+                await channel.send("Broadcast from the bot's developer:")
+                await channel.send(message)
+        else:
+            await ctx.send("Only the dev can use this.")
+    
+    @commands.command()
+    async def botLink(self, ctx):
+        """Gives the bot invite link."""
+        await ctx.send("Invite me to your server :grin: \nhttps://discord.com/api/oauth2/authorize?client_id=791887063901274123&permissions=8&scope=bot")
+
+
+
+def setup(bot):
+    bot.add_cog(Utility(bot))
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/TextBased.py:
+
+import discord
+from discord.ext import commands
+from .Karma import Karma
+
+class TextBased(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.Karma = Karma(bot)
+    
+    @commands.command()
+    async def clapify(self, ctx, *, text):
+        """Replaces spaces with :clap:"""
+        newtext = text.replace(' ', ':clap:')
+        await ctx.channel.purge(limit=1)
+        await ctx.send(newtext)
+        await self.Karma.add_karma(ctx, 1)
+    
+    
+    @commands.command(aliases=['say'])
+    async def repeat(self, ctx, *, message):
+        """Repeats a message."""
+        if(message == "I'm gay"):
+            await ctx.send('I know')
+        else:
+            await ctx.channel.purge(limit=1)
+            await ctx.send(message)
+    
+    @commands.command(aliases=['curse'])
+    async def cursed(self, ctx, lvl=0):
+        """Immortalizes the cursedness of thy post above."""
+        # await ctx.channel.purge(limit=1)
+        if(abs(lvl) == 0):
+            await ctx.send("Wait! Let me cast guidance, cause y'all need Jesus.")
+        elif(abs(lvl) == 1):
+            await ctx.send(f"Woaah there, I need to drop concentration on Comprehend Languages.")
+        elif(abs(lvl) == 2):
+            await ctx.send(f"I'm getting a restraining order, I need you out of Misty Step range!")
+        elif(abs(lvl) == 3):
+            await ctx.send(f"KILL IT WITH FIREBALL! QUICKEN THE SPELL YOU USELESS SORCERER I NEED IT ***NOW***.")
+        elif(abs(lvl) == 4):
+            await ctx.send(f"Yeah, this definitely deserves Banishment.")
+        elif(abs(lvl) == 5):
+            await ctx.send(f"Oh lord, I'm unseeing this. MODIFY MEMORY *wooshes wand*")
+        elif(abs(lvl) == 6):
+            await ctx.send(f"Did someone cast Eyebite? I feel sickened!")
+        elif(abs(lvl) == 7):
+            await ctx.send(f"That's it. I'm summoning Jesus. CONJURE CELESTIAL *wooshes wand*")
+        elif(abs(lvl) == 8):
+            await ctx.send(f"I'm casting Mind Blank, I need immunity to the psychic damage you just caused with... that...")
+        if(lvl > 8):
+            await ctx.send("Good Lord, I'll need a wish spell to unsee this! Anyone have spare GP?")
+        await self.Karma.add_karma(ctx, 1)
+    
+
+    @commands.command()
+    async def spam(self, ctx, person, amount=1):
+        """Spams the message you input. Currently Disabled."""
+        await ctx.send("Hugo made me diable this. Bad Hugo.")
+        # for i in range(int(amount)):
+        #     await ctx.send(person)
+    
+    @commands.command(aliases=['69', 'funny number'])
+    async def nice(self, ctx):
+        """nice"""
+        await ctx.send('Nice')
+        await self.Karma.add_karma(ctx, 1)
+
+
+
+    @commands.command(aliaes=['love', 'live', 'laugh', 'lovelivelaugh', 'lickmyass'])
+    async def livelaughlove(self, ctx):
+        """just no"""
+        await ctx.send("Watch out there! We got a white girl in our hands! I'll cast mold earth to make some 'magic' crystals as a distraction while you get her!")
+        await self.Karma.add_karma(ctx, 1)
+
+
+    @commands.command()
+    async def uwufy(self, ctx, *, text):
+        """UwU nyaa~~ rawr XD"""
+        await ctx.channel.purge(limit=1)
+        text = text.replace("r", "w")
+        text = text.replace("l", "w")
+        text = text.replace('ove', 'uv')
+        await ctx.send(text)
+        await self.Karma.add_karma(ctx, 1)
+
+
+
+def setup(bot):
+    bot.add_cog(TextBased(bot))
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/DnD.py:
+
+import discord
+import random as rd
+from discord.ext import commands
+from .consts import classes
+from .Karma import Karma
+import urllib.request
+import re
+import json
+
+
+class DnD(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.Karma = Karma(bot)
+
+    @commands.command(aliases=['randClass', 'class', 'gimme class'])
+    async def randomClass(self, ctx):
+        """Returns one random class."""
+        rd.shuffle(classes)
+        await ctx.send("Your random class is " + classes[0])
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['randRace', 'race', 'gimmeRace'])
+    async def randomRace(self, ctx):
+        """Returns one random race."""
+        racesfile = open("Party Wizard/races.txt", "r")
+        races = racesfile.readlines()
+        rd.shuffle(races)
+        await ctx.send(f"Your random race is:\n```{races[0]}```Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
+        racesfile.close()
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['randFeat', 'feat', 'gimmeFeat'])
+    async def randomFeat(self, ctx):
+        """Returns one random feat."""
+        featsfile = open("Party Wizard/feats.txt", "r")
+        feats = featsfile.readlines()
+        rd.shuffle(feats)
+        await ctx.send(f"Your random feat is:\n```{feats[0]}```Visit http://www.jsigvard.com/dnd/Feats.html for more information on this feat.")
+        featsfile.close()
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['d', 'dice', 'r'])
+    async def roll(self, ctx, rollstr):
+        """Rolls some dice."""
+
+        rollsarr = rollstr.split("+")
+
+        await ctx.send(":arrow_down: Contacting fate:")
+
+        total = 0
+        rolls = []
+
+        for roll in rollsarr:
+
+            try:
+                rollarr = roll.split("d")
+                for _ in range(int(rollarr[0])):
+
+                    try:
+                        temp = rollarr[1].split("-")
+                        rollarr[1] = temp[0]
+                        rollarr.append(temp[1])
+                    except:
+                        rollarr.append(0)
+
+                    curr = rd.randint(1, int(rollarr[1]))
+                    rolls.append(curr)
+                    total += curr
+
+                total -= int(rollarr[2])
+
+            except:
+
+                try:
+
+                    total += int(roll)
+
+                except:
+
+                    await ctx.send("I don't understand that, please use common dice notation.")
+                    return
+
+        await ctx.send(f"Rolls: {rolls}")
+        await ctx.send(f'The total is {total}.')
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['adv'])
+    async def advantage(self, ctx, die=20):
+        """Rolls with advantage"""
+        await ctx.send(":arrow_down: Contacting fate, with advantage:")
+        curr1 = rd.randint(1, int(die))
+        curr2 = rd.randint(1, int(die))
+        await ctx.send(str(curr1) + ', ' + str(curr2))
+        if(curr1 < curr2):
+            await ctx.send('Final: ' + str(curr2))
+        else:
+            await ctx.send('Final: ' + str(curr1))
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['disadv'])
+    async def disadvantage(self, ctx, die=20):
+        """Rolls with disadvantage."""
+        await ctx.send(":arrow_down: Contacting fate, with disadvantage:")
+        curr1 = rd.randint(1, int(die))
+        curr2 = rd.randint(1, int(die))
+        await ctx.send(str(curr1) + ', ' + str(curr2))
+        if(curr1 > curr2):
+            await ctx.send('Final: ' + str(curr2))
+        else:
+            await ctx.send('Final: ' + str(curr1))
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['stats', 'rollstats', 'randomstats', 'randstats'])
+    async def rollStats(self, ctx):
+        """Rolls an array of 6 4d6 drop lowest stats."""
+        await ctx.send(":arrow_down: Contacting fate:")
+        rolls = []
+        stats = []
+        for i in range(6):
+            for j in range(4):
+                rolls.append(rd.randint(1, 6))
+            rolls.sort()
+            rolls.pop(0)
+            stats.append(rolls[0] + rolls[1] + rolls[2])
+            rolls.clear()
+        stats.sort()
+        summ = 0
+        for stat in stats:
+            summ += stat
+
+        await ctx.send(f'Your stats, in ascending order, are: {stats}, and the sum is: {summ}')
+
+    @commands.command()
+    async def rollHP(self, ctx, lvl, dice, conmod):
+        """Rolls the maximum HP for your character."""
+        sum = int(dice) + int(conmod)
+        for i in range(int(lvl) - 1):
+            sum += rd.randint(1, int(dice)) + int(conmod)
+        await ctx.send("Your maximum HP is: " + str(sum))
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=['character', 'gimmeCharacter', 'randCharacter', 'char', 'randChar'])
+    async def randomCharacter(self, ctx):
+        """Generates a random Character with race, class and stats."""
+        racesfile = open("Party Wizard/races.txt",
+                         "r", encoding='utf-8')
+        races = racesfile.readlines()
+        rd.shuffle(races)
+        rd.shuffle(classes)
+        await ctx.send(f"Your random Character is of the race:\n```{races[0]}```They are a {classes[0]}, and their stats (without race modifiers) look as such:")
+        await self.rollStats.__call__(ctx)
+        await ctx.send("Visit https://www.dandwiki.com/wiki/Alphabetical_5e_Races for more information on this race.")
+        racesfile.close()
+        await self.Karma.add_karma(ctx, 5)
+
+    @commands.command()
+    async def map(self, ctx):
+        """Returns the current map for the campaign."""
+        await ctx.channel.send(file=discord.File('Party Wizard/map1.png'))
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command(aliases=["boo", 'Boo', 'boo!', 'Boo!'])
+    async def loserboard(self, ctx, loser="Check"):
+        """Adds one tick to this person in the loserboard."""
+
+        await self.add_loserboard(ctx)
+
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = await self.get_loserboard_data()
+            f.close()
+
+        if loser != "Check":
+
+            loser_id = loser[3:-1]
+
+            try:
+                int(loser_id)
+            except:
+                await ctx.send("Please ping the person you want to add to the loserboard, or write nothing if you just want to read it.")
+
+            try:
+
+                losercount = loserboards[str(ctx.guild.id)][loser_id]
+
+            except:
+
+                loserboards[str(ctx.guild.id)][loser_id] = 0
+                losercount = 0
+
+            losercount += 1
+
+            loserboards[str(ctx.guild.id)][loser_id] = losercount
+
+            with open("Party Wizard/cogs/loserboards.json", 'w') as f:
+
+                json.dump(loserboards, f)
+
+            await self.print_losers(ctx)
+
+        else:
+
+            await self.print_losers(ctx)
+
+    async def print_losers(self, ctx):
+
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = await self.get_loserboard_data()
+            f.close()
+
+        sendstr = "LOSERBOARD:\n```"
+
+        for person in loserboards[str(ctx.guild.id)]:
+
+            sendstr += f"{ctx.guild.get_member(int(person)).display_name} - {loserboards[str(ctx.guild.id)][person]}\n"
+
+        sendstr += "```"
+
+        await ctx.send(sendstr)
+
+    async def add_loserboard(self, ctx):
+        loserboards = await self.get_loserboard_data()
+
+        if str(ctx.guild.id) in loserboards:
+            return
+        else:
+            loserboards[str(ctx.guild.id)] = {}
+
+        with open("Party Wizard/cogs/loserboards.json", 'w') as f:
+            json.dump(loserboards, f)
+
+    async def get_loserboard_data(self):
+        with open("Party Wizard/cogs/loserboards.json", 'r') as f:
+            loserboards = json.load(f)
+        return loserboards
+
+    @commands.command()
+    async def wikidot(self, ctx, *, string):
+        """Searches wikidot and returns the top result."""
+        await ctx.send("Searching Wikidot. This may take a while.")
+
+        url = "http://dnd5e.wikidot.com/search:site/q/" + \
+            string.replace(' ', '%20')
+        with urllib.request.urlopen(url) as response:
+            html = response.read()
+
+        urllist = re.findall(r"""<\s*a\s*href=["'](http:\/\/dnd5e\.wikidot\.com\/[^=]+)["']""",
+                             urllib.request.urlopen(url).read().decode("utf-8"))
+
+        try:
+            result = urllist[0]
+        except:
+            if "timed out" in urllib.request.urlopen(url).read().decode("utf-8"):
+                await ctx.send("I'm sorry, but the website timed out.")
+            else:
+                print("No URLs found")
+
+        print(result)
+
+        site = urllib.request.urlopen(result).read().decode("utf-8")
+
+        paragraphs = "<p>" + \
+            re.findall(r"""<p>([^=]+)<\/p>""", site)[0] + "</p>"
+
+        infos = re.findall(r"<[^>]+>([^\\<]+)", paragraphs)
+
+        chunknum = 0
+        printstr = []
+        printstr.append('')
+
+        for thing in infos:
+            tempprintstr = printstr[chunknum] + thing
+            if len(tempprintstr) > 1000:
+                await ctx.send("Result too long. Made a new ~1000 character chunk")
+                chunknum += 1
+                printstr.append(thing)
+                tempprintstr = ''
+            else:
+                printstr[chunknum] += thing
+
+        resultname = re.findall(r":([^/]+)", result)[0]
+
+        await ctx.send(f"This is the top result: \n{resultname}")
+
+        em = discord.Embed(
+            title=f"Result: {resultname}", color=discord.Colour.magenta())
+
+        em.add_field(name="Description:", value=printstr)
+
+        await ctx.send(embed=em)
+
+        try:
+            for i in range(len(printstr) - 1):
+
+                em = discord.Embed(color=discord.Colour.magenta())
+
+                em.add_field(name="...", value=printstr[i + 1])
+
+                await ctx.send(embed=em)
+        except Exception as e:
+            await ctx.send(e)
+
+        await ctx.send(f"If this isn't what you wanted, try this link: \n{url}")
+
+        await self.Karma.add_karma(ctx, 5)
+
+
+def setup(bot):
+    bot.add_cog(DnD(bot))
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/__init__.py:
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/campaigns.json:
+
+{"727552689231101983": {"time": "Friday, 19:00", "channel": 792311682898460693}, "769850094353776650": {"time": "Saturday, 20:00", "channel": 769850094353776654}, "706471625544957972": {"time": "Monday, 19:19", "channel": 880729840163123221}, "797769871861612584": {"time": 0, "channel": 803519416008572938}, "842207734404612116": {"time": 0, "channel": 842207734878830600}, "832084009651273748": {"time": "Sunday, 20:30", "channel": 853595329869381642}, "855717393313693707": {"time": 0, "channel": 856185880616370176}}
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Games.py:
+
+import discord, json
+import random as rd
+from discord.ext import commands
+from .Karma import Karma
+from .Checkers.checkers.board import Board
+
+
+class Games(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.karma = Karma(bot)
+    
+    allgames = set()
+    gamestrings = ["Checkers"]
+    for thing in gamestrings:
+        allgames.add(thing)
+    
+    async def get_game_data(self):
+        with open("Party Wizard/cogs/games.json", 'r') as f:
+            games = json.load(f)
+        return games
+
+    async def check_for_existing_game(self, authorID, opponentID, currgame):
+        games = await self.get_game_data()
+
+        for i in range(0, 256):
+            if games[str(i)]["Active"] == True:
+                if  games[str(i)]["Game"] == currgame:
+                    if games[str(i)]["Players"]['1'] == str(authorID):
+                        if games[str(i)]["Players"]['2'] == str(opponentID):
+                            return True
+                    elif games[str(i)]["Players"]['1'] == str(opponentID):
+                        if games[str(i)]["Players"]['2'] == str(authorID):
+                            return True
+        return False
+
+    async def get_game_id(self, authorID, opponentID, currgame):
+        games = await self.get_game_data()
+
+        i = 0
+
+        while games[str(i)]["Active"] == True:
+            if  games[str(i)]["Game"] == currgame:
+                if games[str(i)]["Players"]['1'] == str(authorID):
+                    if games[str(i)]["Players"]['2'] == str(opponentID):
+                        return i
+                elif games[str(i)]["Players"]['1'] == str(opponentID):
+                    if games[str(i)]["Players"]['2'] == str(authorID):
+                        return i
+            i += 1
+
+    async def startgame(self, ctx, opponentID, currgame):
+        games = await self.get_game_data()
+
+        for i in range(0, 256):
+            if games[str(i)]["Active"] == False:
+                games[str(i)]["Active"] = True
+                games[str(i)]["Game"] = currgame
+                games[str(i)]["Players"]['1'] = str(ctx.author.id)
+                games[str(i)]["Players"]['2'] = opponentID
+                if currgame == "Checkers":
+                    games[str(i)]["Data"]['Turn'] = '1'
+                    board = Board()
+                    games[str(i)]["Data"]["Board"] = board.__repr__()
+                    await ctx.send(board.draw())
+                    #TODO make game work. This will take some time.
+                break
+        
+        with open("Party Wizard/cogs/games.json", 'w') as f:
+            json.dump(games, f)
+
+    @commands.command()
+    async def guess(self, ctx, theguess):
+        """Guess a random number between 1 and 10."""
+        temp = rd.randint(1, 10)
+        try:
+            int(theguess)
+        except:
+            await ctx.send('The stars didn\'t align, or you were just stupid. Try again, but with a number this time :angry:.')
+            return
+
+        if(int(theguess) == temp):
+            await ctx.send('Correct! Are you a divination wizard by chance?')
+            await self.karma.add_balance(ctx, 200)
+        else:
+            await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
+
+    @commands.command()
+    async def guess100(self, ctx, theguess):
+        """Guess a random number between 1 and 100."""
+        temp = rd.randint(1, 100)
+        try:
+            int(theguess)
+        except:
+            await ctx.send('The stars didn\'t align, or you were just stupid. Try again, but with a number this time :angry:.')
+            return
+
+        if(int(theguess) == temp):
+            await ctx.send('Correct! Are you a divination wizard by chance?')
+            await self.karma.add_balance(ctx, 5000)
+        else:
+            await ctx.send(f'Gotta work on those divination spells, huh?\nThe true value was {temp}.')
+
+    @commands.command()
+    async def startGame(self, ctx, game, otherplayer):
+        if game not in self.allgames:
+            await ctx.send("I'm sorry, but we either don't have that game, or you misspelled something.\nUse the command getGames to see all available games and their spelling.")
+            return
+        otherplayer = otherplayer[2:-1]
+        try:
+            int(otherplayer)
+        except:
+            otherplayer = otherplayer[1:]
+        if not await self.check_for_existing_game(ctx.author.id, otherplayer, game):
+            await self.startgame(ctx, otherplayer, game)
+            await ctx.send(f"You started a new {game} game with <@!{otherplayer}>")
+        else:
+            await ctx.send(f"You already have a game of {game} with this person!")
+
+    @commands.command()
+    async def getGame(self, ctx, otherplayer, game):
+        if game not in self.allgames:
+            await ctx.send("I'm sorry, but we either don't have that game, or you misspelled something.\nUse the command getGames to see all available games and their spelling.")
+            return
+        otherplayer = otherplayer[2:-1]
+        try:
+            int(otherplayer)
+        except:
+            otherplayer = otherplayer[1:]
+
+        if not await self.check_for_existing_game(ctx.author.id, otherplayer, game):
+            await ctx.send("You currently don't have a game with this person")
+        else:
+            gamedata = await self.get_game_data()
+            gameid = await self.get_game_id(ctx.author.id, otherplayer, game)
+            board = Board()
+            board.overwrite(gamedata[str(gameid)])
+            await ctx.send(board.draw())
+
+    @commands.command()
+    async def move(self, ctx, game, otherplayer, startpos, endpos):
+        if game not in self.allgames:
+            await ctx.send("I'm sorry, but we either don't have that game, or you misspelled something.\nUse the command getGames to see all available games and their spelling.")
+            return
+
+        otherplayer = otherplayer[2:-1]
+        try:
+            int(otherplayer)
+        except:
+            otherplayer = otherplayer[1:]
+
+        if not await self.check_for_existing_game(ctx.author.id, otherplayer, game):
+            await ctx.send("You currently don't have a game with this person")
+        else:
+            if game == 'Checkers':
+                
+                gamedata = await self.get_game_data()
+                gameid = await self.get_game_id(ctx.author.id, otherplayer, game)
+                
+                if gamedata[str(gameid)]["Players"][gamedata[str(gameid)]["Data"]["Turn"]]  == str(ctx.author.id):
+                    
+                    board = Board()
+                    board.overwrite(gamedata[str(gameid)])
+
+                    turn = gamedata[str(gameid)]["Data"]["Turn"]
+
+                    # TODO        Only aaccept valid moves
+                    await ctx.send(board.move(int(startpos[1]) - 1, int(startpos[0]) - 1, int(endpos[1]) - 1, int(endpos[0]) - 1, turn))
+                    
+                    oldboard = gamedata[str(gameid)]["Data"]["Board"]
+
+                    gamedata[str(gameid)]["Data"]["Board"] = board.__repr__()
+                    
+                    if board.winner() != 'no':
+                        gamedata[str(gameid)]["Active"] = False
+                        
+                    if oldboard != gamedata[str(gameid)]["Data"]["Board"]:
+                        if gamedata[str(gameid)]["Data"]["Turn"] == '1':
+                            gamedata[str(gameid)]["Data"]["Turn"] = '2'
+                        else:
+                            gamedata[str(gameid)]["Data"]["Turn"] = '1'
+                    
+                    with open("Party Wizard/cogs/games.json", 'w') as f:
+                        json.dump(gamedata, f)
+                    await ctx.send(board.draw())
+                else:
+                    await ctx.send("It's not your turn right now.")
+
+    @commands.command()
+    async def getGames(self, ctx):
+        await ctx.send(self.allgames)
+        
+    @commands.command()
+    async def resetGames(self, ctx):
+        """Debug, only for developer."""
+        if ctx.author.id == 154979334002704384:
+            games = {}
+            for i in range(0, 256):
+                games[i] = {}
+                games[i]["Active"] = False
+                games[i]["Game"] = None
+                games[i]["Players"] = {}
+                games[i]["Players"][1] = None
+                games[i]["Players"][2] = None
+                games[i]["Data"] = {}
+            with open('Party Wizard/cogs/games.json', 'w') as f:
+                json.dump(games,f)
+            await ctx.send("All games have been purged.")
+        else:
+            await ctx.send("You don't have the rights to cast that much destruction!")
+
+def setup(bot):
+    bot.add_cog(Games(bot))
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/BitD.py:
+
+import discord
+import json
+from discord.ext import commands
+from .Karma import Karma
+
+class BitD(commands.Cog):
+    """Blades in the Dard Commands!"""
+    def __init__(self, bot):
+        self.bot = bot
+        self.Karma = Karma(bot)
+    
+    @commands.command()
+    async def clock(self, ctx, *description):
+        """Makes a new clock according to your specifications."""
+
+        name = description[0].lower()
+        size = int(description[1])
+
+        try:
+            clock = Clock(size, 0)
+        except:
+            await ctx.send('Please give me the clock in this format: ("Name" x) where Name is the name of the clock, and x is the size.')
+
+        jsclock = clock.__dict__
+
+        await self.open_channel_by_id(ctx.channel.id)
+
+        clocks = await self.get_clocks_data()
+
+        if name not in clocks[str(ctx.channel.id)]:
+            clocks[str(ctx.channel.id)][name] = jsclock
+            await ctx.send(f"Created clock named {name} with size {size}")
+        else:
+            await ctx.send("Clock not created, as a clock in this channel with this name already exists. To check all clocks on this channel, write 'wiz clocks'")
+
+        with open("Party Wizard/clocks.json", 'w') as f:
+            json.dump(clocks, f)
+        
+        await self.Karma.add_karma(ctx, 2)
+
+
+    @commands.command()    
+    async def tick(self, ctx, *description):
+        """Chages a specific Clock's phase by a specified value"""
+        await self.open_channel_by_id(ctx.channel.id)
+
+        name = description[0].lower()
+
+        clocks = await self.get_clocks_data()
+        
+        size = clocks[str(ctx.channel.id)][name]['size']
+        
+        if name not in clocks[str(ctx.channel.id)]:
+            await ctx.send("I'm sorry, but this clock doesn't exist. Maybe you mispronounced it?")
+            return
+
+        try:
+            operation = description[1]
+        except:
+            operation = '+1'
+
+        if '+' in operation:
+            newvalue = clocks[str(ctx.channel.id)][name]["phase"] + int(operation[1:])
+        elif '-' in operation:
+            newvalue = clocks[str(ctx.channel.id)][name]["phase"] - int(operation[1:])
+        else:
+            await ctx.send("I'm sorry, but you seem to not have added or subtracted anything.")
+
+        if newvalue >= clocks[str(ctx.channel.id)][name]["size"]:
+            await ctx.send("Ding Ding Ding! This clock has reached its end!")
+            try:
+                await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+            except:
+                pass
+            
+            clocks[str(ctx.channel.id)].pop(name)
+        else:
+            clocks[str(ctx.channel.id)][name]["phase"] = newvalue
+
+
+            if size == 4 or size == 6 or size == 8:
+
+                if newvalue >=0 and newvalue <= size:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{newvalue}.png"))
+                elif newvalue < 0:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-0.png"))
+                else:
+                    await ctx.send(file=discord.File(f"Party Wizard/PClocks/Progress Clock {size}-{size}.png"))
+            elif size > 0:
+                sendstring = ''
+                for _ in range(newvalue):
+                    sendstring += ":black_large_square:"
+                for _ in range(size - newvalue):
+                    sendstring += ":white_large_square:"
+                await ctx.send(sendstring)
+            else:
+                await ctx.send("I'm sorry, but the clock has a negative size, so I can't show it.")
+
+            await ctx.send(f"The new phase value for this clock is {newvalue}")
+
+        with open("Party Wizard/clocks.json", 'w') as f:
+            json.dump(clocks, f)
+        
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command()
+    async def clocks(self, ctx):
+        """Returns all clocks in the channel in a dictionary format. May be hard to read."""
+        await self.open_channel_by_id(ctx.channel.id)
+
+        clocks = await self.get_clocks_data()
+
+        sendstring = ''
+
+        if clocks[str(ctx.channel.id)] == {}:
+            await ctx.send("Couldn't find any clocks in this channel.")
+        else:
+            for clock in clocks[str(ctx.channel.id)]:
+                sendstring += f"Clock '{clock}':\n   Size: {clocks[str(ctx.channel.id)][clock]['size']}\n    Phase: {clocks[str(ctx.channel.id)][clock]['phase']}\n"
+
+            await ctx.send(sendstring)
+        
+        await self.Karma.add_karma(ctx, 1)
+
+    @commands.command()    
+    async def kill(self, ctx, name):
+        """Deletes the specified clock."""
+        await self.open_channel_by_id(ctx.channel.id)
+
+        name = name.lower()
+
+        clocks = await self.get_clocks_data()
+
+        if name not in clocks[str(ctx.channel.id)]:
+            await ctx.send("I'm sorry, but this clock doesn't exist. Maybe you mispronounced it?")
+            return
+
+        clocks[str(ctx.channel.id)].pop(name)
+
+        await ctx.send(f"Killed the clock: {name}")
+
+        with open("Party Wizard/clocks.json", 'w') as f:
+            json.dump(clocks, f)
+    
+        await self.Karma.add_karma(ctx, 2)
+
+
+    async def get_clocks_data(self):
+        with open("Party Wizard/clocks.json", 'r') as f:
+            clocks = json.load(f)
+        return clocks
+    
+    async def open_channel_by_id(self, ID):
+
+        clocks = await self.get_clocks_data()
+
+        if str(ID) in clocks:
+            return
+        else:
+            clocks[str(ID)] = {}
+
+        with open("Party Wizard/clocks.json", 'w') as f:
+            json.dump(clocks, f)
+        
+
+
+class Clock():
+    def __init__(self, size, phase):
+        self.size = size
+        self.phase = phase
+
+def setup(bot):
+    bot.add_cog(BitD(bot))
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/consts.py:
+
+import discord
+from discord.ext import commands
+
+status = ["it's time!", "it's not time yet..."]
+classes = ['Artificer', 'Blood Hunter', 'Bard', 'Barbarian', 'Cleric', 'Druid',
+           'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard']
+guilds = [792311682898460693, 769850094353776654, 706471625544957975]
+
+weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Karma.py:
+
+import discord, json, asyncio
+import random as rd
+from discord.ext import commands
+
+class Karma(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+    
+    async def add_karma(self, ctx, amount):
+        await self.open_account(ctx.author)
+
+        users = await self.get_bank_data()
+
+        karma = users[str(ctx.author.id)]["karma"]
+
+        karma += int(amount)
+
+        users[str(ctx.author.id)]["karma"] = karma
+
+        await ctx.send(f"Your new karma is {karma}")
+
+        with open("Party Wizard/main.json", 'w') as f:
+            json.dump(users, f)
+
+    async def add_balance(self, ctx, amount):
+        await self.open_account(ctx.author)
+
+        users = await self.get_bank_data()
+        
+        bal = users[str(ctx.author.id)]["balance"]
+
+        bal += int(amount)
+
+        users[str(ctx.author.id)]["balance"] = bal
+
+        await ctx.send(f"Your new balance is {bal}")
+
+        with open("Party Wizard/main.json", 'w') as f:
+            json.dump(users, f)
+    
+    async def open_account(self, author):
+
+        users = await self.get_bank_data()
+
+        if str(author.id) in users:
+            return
+        else:
+            users[str(author.id)] = {}
+            users[str(author.id)]["karma"] = 0
+            users[str(author.id)]["balance"] = 0
+
+        with open("Party Wizard/main.json", 'w') as f:
+            json.dump(users, f)
+
+    async def open_account_by_id(self, ID):
+
+        users = await self.get_bank_data()
+
+        if str(ID) in users:
+            return
+        else:
+            users[str(ID)] = {}
+            users[str(ID)]["karma"] = 0
+            users[str(ID)]["balance"] = 0
+
+        with open("Party Wizard/main.json", 'w') as f:
+            json.dump(users, f)
+
+    async def get_bank_data(self):
+        with open("Party Wizard/main.json", 'r') as f:
+            users = json.load(f)
+        return users
+
+    @commands.command(aliases = ['bal', 'balance'])
+    async def karma(self, ctx):
+        """Returns your current karma and money."""
+        await self.open_account(ctx.author)
+
+        users = await self.get_bank_data()
+
+        karma = users[str(ctx.author.id)]["karma"]
+        balance = users[str(ctx.author.id)]["balance"]
+
+        em = discord.Embed(
+            title=f"{ctx.author.name}, this is your karma.", color=discord.Colour.magenta())
+        em.add_field(name="Karma", value=karma)
+        em.add_field(name="Balance", value=balance)
+
+        await ctx.send(embed=em)
+
+
+    @commands.command()
+    async def makeMeRich(self, ctx, karma, bal):
+        """Only for owner, debug."""
+        await self.open_account(ctx.author)
+
+        try:
+            pog = int(bal)
+        except:
+            await ctx.send("Fuck off.")
+            return
+
+        if(ctx.author.id == 154979334002704384):
+            await self.add_karma(ctx, karma)
+            await self.add_balance(ctx, bal)
+            await ctx.send("Here you go daddy.")
+
+        else:
+            await ctx.send("You're not my dad!")
+
+
+    @commands.command()
+    async def beg(self, ctx):
+        """Gives a random amount of money."""
+        await self.open_account(ctx.author)
+
+        scraps = rd.randint(1, 10)
+
+        await self.add_karma(ctx, scraps)
+        await ctx.send("Peasant...")
+
+
+    @commands.command()
+    async def thanks(self, ctx, *, pog=''):
+        """Thanks"""
+        with open("Party Wizard/thankscount.json", 'r') as f:
+            thankscount = json.load(f)
+        thankscount["thanks"] += 1
+        with open("Party Wizard/thankscount.json", 'w') as f:
+            json.dump(thankscount, f)
+        
+        await ctx.send("Any time, my student.")
+        await self.open_account(ctx.author)
+        await self.add_karma(ctx, 20)
+    
+    @commands.command(aliases = ['getThanks', 'getthanks', 'thankscount'])
+    async def thanksCount(self, ctx):
+        with open("Party Wizard/thankscount.json", 'r') as f:
+            thankscount = json.load(f)
+        await ctx.send(f"I've been thanked {thankscount['thanks']} times!\nThank you for asking :grin:")
+
+
+    @commands.command()
+    async def gift(self, ctx, person, amount):
+        """Gift a friend with money!"""
+        await self.open_account(ctx.author)
+        
+        person = person[3:-1]
+
+        try:
+            int(person)
+        except:
+            await ctx.send("Please ping someone in the person input slot.")
+            return
+        
+        try:
+            amount = int(amount)
+        except:
+            await ctx.send("Please enter a valid amount to gift.")
+            return
+
+        if amount < 0:
+            await ctx.send("HEY! Stealing is BAD! Don't steal!")
+            await self.add_balance(ctx, amount)
+        else:
+            await self.open_account_by_id(person)
+            data = await self.get_bank_data()
+
+            if data[str(ctx.author.id)]["balance"] < amount:
+                await ctx.send("I'm sorry, but you don't have that much karma to give.")
+            else:
+                await self.add_balance(ctx, amount * -1)
+                data = await self.get_bank_data()
+                bal = data[str(person)]["balance"]
+                
+                bal += int(amount)
+
+                data[str(person)]["balance"] = bal
+
+                await ctx.send(f"Their new balance is {bal}")
+
+                with open("Party Wizard/main.json", 'w') as f:
+                    json.dump(data, f)
+    
+    @commands.command()
+    async def redeem(self, ctx):
+        await self.open_account(ctx.author)
+
+        users = await self.get_bank_data()
+
+        karma = users[str(ctx.author.id)]["karma"]
+
+        if karma > 10000:
+
+            roles = await ctx.guild.fetch_roles()
+            for role in roles:
+                if role.name == 'Archwizard':
+                    give = role
+                    await ctx.author.add_roles(give)
+                    await ctx.send("Congrats, you're now an Archwizard!")
+                    break
+            else:
+                give = await ctx.guild.create_role(name='Archwizard', colour=discord.Colour.gold(), hoist=True)
+                await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now an Archwizard!")
+
+        elif karma > 1000:
+            roles = await ctx.guild.fetch_roles()
+
+            for role in roles:
+                if role.name == 'Wizard':
+                    give = role
+                    await ctx.author.add_roles(give)
+                    await ctx.send("Congrats, you're now a Wizard!")
+                    break
+            else:
+                # ? Dooesn't work atm...
+                # pos = 2
+                # for role in roles:
+                #     if role.name == "Apprentice":
+                #         pos = role.position + 1
+                give = await ctx.guild.create_role(name='Wizard', colour=discord.Colour.red(), hoist=True)
+                # await give.edit(position=pos)
+                await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now a Wizard!")
+
+        elif karma > 100:
+
+            roles = await ctx.guild.fetch_roles()
+            for role in roles:
+                if role.name == 'Apprentice':
+                    give = role
+                    try:
+                        await ctx.author.add_roles(give)
+                        await ctx.send("Congrats, you're now an Apprentice!")
+                    except Exception as e:
+                        print(e)
+                    break
+            else:
+                give = await ctx.guild.create_role(name='Apprentice', colour=discord.Colour.green(), hoist=True)
+                await ctx.author.add_roles(give)
+                await ctx.send("Congrats, you're now an Apprentice!")
+            
+        else:
+            await ctx.send("Sorry, but you don't have enough experience for a role.")
+
+
+
+def setup(bot):
+    bot.add_cog(Karma(bot))
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Scheduling.py:
+
+import discord
+import json
+import asyncio
+from datetime import datetime, timedelta, time, timezone
+from discord.ext import commands, tasks
+from .consts import status, weekdays
+
+class Scheduling(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.loop = asyncio.get_event_loop()
+        self.bg_task = self.loop.create_task(self.checkTime())
+
+    async def checkTime(self):
+        """Checks if there is a session going on."""
+        while True:
+
+            await asyncio.sleep(20)
+
+            schedules = await self.get_campaign_data()
+
+            for campaign in schedules:
+
+                await self.bot.wait_until_ready()
+
+                channel = self.bot.get_channel(schedules[campaign]["channel"])
+
+                current_time = (datetime.now() - timedelta(hours=8)).strftime("%A, %H:%M")
+
+                camp_time = schedules[campaign]["time"]
+
+                # print(camp_time, current_time)
+
+                if(current_time == camp_time):
+                    # print("match")
+                    for i in range(5):
+                        await channel.send("THE TIME IS NOW, REJOICE!\n@everyone")
+                    await self.bot.change_presence(activity=discord.Game(status[0]))
+                else:
+                    # print("No match")
+                    await self.bot.change_presence(activity=discord.Game(status[1]))
+
+    async def add_campaign(self, ctx):
+        campaigns = await self.get_campaign_data()
+
+        if str(ctx.guild.id) in campaigns:
+            return
+        else:
+            campaigns[str(ctx.guild.id)] = {}
+            campaigns[str(ctx.guild.id)]["time"] = 0
+            campaigns[str(ctx.guild.id)]["channel"] = ctx.channel.id
+            await ctx.send("This channel has been set as the main announcement channel. If this is not the channel I should be spamming, go to the appropriate channel and call 'wizard setChannel'")
+
+        with open("Party Wizard/cogs/campaigns.json", 'w') as f:
+            json.dump(campaigns, f)
+
+    async def get_campaign_data(self):
+        with open("Party Wizard/cogs/campaigns.json", 'r') as f:
+            campaigns = json.load(f)
+        return campaigns
+
+
+    async def getIfPartyTime(self, ctx):
+
+        await self.add_campaign(ctx)
+
+        campaigns = await self.get_campaign_data()
+
+        time = campaigns[str(ctx.guild.id)]["time"]
+
+        now = datetime.now() - timedelta(hours=8)
+        current_time = now.strftime("%A, %H:%M")
+        if(current_time == time):
+            return True
+        else:
+            return False
+
+    @commands.command()
+    async def setChannel(self, ctx):
+        """Sets the current channel as the main channel"""
+        await self.add_campaign(ctx)
+
+        campaigns = await self.get_campaign_data()
+
+        campaigns[str(ctx.guild.id)]["channel"] = ctx.channel.id
+
+        with open("Party Wizard/cogs/campaigns.json", 'w') as f:
+            json.dump(campaigns, f)
+        
+        await ctx.send("This channel is now the main wizard channel.")
+
+
+    @commands.command()
+    async def getTime(self, ctx):
+        """Gets the current time."""
+        now = datetime.now()
+        current_time = now.strftime("%H:%M")
+        await ctx.send("Current time at my location = " + current_time)
+        current_day = now.strftime("%A")
+        await ctx.send("It's " + current_day + " today.")
+
+    @commands.command()
+    async def getMeetingTime(self, ctx, timezone = "0"):
+        """Gets the meeting time of the server's campaign."""
+
+        await self.add_campaign(ctx)
+
+        campaigns = await self.get_campaign_data()
+        
+        em = discord.Embed(title = f"{ctx.guild}'s campaign's info:", color=discord.Colour.magenta())
+        
+        await self.bot.wait_until_ready()
+
+        daytime = campaigns[str(ctx.guild.id)]["time"]
+
+        day, time = daytime.split(", ")[0], daytime.split(", ")[1]
+
+        day, time = await self.convert_times_to_tz(day, time, timezone)
+
+        daytime = f"{day}, {time}"
+
+        channel = self.bot.get_channel(campaigns[str(ctx.guild.id)]["channel"])
+
+        if int(timezone) == 0:
+            timezone = ""
+        elif "+" not in timezone and "-" not in timezone:
+            timezone = "+" + timezone
+            
+
+        em.add_field(name="Channel: ", value=channel)
+        em.add_field(name="Time: ", value=f"{daytime} (GMT{timezone})")
+
+        await ctx.send(embed=em)
+
+    @commands.command()
+    async def setMeetingTime(self, ctx, weekday=(datetime.now() - timedelta(hours=8)).strftime('%A'), time=(datetime.now() - timedelta(hours=8)).strftime('%H:%M'), timezone = "0"):
+        """Sets the meeting time of the server's campaign."""
+
+        await self.add_campaign(ctx)
+
+        weekday, time = await self.convert_times_from_tz(weekday, time, timezone)
+
+        timestring = f'{weekday}, {time}'
+
+        campaigns = await self.get_campaign_data()
+
+        campaigns[str(ctx.guild.id)]["time"] = timestring
+
+        with open("Party Wizard/cogs/campaigns.json", 'w') as f:
+            json.dump(campaigns, f)
+
+        await ctx.send(f"Changed the meeting time to {weekday}, {time} GMT")
+
+    async def convert_times_from_tz(self, weekday, time, timezone):
+
+        if int(time.split(":")[0]) - int(timezone) > 23:
+            weekday = weekdays[(weekdays.index(weekday) - 1) % 7]
+            
+        elif int(time.split(":")[0]) - int(timezone) < 0:
+            weekday = weekdays[(weekdays.index(weekday) + 1) % 7]
+        
+        if (int(time.split(':')[0]) - int(timezone)) % 24 < 10:
+            time = f"0{(int(time.split(':')[0]) - int(timezone)) % 24}:{time.split(':')[1]}"     
+        else:
+            time = f"{(int(time.split(':')[0]) - int(timezone)) % 24}:{time.split(':')[1]}"     
+
+        return weekday, time
+    
+    async def convert_times_to_tz(self, weekday, time, timezone):
+
+        if int(time.split(":")[0]) + int(timezone) > 23:
+            weekday = weekdays[(weekdays.index(weekday) + 1) % 7]
+        elif int(time.split(":")[0]) + int(timezone) < 0:
+            weekday = weekdays[(weekdays.index(weekday) - 1) % 7]
+
+        time = f"{(int(time.split(':')[0]) + int(timezone)) % 24}:{time.split(':')[1]}"
+
+        return weekday, time
+
+
+    @commands.command(aliases=['partyTime?', 'pogTime?', 'time?'])
+    async def partyTime(self, ctx):
+        """Gets if the server's campaign is currently on."""
+        if(await self.getIfPartyTime(ctx)):
+            await ctx.send("THE TIME IS NOW, REJOICE!\n@everyone")
+        else:
+            await ctx.send("We shall wait yet for the time to come... \nSoon brother, soon...")
+
+
+def setup(bot):
+    bot.add_cog(Scheduling(bot))
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/__init__.py:
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/main.py:
+
+# import pygame as pg
+# from checkers.consts import WIDTH, HEIGHT, SQUARE_SIZE, RED
+# from checkers.game import Game
+
+# FPS = 60
+# WIN = pg.display.set_mode((WIDTH, HEIGHT))
+# pg.display.set_caption("Checkers")
+
+# def get_row_col_from_mouse(pos):
+#     x, y = pos
+#     row = y // SQUARE_SIZE
+#     col = x // SQUARE_SIZE
+#     return row, col
+
+# def main():
+
+#     run = True
+#     clock = pg.time.Clock()
+#     game = Game(WIN)
+
+#     while run:
+
+#         clock.tick(FPS)
+
+#         for event in pg.event.get():
+
+#             if event.type == pg.QUIT:
+#                 run = False
+            
+#             if event.type == pg.MOUSEBUTTONDOWN:
+#                 pos = pg.mouse.get_pos()
+#                 row, col = get_row_col_from_mouse(pos)
+#                 game.select(row, col)
+
+#         game.update()
+    
+#     pg.quit()
+
+# main()
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/checkers/board.py:
+
+from .consts import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
+from .piece import Piece
+
+class Board:
+    def __init__(self):
+        self.board = []
+        self.create_board()
+
+
+    def move(self, startrow, startcol, endrow, endcol, turn):
+
+        if turn == '1' and self.board[startrow][startcol][0] == WHITE:
+            moves = self.get_valid_moves(self.board[startrow][startcol])
+            
+            endmove = (endrow, endcol)
+
+            if endmove not in moves:
+                return "That's not a valid move, sorry!"
+            else:
+                self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
+
+                self.board[endrow][endcol][1] = endrow
+                self.board[endrow][endcol][2] = endcol
+
+                for piece in moves[(endrow, endcol)]:
+                    self.board[piece[1]][piece[2]] = 0
+
+                if self.winner() != 'no':
+                    if self.winner() == WHITE:
+                        return 'Red wins!!!'
+                    else:
+                        return 'Purple wins!!!'
+                else:
+                    return 'No winner yet.'
+
+                if endrow == ROWS - 1 or endrow == 0:
+                    self.board[endrow][endcol][3] = True
+
+                    if self.board[endrow][endcol][0] == WHITE:
+                        self.board[endrow][endcol][3] = True
+                    else:
+                        self.board[endrow][endcol][3] = True
+
+        elif turn == '2' and self.board[startrow][startcol][0] == RED:
+
+            moves = self.get_valid_moves(self.board[startrow][startcol])
+            endmove = (endrow, endcol)
+
+            if endmove not in moves:
+                return "That's not a valid move, sorry!"
+            else:
+                self.board[startrow][startcol], self.board[endrow][endcol] = 0, self.board[startrow][startcol]
+
+                self.board[endrow][endcol][1] = endrow
+                self.board[endrow][endcol][2] = endcol
+
+                for piece in moves[(endrow, endcol)]:
+                    self.board[piece[1]][piece[2]] = 0
+
+                if self.winner() != 'no':
+                    if self.winner() == WHITE:
+                        return 'Red wins!!!'
+                    else:
+                        return 'Purple wins!!!'
+                else:
+                    return 'No winner yet.'
+
+                if endrow == ROWS - 1 or endrow == 0:
+                    self.board[endrow][endcol][3] = True
+
+                    if self.board[endrow][endcol][0] == WHITE:
+                        self.board[endrow][endcol][3] = True
+                    else:
+                        self.board[endrow][endcol][3] = True
+        else:
+            return "This isn't your piece!"
+
+        
+
+    def get_piece(self, row, col):
+        return self.board[row][col]
+
+    def overwrite(self, boardarr):
+        self.board = boardarr["Data"]["Board"]
+
+    def create_board(self):
+        for row in range(ROWS):
+            self.board.append([])
+            for col in range(COLS):
+                if col % 2 == ((row +  1) % 2):
+                    if row < 3:
+                        self.board[row].append(Piece(row, col, WHITE).__repr__())
+                    elif row > 4:
+                        self.board[row].append(Piece(row, col, RED).__repr__())
+                    else:
+                        self.board[row].append(0)
+                else:
+                    self.board[row].append(0)
+        
+    def draw(self):
+
+        numberemotes = [':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:']
+
+        drawstring = ':zero::one::two::three::four::five::six::seven::eight:\n'
+        for row in range(ROWS):
+            drawstring += numberemotes[row]
+            for col in range(COLS):
+                piece = self.board[row][col]
+                if piece != 0:
+                    if piece[0] == WHITE:
+                        if piece[3] == False:
+                            drawstring += ':rage:'
+                        else:
+                            drawstring += ':face_with_symbols_over_mouth:'
+                    else:
+                        if piece[3] == False:
+                            drawstring += ':imp:'
+                        else:
+                            drawstring += ':smiling_imp:'
+                elif col % 2 == 0 and row % 2 == 1:
+                    drawstring += ':yellow_square:'
+                elif col % 2 == 1 and row % 2 == 0:
+                    drawstring += ':yellow_square:'
+                else:
+                    drawstring += ':brown_square:'
+            drawstring += '\n'
+
+        return drawstring
+
+    def remove(self, pieces):
+        for piece in pieces:
+            self.board[piece[1]][piece[2]] = 0
+    
+    def winner(self):
+        red_left = 0
+        white_left = 0
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j] != 0:
+                    if self.board[i][j][0] == RED:
+                        red_left += 1
+                    else:
+                        white_left += 1
+        if red_left <= 0:
+            return WHITE
+        elif white_left <= 0:
+            return RED
+        else:
+            return 'no'
+        
+        return None 
+    
+    
+    def get_valid_moves(self, piece):
+        moves = {}
+        left = piece[2] - 1
+        right = piece[2] + 1
+        row = piece[1]
+        king = piece[3]
+        color = piece[0]
+
+        if color == RED or king:
+            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, color, left))
+            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, color, right))
+        if color == WHITE or king:
+            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, color, left))
+            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, color, right))
+        return moves
+
+    def _traverse_left(self, start, stop, step, color, left, skipped=[]):
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if left < 0:
+                break
+            
+            current = self.board[r][left]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(r, left)] = last + skipped
+                else:
+                    moves[(r, left)] = last
+                
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._traverse_left(r+step, row, step, color, left-1,skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, left+1,skipped=last))
+                break
+            elif current[0] == color:
+                break
+            else:
+                last = [current]
+
+            left -= 1
+        
+        return moves
+
+    def _traverse_right(self, start, stop, step, color, right, skipped=[]):
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if right >= COLS:
+                break
+            
+            current = self.board[r][right]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(r,right)] = last + skipped
+                else:
+                    moves[(r, right)] = last
+                
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._traverse_left(r+step, row, step, color, right-1,skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, right+1,skipped=last))
+                break
+            elif current[0] == color:
+                break
+            else:
+                last = [current]
+
+            right += 1
+        
+        return moves
+    
+    def __repr__(self):
+        return self.board
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/checkers/game.py:
+
+from .consts import BLUE, SQUARE_SIZE
+from .board import Board
+
+class Game:
+    def __init__(self:
+        self._init()
+    
+    def update(self):
+        self.draw_valid_moves(self.valid_moves)
+
+    def _init(self):
+        self.selected = None
+        self.board = Board()
+        self.turn = 'RED'
+        self.valid_moves = {}
+
+    def winner(self):
+        return self.board.winner()
+
+    def reset(self):
+        self._init()
+
+    def select(self, row, col):
+        if self.selected:
+            result = self._move(row, col)
+            if not result:
+                self.selected = None
+                self.select(row, col)
+        
+        piece = self.board.get_piece(row, col)
+        if piece != 0 and piece.color == self.turn:
+            self.selected = piece
+            self.valid_moves = self.board.get_valid_moves(piece)
+            return True
+            
+        return False
+
+    def _move(self, row, col):
+        piece = self.board.get_piece(row, col)
+        if self.selected and piece == 0 and (row, col) in self.valid_moves:
+            self.board.move(self.selected, row, col)
+            skipped = self.valid_moves[(row, col)]
+            if skipped:
+                self.board.remove(skipped)
+            self.change_turn()
+        else:
+            return False
+
+        return True
+
+    def draw_valid_moves(self, moves):
+        for move in moves:
+            row, col = move
+
+    def change_turn(self):
+        self.valid_moves = {}
+        if self.turn == 'RED':
+            self.turn = "WHITE"
+        else:
+            self.turn = "RED"
+    
+    def __repr__(self):
+        return self.board, self.turn, self.valid_moves
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/checkers/__init__.py:
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/checkers/consts.py:
+
+ROWS, COLS = 8, 8
+SQUARE_SIZE = 100
+
+WIDTH, HEIGHT = COLS * SQUARE_SIZE, ROWS * SQUARE_SIZE
+
+RED = 'RED'
+WHITE = 'WHITE'
+BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
+GRAY = (200, 200, 200)
+# CROWN = pygame.transform.scale(pygame.image.load('01TrainingCode/assets/crown.png'), (45, 25))
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Checkers/checkers/piece.py:
+
+from .consts import RED, WHITE, SQUARE_SIZE, GRAY
+
+class Piece:
+    PADDING = 15
+    OUTLINE = 2
+
+    def __init__(self, row, col, color):
+        self.row = row
+        self.col = col
+        self.color = color
+        self.king = False
+
+    def make_king(self):
+        self.king = True
+    
+    def move(self, row, col):
+        self.row = row
+        self.col = col
+
+    def __repr__(self):
+        return self.color, self.row, self.col, self.king
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/__init__.py:
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/main.py:
+
+from bj.housegame import Game
+
+game = Game(1)
+
+game.play()
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/bj/deck.py:
+
+_ctypes = ['2', '3', '4', '5', '6', '7', '8', '9', 'Jack', 'Queen', 'King', 'Ace']
+_cSuits = [' of Hearts', ' of Clubs', ' of Diamonds', ' of Spades']
+import random as rd
+class Deck:
+
+    _cards = []
+
+    def __init__(self, size):
+        for _ in range(size):
+            for i in range(len(_ctypes)):
+                for j in range(len(_cSuits)):
+                    self._cards.append(_ctypes[i] + _cSuits[j])
+
+    def pickCard(self):
+        temp = rd.randint(0, len(self._cards) - 1)
+        return self._cards.pop(temp)
+    
+    def getCards(self):
+        return self._cards
+    
+    def printCards(self):
+        print(_cards)
+
+
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/bj/__init__.py:
+
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/bj/player.py:
+
+from .hand import Hand
+class Player:
+
+ 
+    def __init__(self, name):
+        self._name = name
+        self._balance = 0
+        self._hand = Hand()
+        self._halue = 0    
+    def pay(self, amount):
+        self._balance = self._balance - amount
+    
+    def win(self, amount):
+        self._balance = self._balance + amount
+    
+    def getBalance(self):
+        return self._balance
+
+    def addCard(self, card):
+        # print(f"(debug) {self._name} pulled a(n) " + card)
+        self._hand.addCard(card)
+        self.evaluate()
+
+    def resetHand(self):
+        self._hand = Hand()
+
+    def getNumCards(self):
+        return len(self.getCards())
+    
+    def getDecision(self):
+        _decision = input("Pull another card, or stop?\n")
+        if _decision == 'pull':
+            return True
+        elif _decision == 'stop':
+            return False
+        else:
+            print("Not a valid input, sorry!")
+    
+    def setValue(self, value):
+        self._halue = value
+
+    def printCards(self):
+        print(f"{self._name}'s Cards are: {self._hand.getCards()}, with a total value of {self._halue}")
+    
+    def getValue(self):
+        return self._halue
+
+    def evaluate(self):
+        values = {'2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, 'J':10, 'Q':10, 'K':10, 'A':11}
+        _value = 0
+        aces = 0
+        for card in self._hand.getCards():
+            if values[card[:1]] == 11:
+                aces += 1
+            else:
+                _value += values[card[:1]]
+        
+        while aces > 0:
+            if _value + aces * 11 <= 21:
+                _value += 11
+                aces -= 1
+            else:
+                _value += 1
+                aces -= 1
+        self.setValue(_value)
+        # print(f"{self._name}'s hand is now valued at {str(_value)}.")
+        return _value
+
+    def over(self):
+        return self.getValue() > 21
+
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/bj/hand.py:
+
+class Hand:
+    def __init__(self):
+        self._cards = []
+
+    def getCards(self):
+        return self._cards
+
+    def addCard(self, card):
+        self._cards.append(card)
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/bj/housegame.py:
+
+from .player import Player
+from .pot import Pot
+from .deck import Deck
+import json
+
+class Game:
+    def __init__(self, size = 1):
+        self._p1 = Player("Player 1")
+        self._house = Player("House")
+        self._pot = Pot()
+        self._deck = Deck(size)
+        self._running = True
+        self._p1playing = True
+        self.inround = True
+
+    def jsonify(self):
+        return json.dumps(self.__dict__)
+
+    def play(self):
+
+        while self._running:
+
+            self._pot.addToPot(int(input("How much do you bet on this round?\n")))
+            self.inround = True
+            self._p1playing = True
+
+            self._p1.addCard(self._deck.pickCard())
+            self._p1.addCard(self._deck.pickCard())
+            self._house.addCard(self._deck.pickCard())
+
+            self._p1.printCards()
+            self._house.printCards()
+
+            self._house.addCard(self._deck.pickCard())
+
+
+            while self.inround:
+                if self._p1playing:
+                    if self._p1.getDecision():
+                        self._p1.addCard(self._deck.pickCard())
+                        self._p1.printCards()
+                        if self._p1.over():
+                            self._p1playing = False
+                    else:
+                        self._p1playing = False
+                        self._house.printCards()
+
+                elif self._p1.over():
+                    self._p1.pay(self._pot.getValue())
+                    self._pot.reset()
+                    self.inround = False
+                    self._house.printCards()
+                    
+                elif not self._p1playing and not self._p1.over():
+
+                    if not self._house.getValue() > self._p1.getValue():
+                        self._house.addCard(self._deck.pickCard())
+                        self._house.printCards()
+                        
+
+                        if self._house.over():
+                            self._p1.win(self._pot.getValue())
+                            self._pot.reset()
+                            self.inround = False
+                    else:
+                        self._p1.pay(self._pot.getValue())
+                        self._pot.reset()
+                        self.inround = False
+
+            print('Round over\n')
+            self._p1.resetHand()
+            self._house.resetHand()
+            print("Your balance is " + str(self._p1.getBalance()))
+
+            if not int(input("Do you want to keep playing? 1  for yes, 0 for no.\n")):
+                self._running = False
+--------------------
+## File /Users/yusufsimsek/Desktop/Code/01TrainingCode/Party Wizard/cogs/Blackjack/bj/pot.py:
+
+class Pot:
+    def __init__(self):
+        self._value = 0
+    
+    def getValue(self):
+        return self._value
+
+    def addToPot(self, amount):
+        self._value += amount
+    
+    def reset(self):
+        self._value = 0
+
+    def printValue(self):
+        print(self._value)

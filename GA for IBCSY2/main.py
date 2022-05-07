@@ -1,4 +1,6 @@
 import random as rd
+import cProfile
+import pstats
 from Data.road import  Road
 from Data.consts import MUTATION_RATE, POPULATION_SIZE, NUM_ALGS, MUTATION_SEVERITY, MUTATION_REPETIVITY
 import time
@@ -255,7 +257,12 @@ if __name__ == '__main__':
 
     for i in range(1):
 
-        run()
+        with cProfile.Profile() as pr:
+            run()
+
+    stats = pstats.Stats(pr)
+    stats.sort_stats(pstats.SortKey.TIME)
+    stats.dump_stats(filename="GA for IBCSY2/stats.prof")
 
 """
 FRI26 is a set of 26 cities, from TSPLIB. The minimal tour has length 937.
