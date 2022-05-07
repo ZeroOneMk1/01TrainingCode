@@ -16,3 +16,5 @@ turn commands into slash :( - 154979334002704384
 move to 5e.tools - 154979334002704384
 commission the same thing for both bots - 939510283683115098
 advantage and disadvantage work with dice rolling notation - 939510283683115098
+have a method to talk to creator through the wizard - 939510283683115098
+the feat. link seems to be broken :( - 372642886648332288
