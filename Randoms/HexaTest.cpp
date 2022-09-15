@@ -6,6 +6,13 @@ using namespace std;
 #define PI 3.14159265358
 
 int servoPins[2][3][3];
+/*
+  The first index gives the side of the robot, where LEFT = 0 RIGHT = 1
+
+  The second index gives the leg of the side, where BACK = 0 FRONT = 2
+
+  The third index gives the servo on the leg, where CLOSER = LOWER
+*/
 double tibia = 10.0;
 double femur = 10.0;
 double coaxia = 10.0;
@@ -37,15 +44,13 @@ double gaitYCenter = sin(walkAngle) * maxExtension;
 double extendedCenterLeg[] = {gaitXCenter, gaitYCenter, -desiredHeight};
 double contractedCenterLeg[] = {gaitXCenter, -gaitYCenter, -desiredHeight};
 
+enum State {walking, reversing, turning, idle, returning};
+
+State state_;
+
 // WARNING: I NEVER TESTED THE FLIPPING. THIS MAY MESS UP IN THE FUTURE. WATCH OUT FOR YOUR FINGERS!
 
-/*
-  The first index gives the side of the robot, where LEFT = 0 RIGHT = 1
 
-  The second index gives the leg of the side, where BACK = 0 FRONT = 2
-
-  The third index gives the servo on the leg, where CLOSER = LOWER
-*/
 void normalizeDesiredPos(int legIndex, double* desiredPos);
 
 double calcFingerAngle(double desiredLength);
@@ -80,11 +85,24 @@ void setup() {
     servoPins[(i - i%9)/9][(i-i%3)/3][i%3] = i;
   }
 
+  state_ = returning;
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  switch(state_){
+    case(returning):
 
+    case(idle):
+
+    case(walking):
+
+    case(reversing):
+    
+    case(turning):
+    
+  }
 }
 
 void rotateZ(double* vector, double theta, bool flip){
