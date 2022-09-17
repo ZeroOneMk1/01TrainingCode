@@ -1,11 +1,14 @@
 #include <cmath>
 #include <iostream>
 #include <chrono>
+#include <unistd.h>
 using namespace std;
 
 #define PI 3.14159265358
 
 int servoPins[2][3][3];
+double servoDestinations[2][3][3];
+double servoAngles[2][3][3];
 /*
   The first index gives the side of the robot, where LEFT = 0 RIGHT = 1
 
@@ -13,36 +16,41 @@ int servoPins[2][3][3];
 
   The third index gives the servo on the leg, where CLOSER = LOWER
 */
-double tibia = 10.0;
-double femur = 10.0;
-double coaxia = 10.0;
-double BCSQ = femur * femur + tibia * tibia;
-double D2BC = 1/(femur * tibia)* 0.5;
-double BCSQD2BC = BCSQ * D2BC;
+static double tibia = 10.0;
+static double femur = 10.0;
+static double coaxia = 10.0;
+static double BCSQ = femur * femur + tibia * tibia;
+static double D2BC = 1/(femur * tibia)* 0.5;
+static double BCSQD2BC = BCSQ * D2BC;
+static int QUARTERWALKCYCLE = 250000; //THIS IS A GUESS. IT ASSUMES IT TAKES 1 SECOND TO TAKE ONE STEP.
 
-double horizOffset = 10.0;
-double vertOffset = 10.0;
+static double horizOffset = 10.0;
+static double vertOffset = 10.0;
 
-double desiredHeight = 5.0;
+static double desiredHeight = 5.0;
+static double legLift = 1.0;
 
-double maxExtension = coaxia + sqrt((femur + tibia)*(femur + tibia) - desiredHeight * desiredHeight);
+static double maxExtension = coaxia + sqrt((femur + tibia)*(femur + tibia) - desiredHeight * desiredHeight);
 
-double walkAngleDeg = 20; // In degrees!
-double walkAngle = walkAngleDeg / 180 * PI;
-double coAngle = (walkAngleDeg + 45)/180 * PI;
+static double walkAngleDeg = 20; // In degrees!
+static double walkAngle = walkAngleDeg / 180 * PI;
+static double coAngle = (walkAngleDeg + 45)/180 * PI;
+static double radToDeg = 1 / PI * 180;
 
-double gaitXCorner = maxExtension * cos(coAngle);
-double gaitY1 = maxExtension * sin(coAngle);
-double gaitY2 = gaitXCorner / sin(coAngle) * sin(walkAngle);
+static double gaitXCorner = maxExtension * cos(coAngle);
+static double gaitY1 = maxExtension * sin(coAngle);
+static double gaitY2 = gaitXCorner / sin(coAngle) * sin(walkAngle);
 
-double extendedCornerLeg[] = {gaitXCorner, gaitY1, -desiredHeight};
-double contractedCornerLeg[] = {gaitXCorner, gaitY2, -desiredHeight};
+static double extendedCornerLeg[] = {gaitXCorner, gaitY1, -desiredHeight};
+static double centerCornerLeg[] = {gaitXCorner, (gaitY1 + gaitY2)/2, -desiredHeight};
+static double contractedCornerLeg[] = {gaitXCorner, gaitY2, -desiredHeight};
 
-double gaitXCenter = cos(walkAngle) * maxExtension;
-double gaitYCenter = sin(walkAngle) * maxExtension;
+static double gaitXCenter = cos(walkAngle) * maxExtension;
+static double gaitYCenter = sin(walkAngle) * maxExtension;
 
-double extendedCenterLeg[] = {gaitXCenter, gaitYCenter, -desiredHeight};
-double contractedCenterLeg[] = {gaitXCenter, -gaitYCenter, -desiredHeight};
+static double extendedCenterLeg[] = {gaitXCenter, gaitYCenter, -desiredHeight};
+static double centerCenterLeg[] = {gaitXCenter, 0, -desiredHeight};
+static double contractedCenterLeg[] = {gaitXCenter, -gaitYCenter, -desiredHeight};
 
 enum State {walking, reversing, turning, idle, returning};
 
@@ -50,6 +58,10 @@ State state_;
 
 // WARNING: I NEVER TESTED THE FLIPPING. THIS MAY MESS UP IN THE FUTURE. WATCH OUT FOR YOUR FINGERS!
 
+int walkingTimeCounter = 0;
+auto startedWalkingTime = chrono::high_resolution_clock::now();
+auto startWalking();
+void stopWalking();
 
 void normalizeDesiredPos(int legIndex, double* desiredPos);
 
@@ -62,17 +74,22 @@ void rotateZ(double* vector, double theta, bool flip);
 bool inEnvelope(double* normalizedDesiredPos);
 
 int main(){
-  double angles[3];
-  double destoespos[] = {20.0, 20.0, 19.0};
+  // double angles[3];
+  // double destoespos[] = {20.0, 20.0, 19.0};
 
-  normalizeDesiredPos(5, destoespos);
+  // normalizeDesiredPos(5, destoespos);
 
-  if (inEnvelope(destoespos)){
-    calcAngles(destoespos, angles);
+  // if (inEnvelope(destoespos)){
+  //   calcAngles(destoespos, angles);
 
-    cout << "Final Angles: [" << angles[0] << ", " << angles[1] << ", "<< angles[2] << "]" << endl;
-  }else{
-    cout << "Outside of Envelope" << endl;
+  //   cout << "Final Angles: [" << angles[0] << ", " << angles[1] << ", "<< angles[2] << "]" << endl;
+  // }else{
+  //   cout << "Outside of Envelope" << endl;
+  // }
+
+  startWalking();
+  while(true){
+    loop();
   }
 
   
@@ -85,8 +102,8 @@ void setup() {
     servoPins[(i - i%9)/9][(i-i%3)/3][i%3] = i;
   }
 
-  state_ = returning;
-
+  state_ = idle;
+  
 }
 
 void loop() {
@@ -97,11 +114,128 @@ void loop() {
     case(idle):
 
     case(walking):
+      walkingTimeCounter = chrono::duration_cast<chrono::microseconds>(chrono::high_resolution_clock::now() - startedWalkingTime).count();
+      if((walkingTimeCounter - walkingTimeCounter%QUARTERWALKCYCLE)/QUARTERWALKCYCLE % 4 == 0){
+        servoDestinations[0][0][0] = -centerCornerLeg[0];
+        servoDestinations[0][0][1] = -centerCornerLeg[1];
+        servoDestinations[0][0][2] = centerCornerLeg[2] + legLift;
+
+        servoDestinations[0][1][0] = -centerCenterLeg[0];
+        servoDestinations[0][1][1] = centerCenterLeg[1];
+        servoDestinations[0][1][2] = centerCenterLeg[2];
+
+        servoDestinations[0][2][0] = -centerCornerLeg[0];
+        servoDestinations[0][2][1] = centerCornerLeg[1];
+        servoDestinations[0][2][2] = centerCornerLeg[2] + legLift;
+
+        servoDestinations[1][0][0] = centerCornerLeg[0];
+        servoDestinations[1][0][1] = -centerCornerLeg[1];
+        servoDestinations[1][0][2] = centerCornerLeg[2];
+
+        servoDestinations[1][1][0] = centerCenterLeg[0];
+        servoDestinations[1][1][1] = centerCenterLeg[1];
+        servoDestinations[1][1][2] = centerCenterLeg[2] + legLift;
+
+        servoDestinations[1][2][0] = centerCornerLeg[0];
+        servoDestinations[1][2][1] = centerCornerLeg[1];
+        servoDestinations[1][2][2] = centerCornerLeg[2];
+
+      } else if((walkingTimeCounter - walkingTimeCounter%QUARTERWALKCYCLE)/QUARTERWALKCYCLE % 4 == 1){
+
+        servoDestinations[0][0][0] = -contractedCornerLeg[0];
+        servoDestinations[0][0][1] = -centerCornerLeg[1];
+        servoDestinations[0][0][2] = contractedCornerLeg[2];
+
+        servoDestinations[0][1][0] = -contractedCenterLeg[0];
+        servoDestinations[0][1][1] = contractedCenterLeg[1];
+        servoDestinations[0][1][2] = contractedCenterLeg[2];
+
+        servoDestinations[0][2][0] = -extendedCornerLeg[0];
+        servoDestinations[0][2][1] = extendedCornerLeg[1];
+        servoDestinations[0][2][2] = extendedCornerLeg[2];
+
+        servoDestinations[1][0][0] = extendedCornerLeg[0];
+        servoDestinations[1][0][1] = -extendedCornerLeg[1];
+        servoDestinations[1][0][2] = extendedCornerLeg[2];
+
+        servoDestinations[1][1][0] = extendedCenterLeg[0];
+        servoDestinations[1][1][1] = extendedCenterLeg[1];
+        servoDestinations[1][1][2] = extendedCenterLeg[2];
+
+        servoDestinations[1][2][0] = contractedCornerLeg[0];
+        servoDestinations[1][2][1] = contractedCornerLeg[1];
+        servoDestinations[1][2][2] = contractedCornerLeg[2];
+      }else if((walkingTimeCounter - walkingTimeCounter%QUARTERWALKCYCLE)/QUARTERWALKCYCLE % 4 == 2){
+
+        servoDestinations[0][0][0] = -centerCornerLeg[0];
+        servoDestinations[0][0][1] = -centerCornerLeg[1];
+        servoDestinations[0][0][2] = centerCornerLeg[2];
+
+        servoDestinations[0][1][0] = -centerCenterLeg[0];
+        servoDestinations[0][1][1] = centerCenterLeg[1];
+        servoDestinations[0][1][2] = centerCenterLeg[2] + legLift;
+
+        servoDestinations[0][2][0] = -centerCornerLeg[0];
+        servoDestinations[0][2][1] = centerCornerLeg[1];
+        servoDestinations[0][2][2] = centerCornerLeg[2];
+
+        servoDestinations[1][0][0] = centerCornerLeg[0];
+        servoDestinations[1][0][1] = -centerCornerLeg[1];
+        servoDestinations[1][0][2] = centerCornerLeg[2] + legLift;
+
+        servoDestinations[1][1][0] = centerCenterLeg[0];
+        servoDestinations[1][1][1] = centerCenterLeg[1];
+        servoDestinations[1][1][2] = centerCenterLeg[2];
+
+        servoDestinations[1][2][0] = centerCornerLeg[0];
+        servoDestinations[1][2][1] = centerCornerLeg[1];
+        servoDestinations[1][2][2] = centerCornerLeg[2] + legLift;
+      }else{
+        servoDestinations[0][0][0] = -extendedCornerLeg[0];
+        servoDestinations[0][0][1] = -extendedCornerLeg[1];
+        servoDestinations[0][0][2] = extendedCornerLeg[2];
+
+        servoDestinations[0][1][0] = -contractedCornerLeg[0];
+        servoDestinations[0][1][1] = contractedCornerLeg[1];
+        servoDestinations[0][1][2] = contractedCornerLeg[2];
+
+        servoDestinations[0][2][0] = -extendedCornerLeg[0];
+        servoDestinations[0][2][1] = extendedCornerLeg[1];
+        servoDestinations[0][2][2] = extendedCornerLeg[2];
+
+        servoDestinations[1][0][0] = contractedCornerLeg[0];
+        servoDestinations[1][0][1] = -contractedCornerLeg[1];
+        servoDestinations[1][0][2] = contractedCornerLeg[2];
+
+        servoDestinations[1][1][0] = contractedCenterLeg[0];
+        servoDestinations[1][1][1] = contractedCenterLeg[1];
+        servoDestinations[1][1][2] = contractedCenterLeg[2];
+
+        servoDestinations[1][2][0] = extendedCornerLeg[0];
+        servoDestinations[1][2][1] = extendedCornerLeg[1];
+        servoDestinations[1][2][2] = extendedCornerLeg[2];
+      }
+
+
+      for(int i = 0; i < 6; i++){
+        normalizeDesiredPos(i, servoDestinations[(i - i%3)/3][i%3]);
+        if (inEnvelope(servoDestinations[(i - i%3)/3][i%3])){
+          calcAngles(servoDestinations[(i - i%3)/3][i%3], servoAngles[(i - i%3)/3][i%3]);
+
+          cout << "Final Angles for Leg " << i << ": [" << servoAngles[(i - i%3)/3][i%3][0] << ", " << servoAngles[(i - i%3)/3][i%3][1] << ", "<< servoAngles[(i - i%3)/3][i%3][2] << "]" << endl;
+        }else{
+          cout << "Leg " << i << "OUTSIDE OF ENVELOPE:" << endl << "Final Angles for Leg " << i << ": [" << servoAngles[(i - i%3)/3][i%3][0] << ", " << servoAngles[(i - i%3)/3][i%3][1] << ", "<< servoAngles[(i - i%3)/3][i%3][2] << "]" << endl;
+        }
+      }
+
+      sleep(10);
+
+      //TODO: ADD THE PART THAT TELLS THE SERVOS WHERE TO GO PHYSICALLY WITHOUT FORGETTING CONVERSION FACTOR AND ANGLE CONVERSIONS.
 
     case(reversing):
     
     case(turning):
-    
+
   }
 }
 
@@ -219,4 +353,15 @@ void calcAngles(double* normalizedDesiredToesPos, double* angles){
   angles[2] = calcFingerAngle(desLength);
 
   angles[1] = PI / 2 - atan(desiredArmPos[1]/desiredArmPos[0]) - asin(tibia / desLength * sin(angles[2]));
+}
+
+auto startWalking(){
+  walkingTimeCounter = 0;
+  state_ = walking;
+  startedWalkingTime = chrono::high_resolution_clock::now();
+}
+
+void stopWalking(){
+  walkingTimeCounter = 0;
+  state_ = idle;
 }
