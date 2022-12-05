@@ -1,7 +1,7 @@
 from Leg import Leg
 from ControlBoard import ControlBoard
 import numpy as np
-import time
+from time import sleep
 from datetime import datetime as dt
 
 class Robot:
@@ -30,7 +30,7 @@ class Robot:
 
         destination = a
         self.move_leg_to_position(destination)
-        time.sleep(5) # TODO add some sort of better wait time.
+        sleep(5) # TODO add some sort of better wait time.
 
         substeps = 0
 
