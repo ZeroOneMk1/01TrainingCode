@@ -62,3 +62,17 @@ class ControlBoard:
 
             # TODO test if the servo's 0 positions align with what I imagine them to be at.
 
+    def test_servos(self):
+
+        """Scenario to test servo"""
+        for i in range(self.nbPCAServo):
+            for j in range(self.MIN_ANG[i],self.MAX_ANG[i],10):
+                print("Send angle {} to Servo {}".format(j,i))
+                self.servos[i].angle = j
+                time.sleep(.5)
+            for j in range(self.MAX_ANG[i],self.MIN_ANG[i],-10):
+                print("Send angle {} to Servo {}".format(j,i))
+                self.servos[i].angle = j
+                time.sleep(.5)
+            self.servos[i].angle=None #disable channel
+            time.sleep(0.5)
