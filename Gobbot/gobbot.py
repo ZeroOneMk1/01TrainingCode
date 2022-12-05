@@ -22,7 +22,7 @@ def parse(page: str) -> None:
 
 
 def betting() -> bool:
-    return browser.find_element_by_xpath(BETTINGBANNER).text == "PLACE YOUR BET"
+    return browser.find_element("xpath", BETTINGBANNER).text == "PLACE YOUR BET"
 
 
 def is_caps(string: str) -> bool:
@@ -32,8 +32,8 @@ def is_caps(string: str) -> bool:
     return True
 
 def chat(msg: str):
-    browser.find_element_by_class_name("ChatInput").send_keys(msg)
-    browser.find_element_by_class_name("SendButton").click()
+    browser.find_element("class name", "ChatInput").send_keys(msg)
+    browser.find_element("class name", "SendButton").click()
 
 def parse_attacks(side: str, stats: dict) -> dict:
     stats[side]["ACTIONS_PARSED"] = {}
@@ -130,16 +130,16 @@ def login() -> None:
 
     sleep(4)
 
-    browser.find_element_by_xpath(LOGINLOCATION).click()
+    browser.find_element("xpath", LOGINLOCATION).click()
 
-    browser.find_element_by_xpath(USERNAMEBUTTON).send_keys(EMAIL)
-    browser.find_element_by_xpath(PASSWORDBUTTON).send_keys(PASS)
+    browser.find_element("xpath", USERNAMEBUTTON).send_keys(EMAIL)
+    browser.find_element("xpath", PASSWORDBUTTON).send_keys(PASS)
 
-    browser.find_element_by_xpath(LOGINBUTTON).click()
+    browser.find_element("xpath", LOGINBUTTON).click()
 
     sleep(4)
 
-    browser.find_element_by_xpath(CONTINUEBUTTON).click()
+    browser.find_element("xpath", CONTINUEBUTTON).click()
 
 def login_two() -> None:
 
@@ -147,16 +147,16 @@ def login_two() -> None:
 
     sleep(4)
 
-    browsertwo.find_element_by_xpath(LOGINLOCATION).click()
+    browsertwo.find_element("xpath", LOGINLOCATION).click()
 
-    browsertwo.find_element_by_xpath(USERNAMEBUTTON).send_keys(EMAILTWO)
-    browsertwo.find_element_by_xpath(PASSWORDBUTTON).send_keys(PASSTWO)
+    browsertwo.find_element("xpath", USERNAMEBUTTON).send_keys(EMAILTWO)
+    browsertwo.find_element("xpath", PASSWORDBUTTON).send_keys(PASSTWO)
 
-    browsertwo.find_element_by_xpath(LOGINBUTTON).click()
+    browsertwo.find_element("xpath", LOGINBUTTON).click()
 
     sleep(4)
 
-    browsertwo.find_element_by_xpath(CONTINUEBUTTON).click()
+    browsertwo.find_element("xpath", CONTINUEBUTTON).click()
 
 
 def get_stats(right, left) -> dict:
@@ -171,18 +171,18 @@ def get_stats(right, left) -> dict:
 
     #*____________LEFTSIDE_____________
 
-    stats["LEFT"]["STR"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_STR).text)[0])
-    stats["LEFT"]["DEX"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_DEX).text)[0])
-    stats["LEFT"]["CON"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_CON).text)[0])
-    stats["LEFT"]["INT"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_INT).text)[0])
-    stats["LEFT"]["WIS"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_WIS).text)[0])
-    stats["LEFT"]["CHA"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_CHA).text)[0])
-    stats["LEFT"]["HP"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_HP).text)[0])
-    stats["LEFT"]["AC"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_AC).text)[0])
-    stats["LEFT"]["SPEED"] = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_SPEED).text)[0])
+    stats["LEFT"]["STR"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_STR).text)[0])
+    stats["LEFT"]["DEX"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_DEX).text)[0])
+    stats["LEFT"]["CON"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_CON).text)[0])
+    stats["LEFT"]["INT"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_INT).text)[0])
+    stats["LEFT"]["WIS"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_WIS).text)[0])
+    stats["LEFT"]["CHA"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_CHA).text)[0])
+    stats["LEFT"]["HP"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_HP).text)[0])
+    stats["LEFT"]["AC"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_AC).text)[0])
+    stats["LEFT"]["SPEED"] = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_SPEED).text)[0])
 
 
-    left_plaintext = browser.find_element_by_xpath(LEFTSIDE_STATS).text.split("\n")[10:]
+    left_plaintext = browser.find_element("xpath", LEFTSIDE_STATS).text.split("\n")[10:]
 
     stats["LEFT"]["WINS"] = []
     stats["LEFT"]["RESIST"] = []        
@@ -230,18 +230,18 @@ def get_stats(right, left) -> dict:
 
     #* _______RIGHTSIDE_________
 
-    stats["RIGHT"]["STR"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_STR).text)[0])
-    stats["RIGHT"]["DEX"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_DEX).text)[0])
-    stats["RIGHT"]["CON"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_CON).text)[0])
-    stats["RIGHT"]["INT"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_INT).text)[0])
-    stats["RIGHT"]["WIS"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_WIS).text)[0])
-    stats["RIGHT"]["CHA"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_CHA).text)[0])
-    stats["RIGHT"]["HP"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_HP).text)[0])
-    stats["RIGHT"]["AC"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_AC).text)[0])
-    stats["RIGHT"]["SPEED"] = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_SPEED).text)[0])
+    stats["RIGHT"]["STR"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_STR).text)[0])
+    stats["RIGHT"]["DEX"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_DEX).text)[0])
+    stats["RIGHT"]["CON"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_CON).text)[0])
+    stats["RIGHT"]["INT"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_INT).text)[0])
+    stats["RIGHT"]["WIS"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_WIS).text)[0])
+    stats["RIGHT"]["CHA"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_CHA).text)[0])
+    stats["RIGHT"]["HP"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_HP).text)[0])
+    stats["RIGHT"]["AC"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_AC).text)[0])
+    stats["RIGHT"]["SPEED"] = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_SPEED).text)[0])
 
 
-    right_plaintext = browser.find_element_by_xpath(RIGHTSIDE_STATS).text.split("\n")[10:]
+    right_plaintext = browser.find_element("xpath", RIGHTSIDE_STATS).text.split("\n")[10:]
 
     stats["RIGHT"]["WINS"] = []
     stats["RIGHT"]["RESIST"] = []        
@@ -329,16 +329,16 @@ def calc_tougher(right_name:str, left_name:str) -> float:
     stats = get_stats(right_name, left_name)
 
     left_ac = int(re.findall(
-        r"\d+", browser.find_element_by_xpath(LEFTSIDE_AC).text)[0])
+        r"\d+", browser.find_element("xpath", LEFTSIDE_AC).text)[0])
     left_estimated_to_hit = max(int(
-        (int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_STR).text)[0]) - 6)/2), int(
-        (int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_DEX).text)[0]) - 6)/2))
+        (int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_STR).text)[0]) - 6)/2), int(
+        (int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_DEX).text)[0]) - 6)/2))
 
     right_ac = int(re.findall(
-        r"\d+", browser.find_element_by_xpath(RIGHTSIDE_AC).text)[0])
+        r"\d+", browser.find_element("xpath", RIGHTSIDE_AC).text)[0])
     right_estimated_to_hit = max(int(
-        (int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_STR).text)[0]) - 6)/2), int(
-        (int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_DEX).text)[0]) - 6)/2))
+        (int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_STR).text)[0]) - 6)/2), int(
+        (int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_DEX).text)[0]) - 6)/2))
 
     left_effective_ac = left_ac - right_estimated_to_hit
     right_effective_ac = right_ac - left_estimated_to_hit
@@ -348,8 +348,8 @@ def calc_tougher(right_name:str, left_name:str) -> float:
 
     print(f"Left AC:{left_effective_ac}; Right AC: {right_effective_ac}")
 
-    left_hp = int(re.findall(r"\d+", browser.find_element_by_xpath(LEFTSIDE_HP).text)[0])
-    right_hp = int(re.findall(r"\d+", browser.find_element_by_xpath(RIGHTSIDE_HP).text)[0])
+    left_hp = int(re.findall(r"\d+", browser.find_element("xpath", LEFTSIDE_HP).text)[0])
+    right_hp = int(re.findall(r"\d+", browser.find_element("xpath", RIGHTSIDE_HP).text)[0])
 
     left_hp = apply_health_conditions("LEFT", stats, left_hp)
     right_hp = apply_health_conditions("RIGHT", stats, right_hp)
@@ -376,23 +376,23 @@ def run():
 
         browser.refresh()
 
-        score = browser.find_element_by_class_name("BetsScore").text
+        score = browser.find_element("class name", "BetsScore").text
 
         print(f"Score: {score}GP")
 
         try:
-            right_name = browser.find_element_by_xpath(RIGHTSIDENAME).text
+            right_name = browser.find_element("xpath", RIGHTSIDENAME).text
         except:
             try:
-                right_name = browser.find_element_by_xpath(RIGHTSIDENAMETWO).text
+                right_name = browser.find_element("xpath", RIGHTSIDENAMETWO).text
             except:
                 right_name = "RIGHT"
 
         try:
-            left_name = browser.find_element_by_xpath(LEFTSIDENAME).text
+            left_name = browser.find_element("xpath", LEFTSIDENAME).text
         except:
             try:
-                left_name = browser.find_element_by_xpath(LEFTSIDENAMETWO).text
+                left_name = browser.find_element("xpath", LEFTSIDENAMETWO).text
             except:
                 left_name = "LEFT"
 
@@ -417,14 +417,14 @@ def run():
             else:
                 try:
 
-                    browser.find_element_by_xpath(RIGHTSIDEBET).clear()
-                    browser.find_element_by_xpath(RIGHTSIDEBET).send_keys(str(bet))
-                    browser.find_element_by_xpath(RIGHTSIDECOMMIT).click()
+                    browser.find_element("xpath", RIGHTSIDEBET).clear()
+                    browser.find_element("xpath", RIGHTSIDEBET).send_keys(str(bet))
+                    browser.find_element("xpath", RIGHTSIDECOMMIT).click()
                     print(f"Bot: betting {bet/int(score) * 100}% ({bet} GP) on '{right_name}'")
 
-                    browsertwo.find_element_by_xpath(RIGHTSIDEBET).clear()
-                    browsertwo.find_element_by_xpath(RIGHTSIDEBET).send_keys("1")
-                    browsertwo.find_element_by_xpath(RIGHTSIDECOMMIT).click()
+                    browsertwo.find_element("xpath", RIGHTSIDEBET).clear()
+                    browsertwo.find_element("xpath", RIGHTSIDEBET).send_keys("1")
+                    browsertwo.find_element("xpath", RIGHTSIDECOMMIT).click()
                     print("Bot 2 counterbet 1 GP")
                 except:
                     print("Ran out of time before betting.")
@@ -446,14 +446,14 @@ def run():
             else:
                 try:
 
-                    browser.find_element_by_xpath(LEFTSIDEBET).clear()
-                    browser.find_element_by_xpath(LEFTSIDEBET).send_keys(str(bet))
-                    browser.find_element_by_xpath(LEFTSIDECOMMIT).click()
+                    browser.find_element("xpath", LEFTSIDEBET).clear()
+                    browser.find_element("xpath", LEFTSIDEBET).send_keys(str(bet))
+                    browser.find_element("xpath", LEFTSIDECOMMIT).click()
                     print(f"Bot: betting {bet/int(score) * 100}% ({bet} GP) on '{left_name}'")
 
-                    browsertwo.find_element_by_xpath(RIGHTSIDEBET).clear()
-                    browsertwo.find_element_by_xpath(RIGHTSIDEBET).send_keys("1")
-                    browsertwo.find_element_by_xpath(RIGHTSIDECOMMIT).click()
+                    browsertwo.find_element("xpath", RIGHTSIDEBET).clear()
+                    browsertwo.find_element("xpath", RIGHTSIDEBET).send_keys("1")
+                    browsertwo.find_element("xpath", RIGHTSIDECOMMIT).click()
                     print("Bot 2 counterbet 1 GP")
                 except:
                     print("Ran out of time before betting.")
@@ -474,3 +474,4 @@ if __name__ == '__main__':
             print(traceback_output)
         sleep(10)
     browser.quit()
+    browsertwo.quit()
