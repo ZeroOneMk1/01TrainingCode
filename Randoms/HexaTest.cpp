@@ -16,9 +16,9 @@ double servoAngles[2][3][3];
 
   The third index gives the servo on the leg, where CLOSER = LOWER
 */
-static double tibia = 10.0;
-static double femur = 10.0;
-static double coaxia = 10.0;
+static double tibia = 100.0;
+static double femur = 50.0;
+static double coxa = 20.0;
 static double BCSQ = femur * femur + tibia * tibia;
 static double D2BC = 1/(femur * tibia)* 0.5;
 static double BCSQD2BC = BCSQ * D2BC;
@@ -30,7 +30,7 @@ static double vertOffset = 10.0;
 static double desiredHeight = 5.0;
 static double legLift = 1.0;
 
-static double maxExtension = coaxia + sqrt((femur + tibia)*(femur + tibia) - desiredHeight * desiredHeight);
+static double maxExtension = coxa + sqrt((femur + tibia)*(femur + tibia) - desiredHeight * desiredHeight);
 
 static double walkAngleDeg = 20; // In degrees!
 static double walkAngle = walkAngleDeg / 180 * PI;
@@ -261,14 +261,14 @@ bool inEnvelope(double* normalizedDesiredPos){
   double planarDistanceSQRD = normalizedDesiredPos[0] * normalizedDesiredPos[0] + normalizedDesiredPos[1] * normalizedDesiredPos[1];
 
   double angle = atan(normalizedDesiredPos[1]/normalizedDesiredPos[0]);
-  double elbowPos[] = {normalizedDesiredPos[0] - coaxia * cos(angle), normalizedDesiredPos[1] - coaxia * sin(angle), normalizedDesiredPos[2]};
+  double elbowPos[] = {normalizedDesiredPos[0] - coxa * cos(angle), normalizedDesiredPos[1] - coxa * sin(angle), normalizedDesiredPos[2]};
   double desiredArmPos[] = {sqrt(elbowPos[0] * elbowPos[0] + elbowPos[1] * elbowPos[1]), elbowPos[2]};
 
   double desLength = sqrt(desiredArmPos[0] * desiredArmPos[0] + desiredArmPos[1] * desiredArmPos[1]);
 
   if(normalizedDesiredPos[0] < 0){
     return false;
-  }else if(planarDistanceSQRD < coaxia * coaxia){
+  }else if(planarDistanceSQRD < coxa * coxa){
     return false;
   }else if(desLength > femur + tibia){
     return false;
@@ -344,7 +344,7 @@ void calcAngles(double* normalizedDesiredToesPos, double* angles){
 
   angles[0] = atan(normalizedDesiredToesPos[1]/normalizedDesiredToesPos[0]);
 
-  double elbowPos[] = {normalizedDesiredToesPos[0] - coaxia * cos(angles[0]), normalizedDesiredToesPos[1] - coaxia * sin(angles[0]), normalizedDesiredToesPos[2]};
+  double elbowPos[] = {normalizedDesiredToesPos[0] - coxa * cos(angles[0]), normalizedDesiredToesPos[1] - coxa * sin(angles[0]), normalizedDesiredToesPos[2]};
 
   double desiredArmPos[] = {sqrt(elbowPos[0] * elbowPos[0] + elbowPos[1] * elbowPos[1]), elbowPos[2]};
 

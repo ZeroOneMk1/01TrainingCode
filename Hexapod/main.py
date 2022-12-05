@@ -4,24 +4,11 @@
 #Libraries
 import time    #https://docs.python.org/fr/3/library/time.html
 from adafruit_servokit import ServoKit    #https://circuitpython.readthedocs.io/projects/servokit/en/latest/
-
-#Constants
-nbPCAServo=2 
-
-#Parameters
-MIN_IMP  =[500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500]
-MAX_IMP  =[2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500]
-MIN_ANG  =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-MAX_ANG  =[180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180]
-
-#Objects
-pca = ServoKit(channels=16)
+from ControlBoard import ControlBoard
 
 # function init 
 def init():
-
-    for i in range(nbPCAServo):
-        pca.servo[i].set_pulse_width_range(MIN_IMP[i] , MAX_IMP[i])
+    pass
 
 
 # function main 
@@ -32,17 +19,20 @@ def main():
 
 # function pcaScenario 
 def pcaScenario():
+
+    control_board = ControlBoard(1)
+
     """Scenario to test servo"""
-    for i in range(nbPCAServo):
-        for j in range(MIN_ANG[i],MAX_ANG[i],10):
+    for i in range(control_board.nbPCAServo):
+        for j in range(control_board.MIN_ANG[i],control_board.MAX_ANG[i],10):
             print("Send angle {} to Servo {}".format(j,i))
-            pca.servo[i].angle = j
+            control_board.servos[i].angle = j
             time.sleep(.5)
-        for j in range(MAX_ANG[i],MIN_ANG[i],-10):
+        for j in range(control_board.MAX_ANG[i],control_board.MIN_ANG[i],-10):
             print("Send angle {} to Servo {}".format(j,i))
-            pca.servo[i].angle = j
+            control_board.servos[i].angle = j
             time.sleep(.5)
-        pca.servo[i].angle=None #disable channel
+        control_board.servos[i].angle=None #disable channel
         time.sleep(0.5)
 
 
