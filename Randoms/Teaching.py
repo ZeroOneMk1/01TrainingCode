@@ -41,6 +41,24 @@ class ExampleClass(object):
         print(f"First half: {self.name[:int(len(self.name) / 2)]}") # you can select the substring of a string by treating it like a list, and doing [start:end]. If you don't give a value, like [:end], python assumes you go to the extremes (start or end)
         print(f"Second half: {self.name[int(len(self.name) / 2):]}")
         print(f"last 3 letters: {self.name[-3:]}")
+    
+
+def exampleFunction(arg1: int, arg2: str, arg3: tuple) -> str:
+    """Example function that concatonates an int, a string, and a tuple into a string."""
+    return str(arg1) + arg2 + str(arg3)
+
+print(exampleFunction(5, " uhh string I  guess ", (1, 2)))
+
+added = (1, 2) + (3, 4)
+
+multid = 3 * (4, 5)
+
+print("__________________________")
+
+print(added, multid)
+
+print("__________________________")
+
 
 if __name__ == '__main__':
 
