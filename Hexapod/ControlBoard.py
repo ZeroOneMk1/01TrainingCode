@@ -3,8 +3,7 @@
 
 # Libraries
 import time  # https://docs.python.org/fr/3/library/time.html
-# https://circuitpython.readthedocs.io/projects/servokit/en/latest/
-from adafruit_servokit import ServoKit
+from adafruit_servokit import ServoKit # https://circuitpython.readthedocs.io/projects/servokit/en/latest/
 
 
 class ControlBoard:

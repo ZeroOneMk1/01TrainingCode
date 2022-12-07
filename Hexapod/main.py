@@ -16,8 +16,9 @@ def init():
 # function main 
 def main():
     robot = Robot()
+    robot.control_board.test_servos()
 
-    robot.move_leg_from_point_to_point(np.array[10, 10, -5], np.array(10, -10, -5), 3)
+    # robot.move_leg_from_point_to_point(np.array[10, 10, -5], np.array(10, -10, -5), 3)
 
 if __name__ == '__main__':
     init()
