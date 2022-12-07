@@ -65,14 +65,37 @@ class ControlBoard:
     def test_servos(self):
 
         """Scenario to test servo"""
-        for i in range(self.nbPCAServo):
-            for j in range(self.MIN_ANG[i],self.MAX_ANG[i],10):
-                print("Send angle {} to Servo {}".format(j,i))
-                self.servos[i].angle = j
-                time.sleep(.5)
-            for j in range(self.MAX_ANG[i],self.MIN_ANG[i],-10):
-                print("Send angle {} to Servo {}".format(j,i))
-                self.servos[i].angle = j
-                time.sleep(.5)
-            self.servos[i].angle=None #disable channel
-            time.sleep(0.5)
+        for i in range(90,180,10):
+            print("Send angle {} to Servo {}".format(i,0))
+            self.servos[0].angle = i
+            time.sleep(.5)
+        for i in range(180,0,-10):
+            print("Send angle {} to Servo {}".format(i,0))
+            self.servos[0].angle = i
+            time.sleep(.5)
+        for i in range(0,90,10):
+            print("Send angle {} to Servo {}".format(i,0))
+            self.servos[0].angle = i
+            time.sleep(.5)
+        
+        for j in range(self.MIN_ANG[1],self.MAX_ANG[1],10):
+            print("Send angle {} to Servo {}".format(j,1))
+            self.servos[1].angle = j
+            time.sleep(.5)
+        for j in range(self.MAX_ANG[1],self.MIN_ANG[1],-10):
+            print("Send angle {} to Servo {}".format(j,1))
+            self.servos[1].angle = j
+            time.sleep(.5)
+        self.servos[1].angle=None #disable channel
+        time.sleep(0.5)
+
+        for j in range(self.MIN_ANG[2],self.MAX_ANG[2],10):
+            print("Send angle {} to Servo {}".format(j,2))
+            self.servos[2].angle = j
+            time.sleep(.5)
+        for j in range(self.MAX_ANG[2],self.MIN_ANG[2],-10):
+            print("Send angle {} to Servo {}".format(j,2))
+            self.servos[2].angle = j
+            time.sleep(.5)
+        self.servos[2].angle=None #disable channel        
+        self.servos[0].angle=None

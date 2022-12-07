@@ -12,7 +12,9 @@ class Robot:
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
         reachable, servo_positions = self.legs[leg_index].calculate_servo_positions(desired_position)
-        if reachable:
-            self.control_board.set_leg_servo_positions(leg_index, servo_positions)
-        else:
+        if not reachable:
             print("Not Reachable!")
+            return
+        self.control_board.set_leg_servo_positions(leg_index, servo_positions)
+
+            
