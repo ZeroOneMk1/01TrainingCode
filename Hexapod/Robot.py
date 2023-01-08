@@ -1,5 +1,5 @@
 from Leg import Leg
-from ControlBoard import ControlBoard
+# from ControlBoard import ControlBoard
 import numpy as np
 from time import sleep
 from datetime import datetime as dt
@@ -15,14 +15,14 @@ class Robot:
         self.legs.append(Leg(np.array([50, 0, 0]), 0)) # Center Right Leg
         self.legs.append(Leg(np.array([50, -50, 0]), 315)) # Back Right Leg
 
-        self.control_board = ControlBoard(3)
+        # self.control_board = ControlBoard(3)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
         reachable, servo_positions = self.legs[leg_index].calculate_servo_positions(desired_position)
         if not reachable:
             print("Not Reachable!")
             return
-        self.control_board.set_leg_servo_positions(leg_index, servo_positions)
+        # self.control_board.set_leg_servo_positions(leg_index, servo_positions)
     
     def move_leg_from_point_to_point(self, a, b, time:float):
         """a and b must be numpy arrays, time is in seconds"""
