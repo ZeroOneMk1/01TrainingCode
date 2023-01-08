@@ -73,7 +73,7 @@ class Leg:
 
 
         
-    def calculate_all_servo_positions(self, abs_destination) -> bool | np.array:
+    def calculate_all_servo_positions(self, abs_destination):
         rel_destination = self.absolute_to_relative_destination(abs_destination)
 
         perp_destination, theta = self.relative_to_perpendicular_destination(rel_destination)
