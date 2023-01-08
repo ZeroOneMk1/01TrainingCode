@@ -15,6 +15,9 @@ class Robot:
         self.legs.append(Leg(np.array([50, 0, 0]), 0)) # Center Right Leg
         self.legs.append(Leg(np.array([50, -50, 0]), 315)) # Back Right Leg
 
+        self.left_tripod = [self.legs[0], self.legs[2], self.legs[4]]
+        self.right_tripod = [self.legs[1], self.legs[3], self.legs[5]]
+
         # self.control_board = ControlBoard(3)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
@@ -50,3 +53,12 @@ class Robot:
         self.move_leg_to_position(destination)
 
         print(f"Number of substeps: {substeps}")
+
+    def tick(self):
+        controller_input = self.get_controller_input()
+        new_leg_positions = self.calculate_new_leg_positions(controller_input)
+        self.move_legs_to_positions(new_leg_positions)
+        sleep(1/50)
+    
+    def get_controller_input(self):
+        return (0, 1) # TODO actually set up the controller instead of just giving X=0 Y=1
