@@ -1,9 +1,8 @@
 import numpy as np
 
 class Leg:
-    def __init__(self, hipPos, zeroOrientation: float, index: int, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
+    def __init__(self, hipPos, zeroOrientation: float, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
         self.hipPos = np.array(hipPos)
-        self.index = index
 
         self.TIBIA_LENGTH = tibia_length
         self.FEMUR_LENGTH = femur_length

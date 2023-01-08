@@ -8,7 +8,12 @@ class Robot:
     def __init__(self) -> None:
         self.legs = []
 
-        self.legs.append(Leg(np.array([0, 0, 0]), 0, 0)) # TODO expand to 6 legs
+        self.legs.append(Leg(np.array([-50, 50, 0]), 135)) # Front Left Leg
+        self.legs.append(Leg(np.array([-50, 0, 0]), 180)) # Center Left Leg
+        self.legs.append(Leg(np.array([-50, -50, 0]), 225)) # Back Left Leg
+        self.legs.append(Leg(np.array([50, 50, 0]), 45)) # Front Right Leg
+        self.legs.append(Leg(np.array([50, 0, 0]), 0)) # Center Right Leg
+        self.legs.append(Leg(np.array([50, -50, 0]), 315)) # Back Right Leg
 
         self.control_board = ControlBoard(3)
     
