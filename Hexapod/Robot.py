@@ -10,17 +10,21 @@ class Robot:
         self.hip_x = hip_x
         self.hip_y = hip_y
 
-        self.legs.append(Leg(np.array([-hip_x, hip_y, 0]), 135)) # Front Left Leg
-        self.legs.append(Leg(np.array([-hip_x, 0, 0]), 180)) # Center Left Leg
-        self.legs.append(Leg(np.array([-hip_x, -hip_y, 0]), 225)) # Back Left Leg
-        self.legs.append(Leg(np.array([hip_x, hip_y, 0]), 45)) # Front Right Leg
-        self.legs.append(Leg(np.array([hip_x, 0, 0]), 0)) # Center Right Leg
-        self.legs.append(Leg(np.array([hip_x, -hip_y, 0]), 315)) # Back Right Leg
+        self.legs.append(Leg(0, np.array([-hip_x, hip_y, 0]), 135)) # Front Left Leg
+        self.legs.append(Leg(1, np.array([-hip_x, 0, 0]), 180)) # Center Left Leg
+        self.legs.append(Leg(2, np.array([-hip_x, -hip_y, 0]), 225)) # Back Left Leg
+        self.legs.append(Leg(3, np.array([hip_x, hip_y, 0]), 45)) # Front Right Leg
+        self.legs.append(Leg(4, np.array([hip_x, 0, 0]), 0)) # Center Right Leg
+        self.legs.append(Leg(5, np.array([hip_x, -hip_y, 0]), 315)) # Back Right Leg
 
-        self.leg_positions = ()
+        self.current_leg_positions = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+        self.next_leg_positions = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
         self.left_tripod = [self.legs[0], self.legs[2], self.legs[4]]
         self.right_tripod = [self.legs[1], self.legs[3], self.legs[5]]
+
+        self.grounded_legs = self.left_tripod
+        self.lifted_legs = self.right_tripod
 
         # self.control_board = ControlBoard(3)
     
@@ -30,6 +34,7 @@ class Robot:
             print("Not Reachable!")
             return
         # self.control_board.set_leg_servo_positions(leg_index, servo_positions)
+        self.legs[leg_index].position = desired_position
     
     def move_leg_from_point_to_point(self, a, b, time:float):
         """a and b must be numpy arrays, time is in seconds"""
@@ -65,19 +70,24 @@ class Robot:
 
     def tick(self):
         controller_input = self.get_controller_input()
-        new_leg_positions = self.calculate_new_leg_positions(controller_input)
-        self.move_legs_to_positions(new_leg_positions)
+        self.calculate_new_leg_positions(controller_input)
+        self.move_legs_to_positions(self.new_leg_positions)
+        for i in range(len(self.current_leg_positions)):
+            self.current_leg_positions[i] = self.next_leg_positions[i] # ! May have errors when next gets changed
         sleep(1/50)
     
     def get_controller_input(self):
         return (0, 1) # TODO actually set up the controller instead of just giving X=0 Y=1
 
-    def calculate_new_leg_positions(self, input: tuple) -> list:
+    def calculate_new_leg_positions(self, input: tuple) -> None:
         if self.shift_lifted_leg_positions(input):
             self.shift_grounded_leg_positions(input)
         else:
             self.swap_legs()
     
+    def swap_legs(self):
+        self.grounded_legs, self.lifted_legs = self.lifted_legs, self.grounded_legs # ! Does this work in python? Or does this cause a logic error?
+
     def shift_lifted_leg_positions(self, input: tuple) -> bool:
         d = self.get_COM_distance()
 
@@ -85,20 +95,24 @@ class Robot:
             return False
         
         for leg in self.lifted_legs:
-            leg.shift_position(input) # this function should be the one doing the math cause it saves nesting
+            leg.shift_leg_position(leg.index, input, d - 50) # this function should be the one doing the math cause it saves nesting
         
         return True
     
-    def shift_grounded_leg_positions(self, input: tuple) -> None:
-        d = self.get_COM_distance()
-        
+    def shift_grounded_leg_positions(self, input: tuple) -> None:        
         for leg in self.grounded_legs:
-            leg.shift_position(input)
+            self.shift_leg_position(leg.index, input, -50)
 
+    def shift_leg_position(self, leg_index: int,  vector: tuple, height: float) -> None:
+        # TODO decide on how to snap the leg raise to a specific height while staying in envelope.
+        pass
 
     def get_COM_distance(self):
+
+        # TODO Include collision of legs as another distance parameter
+
         min_dist = self.legs[0].COXA_LENGTH + np.sqrt(self.hip_x**2 + self.hip_y**2)
-        points = self.grounded_leg_positions()
+        points = self.get_grounded_leg_positions()
 
         distances = []
 
@@ -129,3 +143,9 @@ class Robot:
             return -1
         
         return min(distances)
+    
+    def get_grounded_leg_positions(self) -> list:
+        positions = []
+        for leg in self.grounded_legs:
+            positions.append(leg.position)
+        return positions

@@ -1,8 +1,9 @@
 import numpy as np
 
 class Leg:
-    def __init__(self, hipPos, zeroOrientation: float, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
+    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
         self.hipPos = np.array(hipPos)
+        self.index = index
 
         self.TIBIA_LENGTH = tibia_length
         self.FEMUR_LENGTH = femur_length
@@ -10,6 +11,8 @@ class Leg:
         self.BCSQ = self.FEMUR_LENGTH * self.FEMUR_LENGTH + self.TIBIA_LENGTH * self.TIBIA_LENGTH
         self.D2BC = 1/(self.FEMUR_LENGTH * self.TIBIA_LENGTH)* 0.5
         self.BCSQD2BC = self.BCSQ * self.D2BC
+
+        self.position = (0, 0, 0)
 
         theta = np.radians(-zeroOrientation)
         c, s = np.cos(theta), np.sin(theta)
