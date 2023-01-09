@@ -67,7 +67,7 @@ class Leg:
 
         ambiguous = 0
 
-        if L < 5*np.sqrt(3):
+        if L < self.TIBIA_LENGTH*np.cos(np.arcsin(self.FEMUR_LENGTH/self.TIBIA_LENGTH)):
             ambiguous = 1
         
         alpha = ambiguous * np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)) + (1-ambiguous)(np.pi-np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)))
