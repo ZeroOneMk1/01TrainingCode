@@ -64,8 +64,13 @@ class Leg:
             vector_angle = -np.arctan(perp_destination[2]/perp_destination[0])
         except:
             vector_angle = np.pi/2
+
+        ambiguous = 0
+
+        if L < 5*np.sqrt(3):
+            ambiguous = 1
         
-        alpha = np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three))
+        alpha = ambiguous * np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)) + (1-ambiguous)(np.pi-np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)))
 
         angle_two = np.pi/2 + vector_angle - alpha
 
