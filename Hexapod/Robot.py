@@ -3,6 +3,8 @@ from Leg import Leg
 import numpy as np
 from time import sleep
 from datetime import datetime as dt
+import pygame
+import math
 
 class Robot:
     def __init__(self, hip_x, hip_y) -> None:
@@ -17,8 +19,8 @@ class Robot:
         self.legs.append(Leg(4, np.array([hip_x, 0, 0]), 0)) # Center Right Leg
         self.legs.append(Leg(5, np.array([hip_x, -hip_y, 0]), 315)) # Back Right Leg
 
-        self.current_leg_positions = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
-        self.next_leg_positions = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+        self.current_leg_positions = np.asarray([(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)])
+        self.next_leg_positions = np.asarray([(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)])
 
         self.left_tripod = [self.legs[0], self.legs[2], self.legs[4]]
         self.right_tripod = [self.legs[1], self.legs[3], self.legs[5]]
@@ -29,37 +31,41 @@ class Robot:
         # self.control_board = ControlBoard(3)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
-        reachable, servo_positions = self.legs[leg_index].calculate_servo_positions(desired_position)
+        reachable, servo_positions = self.legs[leg_index].calculate_all_servo_positions(desired_position)
         if not reachable:
             print("Not Reachable!")
             return
         # self.control_board.set_leg_servo_positions(leg_index, servo_positions)
-        self.legs[leg_index].position = desired_position
+        self.legs[leg_index].position = desired_position # ! Maybe this fucks with data types, check if I could make it more consistent
     
-    def move_leg_from_point_to_point(self, a, b, time:float):
-        """a and b must be numpy arrays, time is in seconds"""
+    def move_legs_from_current_to_next(self, time:float):
+        """Goes from self.current to self.next positions, time is in seconds"""
 
         start = dt.now()
         end = start + dt.timedelta(seconds=time)
         now = dt.now()
 
-        line = b - a
-
-        destination = a
-        self.move_leg_to_position(destination)
-        # sleep(5) # TODO remember why this was important.
+        # self.move_leg_to_position(leg.index, destination)
+        # sleep(5) # ? remember why this was important. Remove if it works fine while commented.
 
         substeps = 0
 
         while now < end:
             substeps += 1
-            t = dt.now() - start
-            t_sec = t.total_seconds()
-            destination = np.array(a + line * t_sec / time)
-            self.move_leg_to_position(destination)
+
+            for leg in self.legs:
+
+                line = np.asarray(self.next_leg_positions[leg.index]) - np.asarray(self.current_leg_positions[leg.index])
+
+                destination = self.next_leg_positions[leg.index]
+
+                t = dt.now() - start
+                t_sec = t.total_seconds()
+                destination = np.asarray(np.asarray(self.current_leg_positions[leg.index]) + line * t_sec / time)
+                self.move_leg_to_position(leg.index, destination)
         
-        destination = b
-        self.move_leg_to_position(destination)
+        for leg in self.legs:
+            self.move_leg_to_position(leg.index, self.next_leg_positions[leg.index])
 
         print(f"Number of substeps: {substeps}")
 
@@ -71,13 +77,13 @@ class Robot:
     def tick(self):
         controller_input = self.get_controller_input()
         self.calculate_new_leg_positions(controller_input)
-        self.move_legs_to_positions(self.new_leg_positions)
+        self.move_legs_from_current_to_next()
         for i in range(len(self.current_leg_positions)):
             self.current_leg_positions[i] = self.next_leg_positions[i] # ! May have errors when next gets changed
         sleep(1/50)
     
     def get_controller_input(self):
-        return (0, 1) # TODO actually set up the controller instead of just giving X=0 Y=1
+        return np.asarray((0, 1)) # TODO actually set up the controller instead of just giving X=0 Y=1
 
     def calculate_new_leg_positions(self, input: tuple) -> None:
         if self.shift_lifted_leg_positions(input):
@@ -86,7 +92,7 @@ class Robot:
             self.swap_legs()
     
     def swap_legs(self):
-        self.grounded_legs, self.lifted_legs = self.lifted_legs, self.grounded_legs # ! Does this work in python? Or does this cause a logic error?
+        self.grounded_legs, self.lifted_legs = self.lifted_legs, self.grounded_legs # ! Does this work with lists of objects in python? Or does this cause a pointer error?
 
     def shift_lifted_leg_positions(self, input: tuple) -> bool:
         d = self.get_COM_distance()
@@ -95,7 +101,7 @@ class Robot:
             return False
         
         for leg in self.lifted_legs:
-            leg.shift_leg_position(leg.index, input, d - 50) # this function should be the one doing the math cause it saves nesting
+            self.shift_leg_position(leg.index, input, d - 50) # TODO Tune d via different functions
         
         return True
     
@@ -104,12 +110,13 @@ class Robot:
             self.shift_leg_position(leg.index, input, -50)
 
     def shift_leg_position(self, leg_index: int,  vector: tuple, height: float) -> None:
-        # TODO decide on how to snap the leg raise to a specific height while staying in envelope.
-        pass
+        self.next_leg_positions[leg_index][0] = self.current_leg_positions[leg_index][0] + vector[0]
+        self.next_leg_positions[leg_index][1] = self.current_leg_positions[leg_index][1] + vector[1]
+        self.next_leg_positions[leg_index][2] = height
 
     def get_COM_distance(self):
 
-        # TODO Include collision of legs as another distance parameter
+        # TODO Include collision of legs as another distance parameter (IMPORTANT BEFORE FINAL IMPLEMENTATION!) not needed before visualization
 
         min_dist = self.legs[0].COXA_LENGTH + np.sqrt(self.hip_x**2 + self.hip_y**2)
         points = self.get_grounded_leg_positions()
@@ -148,4 +155,4 @@ class Robot:
         positions = []
         for leg in self.grounded_legs:
             positions.append(leg.position)
-        return positions
+        return positions   

@@ -45,18 +45,22 @@ class Leg:
         X = perp_destination[0]
         
         if np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) >= X >= np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2):
-            return True
+            return True, perp_destination
 
-        if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-            return True
+        if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+            return True, perp_destination
 
         if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
-            return True
+            return True, perp_destination
 
-        if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-            return True
+        if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+            return True, perp_destination
 
-        return False
+        if X < np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2) and Y >= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+            # Snaps input to within the envelope while maintaining desired height
+            return True, np.asarray([np.sqrt(self.TIBIA_LENGTH**2-(Y-self.FEMUR_LENGTH)**2), perp_destination[1], perp_destination[2]])
+
+        return False, 0
     
     def calculate_second_third_servo_positions(self, perp_destination) -> float:
         """Assumes it's in envelope"""
@@ -88,10 +92,12 @@ class Leg:
 
         if theta > np.pi / 2 or theta < -np.pi/2:
             return False, np.zeros(1, 3)
-        
-        if self.is_within_envelope(perp_destination):
 
-            servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(perp_destination)
+        in_envelope, snapped_destination = self.is_within_envelope(perp_destination)
+        
+        if in_envelope:
+
+            servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(snapped_destination)
             angles = np.array([theta, servo_two_angle, servo_three_angle]) * 180 / np.pi
             return True, angles
         else:
