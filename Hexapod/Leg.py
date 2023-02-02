@@ -1,7 +1,7 @@
 import numpy as np
 
 class Leg:
-    def __init__(self, hipPos, zeroOrientation: float, index: int, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 0.0) -> None:
+    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
         self.hipPos = np.array(hipPos)
         self.index = index
 
@@ -11,6 +11,8 @@ class Leg:
         self.BCSQ = self.FEMUR_LENGTH * self.FEMUR_LENGTH + self.TIBIA_LENGTH * self.TIBIA_LENGTH
         self.D2BC = 1/(self.FEMUR_LENGTH * self.TIBIA_LENGTH)* 0.5
         self.BCSQD2BC = self.BCSQ * self.D2BC
+
+        self.position = (0, 0, 0)
 
         theta = np.radians(-zeroOrientation)
         c, s = np.cos(theta), np.sin(theta)
@@ -55,19 +57,24 @@ class Leg:
         try:
 
             if np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) >= X >= np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2):
-                return True
+                return True, perp_destination
 
-            if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-                return True
+        if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+            return True, perp_destination
 
-            if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
-                return True
+        if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
+            return True
+            return True, perp_destination
 
-            if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-                return True
+        if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+            return True, perp_destination
+
+            if 0 < np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2) and Y >= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+                # Snaps input to within the envelope while maintaining desired height
+            return True, np.asarray([np.sqrt(self.TIBIA_LENGTH**2-(Y-self.FEMUR_LENGTH)**2), perp_destination[1], perp_destination[2]])
         except:
             return False
-        return False
+        return False, 0
     
     def calculate_second_third_servo_positions(self, perp_destination) -> float:
         """Assumes it's in envelope"""
@@ -83,8 +90,13 @@ class Leg:
             vector_angle = -np.arctan(Y/X)
         except:
             vector_angle = np.pi/2
+
+        ambiguous = 0
+
+        if L < self.TIBIA_LENGTH*np.cos(np.arcsin(self.FEMUR_LENGTH/self.TIBIA_LENGTH)):
+            ambiguous = 1
         
-        alpha = np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three))
+        alpha = ambiguous * np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)) + (1-ambiguous)(np.pi-np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)))
 
         angle_two = np.pi/2 + vector_angle - alpha
 
@@ -99,10 +111,12 @@ class Leg:
 
         if theta > np.pi / 2 or theta < -np.pi/2:
             return False, np.zeros(1, 3)
-        
-        if self.is_within_envelope(perp_destination):
 
-            servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(perp_destination)
+        in_envelope, snapped_destination = self.is_within_envelope(perp_destination)
+        
+        if in_envelope:
+
+            servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(snapped_destination)
             angles = np.array([theta + np.pi/2, np.pi-servo_two_angle, servo_three_angle]) * 180 / np.pi
             print(angles)
             return True, angles
