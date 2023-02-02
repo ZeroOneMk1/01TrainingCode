@@ -1,7 +1,7 @@
 import numpy as np
 
 class Leg:
-    def __init__(self, hipPos, zeroOrientation: float, index: int, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
+    def __init__(self, hipPos, zeroOrientation: float, index: int, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 0.0) -> None:
         self.hipPos = np.array(hipPos)
         self.index = index
 
@@ -24,36 +24,49 @@ class Leg:
         return rel_destination
 
     def relative_to_perpendicular_destination(self, rel_destination) -> np.array and float:
-        try:
+        
+        if rel_destination[0] == 0:
+            if rel_destination[1] == 0:
+                theta = 0
+            else:
+                theta  = rel_destination[1]/abs(rel_destination[1]) * np.pi / 2
+        else:
             theta  = -np.arctan(rel_destination[1]/rel_destination[0])
-        except:
-            theta  = rel_destination[1]/abs(rel_destination[1]) * np.pi / 2
 
-        c, s = np.cos(theta), np.sin(theta)
-        R = np.matrix([[c, -s, 0], [s, c,0], [0,0,1]])
+        # c, s = np.cos(theta), np.sin(theta)
+        # R = np.matrix([[c, -s, 0], [s, c,0], [0,0,1]])
 
-        perp_destination = R*rel_destination.reshape(3,1) - np.array(self.COXA_LENGTH, 0, 0)
+        # vec = R*rel_destination.reshape(3,1)
+
+        # print(vec)
+
+        perp_destination = [np.sqrt(rel_destination[0]**2 + rel_destination[1]**2) - self.COXA_LENGTH, 0, rel_destination[2]]
         return perp_destination, -theta
 
 
     def is_within_envelope(self, perp_destination) -> bool:
         """Assumes that the destination is WITHIN WORKABLE XY-ANGLE"""
 
-        Y = perp_destination[2]
-        X = perp_destination[0]
+        Y = float(perp_destination[2][0][0])
+        X = float(perp_destination[0][0][0]) # TODO FIGURE OUT WHY MATRICES STACK
         
-        if np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) >= X >= np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2):
-            return True
+        #TODO PUT INTO TRY EXCEPT BLOCKS
 
-        if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-            return True
+        try:
 
-        if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
-            return True
+            if np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) >= X >= np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2):
+                return True
 
-        if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-            return True
+            if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+                return True
 
+            if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
+                return True
+
+            if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y < self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+                return True
+        except:
+            return False
         return False
     
     def calculate_second_third_servo_positions(self, perp_destination) -> float:
@@ -61,8 +74,13 @@ class Leg:
         L = np.linalg.norm(perp_destination)
         angle_three = np.arccos(self.BCSQD2BC - L**2 * self.D2BC)
 
+        print(perp_destination)
+
+        Y = float(perp_destination[2][0][0])
+        X = float(perp_destination[0][0][0]) # TODO FIGURE OUT WHY MATRICES STACK
+
         try:
-            vector_angle = -np.arctan(perp_destination[2]/perp_destination[0])
+            vector_angle = -np.arctan(Y/X)
         except:
             vector_angle = np.pi/2
         
@@ -85,8 +103,9 @@ class Leg:
         if self.is_within_envelope(perp_destination):
 
             servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(perp_destination)
-            angles = np.array([theta, servo_two_angle, servo_three_angle]) * 180 / np.pi
+            angles = np.array([theta + np.pi/2, np.pi-servo_two_angle, servo_three_angle]) * 180 / np.pi
+            print(angles)
             return True, angles
         else:
-            return False, np.zeros(1, 3)
+            return False, None
 

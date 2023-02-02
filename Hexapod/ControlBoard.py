@@ -64,37 +64,15 @@ class ControlBoard:
     def test_servos(self):
 
         """Scenario to test servo"""
-        for i in range(90,180,10):
-            print("Send angle {} to Servo {}".format(i,0))
-            self.servos[0].angle = i
-            time.sleep(.5)
-        for i in range(180,0,-10):
-            print("Send angle {} to Servo {}".format(i,0))
-            self.servos[0].angle = i
-            time.sleep(.5)
-        for i in range(0,90,10):
-            print("Send angle {} to Servo {}".format(i,0))
-            self.servos[0].angle = i
-            time.sleep(.5)
+        self.servos[0].angle = 90
+        time.sleep(.5)
         
-        for j in range(self.MIN_ANG[1],self.MAX_ANG[1],10):
-            print("Send angle {} to Servo {}".format(j,1))
-            self.servos[1].angle = j
-            time.sleep(.5)
-        for j in range(self.MAX_ANG[1],self.MIN_ANG[1],-10):
-            print("Send angle {} to Servo {}".format(j,1))
-            self.servos[1].angle = j
-            time.sleep(.5)
-        self.servos[1].angle=None #disable channel
-        time.sleep(0.5)
+        self.servos[1].angle = 90
+        time.sleep(.5)
 
-        for j in range(self.MIN_ANG[2],self.MAX_ANG[2],10):
-            print("Send angle {} to Servo {}".format(j,2))
-            self.servos[2].angle = j
-            time.sleep(.5)
-        for j in range(self.MAX_ANG[2],self.MIN_ANG[2],-10):
-            print("Send angle {} to Servo {}".format(j,2))
-            self.servos[2].angle = j
-            time.sleep(.5)
+        self.servos[2].angle = 180
+        time.sleep(2)
+
         self.servos[2].angle=None #disable channel        
+        self.servos[1].angle=None
         self.servos[0].angle=None

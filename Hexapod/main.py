@@ -16,7 +16,13 @@ def init():
 # function main 
 def main():
     robot = Robot()
-    robot.control_board.test_servos()
+    # robot.control_board.test_servos()
+    time.sleep(5)
+    for i in range(23):
+        robot.move_leg_to_position(0, [0, 0, -38.5+i])
+        time.sleep(0.5)
+    time.sleep(2)
+    robot.loosen()
 
     # robot.move_leg_from_point_to_point(np.array[10, 10, -5], np.array(10, -10, -5), 3)
 

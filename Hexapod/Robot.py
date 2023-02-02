@@ -13,10 +13,12 @@ class Robot:
         self.control_board = ControlBoard(3)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
-        reachable, servo_positions = self.legs[leg_index].calculate_servo_positions(desired_position)
+        reachable, servo_positions = self.legs[leg_index].calculate_all_servo_positions(desired_position)
         if not reachable:
             print("Not Reachable!")
             return
+        for i in range(len(servo_positions)):
+            servo_positions[i] = np.clip(servo_positions[i], 0, 180)
         self.control_board.set_leg_servo_positions(leg_index, servo_positions)
     
     def move_leg_from_point_to_point(self, a, b, time:float):
@@ -45,3 +47,7 @@ class Robot:
         self.move_leg_to_position(destination)
 
         print(f"Number of substeps: {substeps}")
+
+    def loosen(self):
+        for servo in self.control_board.servos:
+            servo.angle=None
