@@ -1,7 +1,7 @@
 import numpy as np
 
 class Leg:
-    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 100.0, femur_length: float = 50.0, coxa_length: float = 20.0) -> None:
+    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 0.0) -> None:
         self.hipPos = np.array(hipPos)
         self.index = index
 
@@ -59,22 +59,21 @@ class Leg:
             if np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) >= X >= np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2):
                 return True, perp_destination
 
-        if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-            return True, perp_destination
+            if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+                return True, perp_destination
 
-        if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
-            return True
-            return True, perp_destination
+            if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
+                return True, perp_destination
 
-        if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-            return True, perp_destination
+            if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
+                return True, perp_destination
 
             if 0 < np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2) and Y >= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
                 # Snaps input to within the envelope while maintaining desired height
-            return True, np.asarray([np.sqrt(self.TIBIA_LENGTH**2-(Y-self.FEMUR_LENGTH)**2), perp_destination[1], perp_destination[2]])
+                return True, np.asarray([np.sqrt(self.TIBIA_LENGTH**2-(Y-self.FEMUR_LENGTH)**2), perp_destination[1], perp_destination[2]])
         except:
-            return False
-        return False, 0
+            return False, None
+        return False, None
     
     def calculate_second_third_servo_positions(self, perp_destination) -> float:
         """Assumes it's in envelope"""

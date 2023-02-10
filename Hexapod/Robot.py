@@ -6,6 +6,10 @@ from datetime import datetime as dt
 import pygame
 import math
 
+THETA_WEIGHT = 0.2
+POINTS_WEIGHT = 1
+COM_WEIGHT = 1
+
 class Robot:
     def __init__(self, hip_x, hip_y) -> None:
         self.legs = []
@@ -85,7 +89,7 @@ class Robot:
         sleep(1/50)
     
     def get_controller_input(self):
-        return np.asarray((0, 1)) # TODO actually set up the controller instead of just giving X=0 Y=1
+        return np.asarray((0, 0.5)) # TODO actually set up the controller instead of just giving X=0 Y=1
 
     def calculate_new_leg_positions(self, input: tuple) -> None:
         if self.shift_lifted_leg_positions(input):
@@ -125,11 +129,17 @@ class Robot:
 
         distances = []
 
-        for point in points:
-            dist = np.sqrt(point[0]**2+point[1]**2) - min_dist
+        for i in range(len(points)):
+            dist = np.sqrt(points[i][0]**2+points[i][1]**2) - min_dist
             if dist < 0:
                 return -1
-            distances.append(dist)
+            distances.append(POINTS_WEIGHT * dist)
+
+            rel_destination = self.grounded_legs[i].absolute_to_relative_destination(points[i])
+
+            perp_destination, theta = self.grounded_legs[i].relative_to_perpendicular_destination(rel_destination)
+
+            distances.append(THETA_WEIGHT * theta * 180 / np.pi)
 
         v1 = (points[1][0] - points[0][0], points[1][1] - points[0][1])
         v2 = (points[2][0] - points[0][0], points[2][1] - points[0][1])
@@ -147,7 +157,7 @@ class Robot:
 
         if (0 <= a <= 1) and (0 <= b <= 1) and (a + b <= 1):
             for i in range(len(points)):
-                distances.append(np.linalg.norm(np.cross(vectors[i], points[i]))/np.linalg.norm(vectors[i]))
+                distances.append(COM_WEIGHT * np.linalg.norm(np.cross(vectors[i], points[i]))/np.linalg.norm(vectors[i]))
         else:
             return -1
         
@@ -159,6 +169,7 @@ class Robot:
         for leg in self.grounded_legs:
             positions.append(leg.position)
         return positions   
+    
     def loosen(self):
         for servo in self.control_board.servos:
             servo.angle=None
