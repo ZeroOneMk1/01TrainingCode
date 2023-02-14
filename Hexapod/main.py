@@ -22,21 +22,23 @@ def main():
     #     robot.move_leg_to_position(0, [0, 0, -38.5+i])
     #     time.sleep(0.5)
 
-    h = -15
+    h = -20
     w = 30
     l = 30
 
-    robot.move_leg_to_position(0, [-w, l, h])
+    for i in range(50):
+        robot.move_leg_to_position(0, [-w, l, h+i])
 
-    robot.move_leg_to_position(1, [-w, 0, 2*h])
+        robot.move_leg_to_position(1, [-w, 0, h+i])
 
-    robot.move_leg_to_position(2, [-w, -l, h])
+        robot.move_leg_to_position(2, [-w, -l, h+i])
 
-    robot.move_leg_to_position(3, [w, l, 2*h])
+        robot.move_leg_to_position(3, [w, l, h+i])
 
-    robot.move_leg_to_position(4, [w, 0, h])
+        robot.move_leg_to_position(4, [w, 0, h+i])
 
-    robot.move_leg_to_position(5, [w, -l, 2*h])
+        robot.move_leg_to_position(5, [w, -l, h+i])
+        time.sleep(1)
     time.sleep(10)
 
     robot.loosen()

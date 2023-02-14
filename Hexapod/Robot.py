@@ -172,3 +172,4 @@ class Robot:
     def loosen(self):
         for servo in self.control_board.servos:
             servo.angle=None
+        # pass
