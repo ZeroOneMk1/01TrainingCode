@@ -6,9 +6,9 @@ from datetime import datetime as dt
 from datetime import timedelta
 import math
 
-THETA_WEIGHT = 0.2
-POINTS_WEIGHT = 0.2
-COM_WEIGHT = 0.5
+THETA_WEIGHT = 0.4
+POINTS_WEIGHT = 0.4
+COM_WEIGHT = 1
 
 class Robot:
     def __init__(self, hip_x, hip_y) -> None:
@@ -119,6 +119,8 @@ class Robot:
             self.shift_grounded_leg_positions(input)
         else:
             self.swap_legs()
+            
+            
     
     def swap_legs(self):
         self.grounded_legs, self.lifted_legs = self.lifted_legs, self.grounded_legs # ! Does this work with lists of objects in python? Or does this cause a pointer error?
@@ -134,9 +136,10 @@ class Robot:
         
         return True
     
-    def shift_grounded_leg_positions(self, input: tuple) -> None:        
+    def shift_grounded_leg_positions(self, input: tuple) -> None:  
+        reversed_input = (-input[0], -input[1])      
         for leg in self.grounded_legs:
-            self.shift_leg_position(leg.index, input, self.WORKING_HEIGHT)
+            self.shift_leg_position(leg.index, reversed_input, self.WORKING_HEIGHT)
 
     def shift_leg_position(self, leg_index: int,  vector: tuple, height: float) -> None:
         self.next_leg_positions[leg_index][0] = self.current_leg_positions[leg_index][0] + vector[0]
