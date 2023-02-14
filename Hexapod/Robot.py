@@ -1,9 +1,8 @@
 from Leg import Leg
-# from ControlBoard import ControlBoard
+from ControlBoard import ControlBoard
 import numpy as np
 from time import sleep
 from datetime import datetime as dt
-import pygame
 import math
 
 THETA_WEIGHT = 0.2
@@ -32,16 +31,16 @@ class Robot:
         self.grounded_legs = self.left_tripod
         self.lifted_legs = self.right_tripod
 
-        # self.control_board = ControlBoard(3)
+        self.control_board = ControlBoard(18)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
-        reachable, servo_positions = self.legs[leg_index].calculate_all_all_servo_positions(desired_position)
+        reachable, servo_positions = self.legs[leg_index].calculate_all_servo_positions(desired_position)
         if not reachable:
             print("Not Reachable!")
             return
         for i in range(len(servo_positions)):
             servo_positions[i] = np.clip(servo_positions[i], 0, 180)
-        # self.control_board.set_leg_servo_positions(leg_index, servo_positions)
+        self.control_board.set_leg_servo_positions(leg_index, servo_positions)
         self.legs[leg_index].position = desired_position # ! Maybe this fucks with data types, check if I could make it more consistent
     
     def move_legs_from_current_to_next(self, time:float):

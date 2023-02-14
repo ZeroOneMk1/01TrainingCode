@@ -1,7 +1,7 @@
 import numpy as np
 
 class Leg:
-    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 0.0) -> None:
+    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 2.5) -> None:
         self.hipPos = np.array(hipPos)
         self.index = index
 
@@ -95,7 +95,7 @@ class Leg:
         if L < self.TIBIA_LENGTH*np.cos(np.arcsin(self.FEMUR_LENGTH/self.TIBIA_LENGTH)):
             ambiguous = 1
         
-        alpha = ambiguous * np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)) + (1-ambiguous)(np.pi-np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)))
+        alpha = ambiguous * np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)) + (1-ambiguous)*(np.pi-np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)))
 
         angle_two = np.pi/2 + vector_angle - alpha
 

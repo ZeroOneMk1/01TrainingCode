@@ -4,7 +4,7 @@
 # Libraries
 import time  # https://docs.python.org/fr/3/library/time.html
 from adafruit_servokit import ServoKit # https://circuitpython.readthedocs.io/projects/servokit/en/latest/
-
+import random as rd
 
 class ControlBoard:
 
@@ -32,7 +32,7 @@ class ControlBoard:
         
         elif num_servos < 32:
             self.pca = ServoKit(channels=16)
-            self.pca_two = ServoKit(channels=16) # TODO TEST IF IT HAS A DIFFERENT INDEX.
+            self.pca_two = ServoKit(channels=16, address=65) # TODO TEST IF IT HAS A DIFFERENT INDEX.
 
             self.servos = [] # TODO TEST IF THIS EVEN WORKS IN THE WAY I THINK IT DOES
 
@@ -64,15 +64,21 @@ class ControlBoard:
     def test_servos(self):
 
         """Scenario to test servo"""
-        self.servos[0].angle = 90
-        time.sleep(.5)
+        # self.servos[0].angle = 90
+        # time.sleep(.5)
         
-        self.servos[1].angle = 90
-        time.sleep(.5)
+        # self.servos[1].angle = 90
+        # time.sleep(.5)
 
-        self.servos[2].angle = 180
-        time.sleep(2)
+        # self.servos[2].angle = 180
+        # time.sleep(2)
 
-        self.servos[2].angle=None #disable channel        
-        self.servos[1].angle=None
-        self.servos[0].angle=None
+        for servo in self.servos:
+            servo.angle = 90
+        time.sleep(1)
+        for servo in self.servos:
+            servo.angle=None
+
+        # self.servos[2].angle=None #disable channel        
+        # self.servos[1].angle=None
+        # self.servos[0].angle=None
