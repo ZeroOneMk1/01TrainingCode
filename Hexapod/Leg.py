@@ -97,6 +97,7 @@ class Leg:
 
         
     def calculate_all_servo_positions(self, abs_destination):
+        # print(f"LEG {self.index}\n")
         # print(f"ABS_DES:{abs_destination}\n")
         rel_destination = self.absolute_to_relative_destination(abs_destination)
         # print(f"REL_DES:{rel_destination}\n")

@@ -7,44 +7,42 @@ from Robot import Robot
 from datetime import datetime as dt
 import numpy as np
 
-# function init 
-def init():
-    # robot.control_board.test_servos()
-    pass
-
-
 # function main 
 def main():
     robot = Robot(13.50515, 18.4576)
-    # robot.control_board.test_servos()
-    # time.sleep(5)
-    # for i in range(23):
-    #     robot.move_leg_to_position(0, [0, 0, -38.5+i])
-    #     time.sleep(0.5)
 
-    h = -20
-    w = 30
-    l = 30
+    robot.reset_leg_positions()
 
-    for i in range(50):
-        robot.move_leg_to_position(0, [-w, l, h+i])
+        # robot.control_board.test_servos()
+        # time.sleep(5)
+        # for i in range(23):
+        #     robot.move_leg_to_position(0, [0, 0, -38.5+i])
+        #     time.sleep(0.5)
 
-        robot.move_leg_to_position(1, [-w, 0, h+i])
+        # h = -20
+        # w = 30
+        # l = 30
 
-        robot.move_leg_to_position(2, [-w, -l, h+i])
+        # for i in range(50):
+        #     robot.move_leg_to_position(0, [-w, l, h+i])
 
-        robot.move_leg_to_position(3, [w, l, h+i])
+        #     robot.move_leg_to_position(1, [-w, 0, h+i])
 
-        robot.move_leg_to_position(4, [w, 0, h+i])
+        #     robot.move_leg_to_position(2, [-w, -l, h+i])
 
-        robot.move_leg_to_position(5, [w, -l, h+i])
-        time.sleep(1)
-    time.sleep(10)
+        #     robot.move_leg_to_position(3, [w, l, h+i])
+
+        #     robot.move_leg_to_position(4, [w, 0, h+i])
+
+        #     robot.move_leg_to_position(5, [w, -l, h+i])
+        #     time.sleep(1)
+        # time.sleep(10)
+
+    # robot.tick()
 
     robot.loosen()
 
     # robot.move_leg_from_point_to_point(np.array[10, 10, -5], np.array(10, -10, -5), 3)
 
 if __name__ == '__main__':
-    init()
     main()
