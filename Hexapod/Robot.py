@@ -50,37 +50,36 @@ class Robot:
     def move_legs_from_current_to_next(self, time:float):
         """Goes from self.current to self.next positions, time is in seconds"""
 
-        start = dt.now()
-        end = start + timedelta(seconds=time)
-        now = dt.now()
+        """start = dt.now()
+        # end = start + timedelta(seconds=time)
+        # now = dt.now()
 
-        # self.move_leg_to_position(leg.index, destination)
-        # sleep(5) # ? remember why this was important. Remove if it works fine while commented.
+        # # self.move_leg_to_position(leg.index, destination)
+        # # sleep(5) # ? remember why this was important. Remove if it works fine while commented.
 
-        substeps = 0
+        # substeps = 0
 
-        while now < end:
+        # while now < end:
 
-            substeps += 1
+        #     substeps += 1
 
-            for leg in self.legs:
+        #     for leg in self.legs:
 
-                line = np.asarray(self.next_leg_positions[leg.index]) - np.asarray(self.current_leg_positions[leg.index])
+        #         line = np.asarray(self.next_leg_positions[leg.index]) - np.asarray(self.current_leg_positions[leg.index])
 
-                destination = self.next_leg_positions[leg.index]
+        #         destination = self.next_leg_positions[leg.index]
 
-                t = dt.now() - start
-                t_sec = t.total_seconds()
-                destination = np.asarray(np.asarray(self.current_leg_positions[leg.index]) + line * t_sec / time)
-                self.move_leg_to_position(leg.index, destination)
+        #         t = dt.now() - start
+        #         t_sec = t.total_seconds()
+        #         destination = np.asarray(np.asarray(self.current_leg_positions[leg.index]) + line * t_sec / time)
+        #         self.move_leg_to_position(leg.index, destination)
             
-            now = dt.now()
-
+        #     now = dt.now()""" 
         
         for leg in self.legs:
             self.move_leg_to_position(leg.index, self.next_leg_positions[leg.index])
 
-        print(f"Number of substeps: {substeps}")
+        # print(f"Number of substeps: {substeps}")
 
     def reset_leg_positions(self):
         self.lift_all_legs()
@@ -112,7 +111,7 @@ class Robot:
         sleep(1/50)
     
     def get_controller_input(self):
-        return np.asarray((0, 0.5)) # TODO actually set up the controller instead of just giving X=0 Y=1
+        return (0, 0.5) # TODO actually set up the controller instead of just giving X=0 Y=1
 
     def calculate_new_leg_positions(self, input: tuple) -> None:
         if self.shift_lifted_leg_positions(input):
@@ -120,13 +119,11 @@ class Robot:
         else:
             self.swap_legs()
             
-            
-    
     def swap_legs(self):
         self.grounded_legs, self.lifted_legs = self.lifted_legs, self.grounded_legs # ! Does this work with lists of objects in python? Or does this cause a pointer error?
 
     def shift_lifted_leg_positions(self, input: tuple) -> bool:
-        d = self.get_COM_distance()
+        d = self.get_COM_distance(input)
 
         if d == -1:
             return False
@@ -146,12 +143,15 @@ class Robot:
         self.next_leg_positions[leg_index][1] = self.current_leg_positions[leg_index][1] + vector[1]
         self.next_leg_positions[leg_index][2] = height
 
-    def get_COM_distance(self):
+    def get_COM_distance(self, vector):
 
         # TODO Include collision of legs as another distance parameter (IMPORTANT BEFORE FINAL IMPLEMENTATION!) not needed before visualization
-
         
         points = self.get_grounded_leg_positions()
+
+        for i in range(len(points)):
+            points[i][0] = points[i][0] - vector[0] # ! MAY BE POSITIVE
+            points[i][1] = points[i][1] - vector[1]
 
         distances = []
 

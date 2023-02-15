@@ -13,31 +13,31 @@ def main():
 
     robot.reset_leg_positions()
 
-    h = -20
-    w = 20
-    l = 20
+    # h = -20
+    # w = 20
+    # l = 20
 
-    # i=0
+    # # i=0
 
-    for i in range(150):
-        robot.move_leg_to_position(0, [-w+i/10, l, h])
+    # for i in range(150):
+    #     robot.move_leg_to_position(0, [-w+i/10, l, h])
 
-        robot.move_leg_to_position(1, [-w+i/10, 0, h])
+    #     robot.move_leg_to_position(1, [-w+i/10, 0, h])
 
-        robot.move_leg_to_position(2, [-w+i/10, -l, h])
+    #     robot.move_leg_to_position(2, [-w+i/10, -l, h])
 
-        robot.move_leg_to_position(3, [w+i/10, l, h])
+    #     robot.move_leg_to_position(3, [w+i/10, l, h])
 
-        robot.move_leg_to_position(4, [w+i/10, 0, h])
+    #     robot.move_leg_to_position(4, [w+i/10, 0, h])
 
-        robot.move_leg_to_position(5, [w+i/10, -l, h])
-        time.sleep(0.02)
+    #     robot.move_leg_to_position(5, [w+i/10, -l, h])
+    #     time.sleep(0.02)
 
     # time.sleep(5)
 
-    # for i in range(30):
-    #     robot.tick()
-    #     time.sleep(0.1)
+    for i in range(60):
+        robot.tick()
+        # time.sleep(0.1)
 
     robot.loosen()
 

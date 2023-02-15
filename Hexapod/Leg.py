@@ -97,22 +97,23 @@ class Leg:
 
         
     def calculate_all_servo_positions(self, abs_destination):
-        print(f"LEG {self.index}\n")
-        print(f"ABS_DES:{abs_destination}\n")
         rel_destination = self.absolute_to_relative_destination(abs_destination)
-        print(f"REL_DES:{rel_destination}\n")
         perp_destination, theta = self.relative_to_perpendicular_destination(rel_destination)
-        print(f"PERP_DES:{perp_destination}\n")
         if theta > self.MAX_THETA or theta < -self.MAX_THETA:
-            return False, np.zeros(1, 3)
+            return False, None
         in_envelope, snapped_destination = self.is_within_envelope(perp_destination)
-        print(f"SNAP_DES:{snapped_destination}\n")
+        if self.index == 4:
+            print(f"LEG {self.index}\n")
+            print(f"ABS_DES:{abs_destination}\n")
+            # print(f"REL_DES:{rel_destination}\n")
+            # # print(f"PERP_DES:{perp_destination}\n")
+            # print(f"SNAP_DES:{snapped_destination}\n")
         
         if in_envelope:
 
             servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(snapped_destination)
             angles = np.array([theta + np.pi/2, np.pi-servo_two_angle, servo_three_angle]) * 180 / np.pi
-            print(f"ANGLES:{angles}\n\n")
+            # print(f"ANGLES:{angles}\n\n")
             return True, angles
         else:
             return False, None
