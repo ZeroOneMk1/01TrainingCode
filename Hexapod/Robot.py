@@ -1,5 +1,5 @@
 from Leg import Leg
-from ControlBoard import ControlBoard
+# from ControlBoard import ControlBoard
 import numpy as np
 from time import sleep
 from datetime import datetime as dt
@@ -13,6 +13,7 @@ COM_WEIGHT = 1
 class Robot:
     def __init__(self, hip_x, hip_y) -> None:
         self.legs = []
+        self.servos = [0, 0, 0, 0, 0, 0]
         self.hip_x = hip_x
         self.hip_y = hip_y
 
@@ -35,7 +36,9 @@ class Robot:
         self.grounded_legs = self.left_tripod
         self.lifted_legs = self.right_tripod
 
-        self.control_board = ControlBoard(18)
+        self.REMOVE = 0
+
+        # self.control_board = ControlBoard(18)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
         reachable, servo_positions = self.legs[leg_index].calculate_all_servo_positions(desired_position)
@@ -44,8 +47,10 @@ class Robot:
             return
         for i in range(len(servo_positions)):
             servo_positions[i] = np.clip(servo_positions[i], 0, 180)
-        self.control_board.set_leg_servo_positions(leg_index, servo_positions)
-        self.legs[leg_index].position = desired_position # ! Maybe this fucks with data types, check if I could make it more consistent
+        # self.control_board.set_leg_servo_positions(leg_index, servo_positions)
+        self.servos[leg_index] = servo_positions
+        self.legs[leg_index].position = desired_position
+        # print(f"{desired_position}\n{servo_positions}\n\n")
     
     def move_legs_from_current_to_next(self, time:float):
         """Goes from self.current to self.next positions, time is in seconds"""
@@ -75,7 +80,7 @@ class Robot:
         #         self.move_leg_to_position(leg.index, destination)
             
         #     now = dt.now()""" 
-        
+        pass
         for leg in self.legs:
             self.move_leg_to_position(leg.index, self.next_leg_positions[leg.index])
 
@@ -83,7 +88,7 @@ class Robot:
 
     def reset_leg_positions(self):
         self.lift_all_legs()
-        sleep(2)
+        # sleep(2)
         self.drop_grounded_legs()
 
     def lift_all_legs(self):
@@ -107,11 +112,16 @@ class Robot:
         self.calculate_new_leg_positions(controller_input)
         self.move_legs_from_current_to_next(0.02)
         for i in range(len(self.current_leg_positions)):
-            self.current_leg_positions[i] = self.next_leg_positions[i] # ! May have errors when next gets changed
-        sleep(1/50)
+            for j in range(len(self.current_leg_positions[i])):
+                self.current_leg_positions[i][j] = self.next_leg_positions[i][j] # ! May have errors when next gets changed
+        # sleep(1/50)
     
     def get_controller_input(self):
-        return (0, 0.5) # TODO actually set up the controller instead of just giving X=0 Y=1
+        # c, s = np.cos(self.REMOVE), np.sin(self.REMOVE)
+        # self.REMOVE += np.pi/64
+        return (0, 1) # TODO actually set up the controller instead of just giving X=0 Y=0.5
+
+    
 
     def calculate_new_leg_positions(self, input: tuple) -> None:
         if self.shift_lifted_leg_positions(input):
@@ -147,7 +157,13 @@ class Robot:
 
         # TODO Include collision of legs as another distance parameter (IMPORTANT BEFORE FINAL IMPLEMENTATION!) not needed before visualization
         
-        points = self.get_grounded_leg_positions()
+        glegpos = self.get_grounded_leg_positions()
+        points = []
+
+        for i in range(len(glegpos)):
+            points.append([])
+            for j in range(len(glegpos[i])):
+                points[i].append(glegpos[i][j])
 
         for i in range(len(points)):
             points[i][0] = points[i][0] - vector[0] # ! MAY BE POSITIVE
@@ -166,7 +182,7 @@ class Robot:
 
             perp_destination, theta = self.grounded_legs[i].relative_to_perpendicular_destination(rel_destination)
 
-            theta_dist = 30-abs(theta * 180 / np.pi)
+            theta_dist = 45-abs(theta * 180 / np.pi)
 
             if theta_dist < 0:
                 return -1
@@ -193,6 +209,8 @@ class Robot:
         else:
             return -1
         
+        # print(min(distances))
+
         return min(distances)
     
 
@@ -203,6 +221,8 @@ class Robot:
         return positions   
     
     def loosen(self):
-        for servo in self.control_board.servos:
-            servo.angle=None
+
+        # for servo in self.control_board.servos:
+        #     servo.angle=None
         pass
+

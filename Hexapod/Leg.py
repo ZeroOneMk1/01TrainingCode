@@ -16,6 +16,8 @@ class Leg:
 
         self.position = (0, 0, 0)
 
+        self.rest_angle = np.radians(-zeroOrientation)
+
         theta = np.radians(-zeroOrientation)
         c, s = np.cos(theta), np.sin(theta)
         R = np.matrix([[c, -s, 0], [s, c,0], [0,0,1]])
@@ -70,13 +72,13 @@ class Leg:
             return False, None
         return False, None
     
-    def calculate_second_third_servo_positions(self, perp_destination) -> float:
+    def calculate_second_third_servo_positions(self, snapped_destination) -> float:
         """Assumes it's in envelope"""
-        L = np.sqrt(perp_destination[0]**2 + perp_destination[2]**2)
+        L = np.sqrt(snapped_destination[0]**2 + snapped_destination[2]**2)
         angle_three = np.arccos(self.BCSQD2BC - L**2 * self.D2BC)
 
-        Y = float(perp_destination[2])
-        X = float(perp_destination[0]) # TODO FIGURE OUT WHY MATRICES STACK
+        Y = float(snapped_destination[2])
+        X = float(snapped_destination[0])
 
         try:
             vector_angle = -np.arctan(Y/X)
@@ -102,9 +104,9 @@ class Leg:
         if theta > self.MAX_THETA or theta < -self.MAX_THETA:
             return False, None
         in_envelope, snapped_destination = self.is_within_envelope(perp_destination)
-        if self.index == 4:
-            print(f"LEG {self.index}\n")
-            print(f"ABS_DES:{abs_destination}\n")
+        # if self.index == 4:
+            # print(f"LEG {self.index}\n")
+            # print(f"ABS_DES:{abs_destination}\n")
             # print(f"REL_DES:{rel_destination}\n")
             # # print(f"PERP_DES:{perp_destination}\n")
             # print(f"SNAP_DES:{snapped_destination}\n")
