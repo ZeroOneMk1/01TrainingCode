@@ -1,4 +1,8 @@
 import numpy as np
+import math
+
+DEG = 180 / math.pi
+RAD = math.pi / 180
 
 class Leg:
     def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 2.5) -> None:
@@ -12,7 +16,7 @@ class Leg:
         self.D2BC = 1/(self.FEMUR_LENGTH * self.TIBIA_LENGTH)* 0.5
         self.BCSQD2BC = self.BCSQ * self.D2BC
 
-        self.MAX_THETA: float = np.pi / 3
+        self.MAX_THETA: float = math.pi / 3
 
         self.position = (0, 0, 0)
 
@@ -23,12 +27,20 @@ class Leg:
         R = np.matrix([[c, -s, 0], [s, c,0], [0,0,1]])
 
         self.ROT_Z_MATRIX = R
+        self.ROT_Z_C = c
+        self.ROT_Z_S = s
+
+        self.min_dist = self.COXA_LENGTH + (self.hipPos[0]**2 + self.hipPos[1]**2)**.5
 
     def absolute_to_relative_destination(self, abs_destination) -> np.array:
         temp_destination = abs_destination - self.hipPos
-        rel_destination = self.ROT_Z_MATRIX*temp_destination.reshape(3,1)
-        rel_dest_return = [float(rel_destination[0][0]), float(rel_destination[1][0]), float(rel_destination[2][0])]
-        return rel_dest_return
+
+        rel_destination = [self.ROT_Z_C*temp_destination[0] - self.ROT_Z_S*temp_destination[1], self.ROT_Z_S*temp_destination[0] + self.ROT_Z_C*temp_destination[1], temp_destination[2]]
+
+        # rel_destination = self.ROT_Z_MATRIX*temp_destination.reshape(3,1)
+        # rel_dest_return = [float(rel_destination[0][0]), float(rel_destination[1][0]), float(rel_destination[2][0])]
+        # print(f"TEMP:\n{temp_destination}\nREL:\n{rel_dest_return}\n\n")
+        return rel_destination
 
     def relative_to_perpendicular_destination(self, rel_destination) -> np.array and float:
         
@@ -36,11 +48,11 @@ class Leg:
             if rel_destination[1] == 0:
                 theta = 0
             else:
-                theta  = rel_destination[1]/abs(rel_destination[1]) * np.pi / 2
+                theta  = rel_destination[1]/abs(rel_destination[1]) * math.pi / 2
         else:
-            theta  = -np.arctan(rel_destination[1]/rel_destination[0])
+            theta  = -math.atan(rel_destination[1]/rel_destination[0])
 
-        perp_destination = [np.sqrt(rel_destination[0]**2 + rel_destination[1]**2) - self.COXA_LENGTH, 0, rel_destination[2]]
+        perp_destination = [(rel_destination[0]**2 + rel_destination[1]**2)**.5 - self.COXA_LENGTH, 0, rel_destination[2]]
         return perp_destination, -theta
 
 
@@ -51,48 +63,55 @@ class Leg:
         X = float(perp_destination[0]) # TODO FIGURE OUT WHY MATRICES STACK
         
         try:
-
-            if np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) >= X >= np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2):
-                return True, perp_destination
-
-            if 0 <= X <= np.sqrt((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-                return True, perp_destination
-
-            if -np.sqrt((self.FEMUR_LENGTH - self.TIBIA_LENGTH)**2 - Y**2) >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2):
-                return True, perp_destination
-
-            if 0 >= X >= -np.sqrt(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2) and Y <= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-                return True, perp_destination
-
-            if 0 < np.sqrt(self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2) and Y >= self.FEMUR_LENGTH - self.TIBIA_LENGTH:
-                # Snaps input to within the envelope while maintaining desired height
-                return True, [np.sqrt(self.TIBIA_LENGTH**2-(Y-self.FEMUR_LENGTH)**2), perp_destination[1], perp_destination[2]]
+            A = ((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2)**.5
+            B = (self.TIBIA_LENGTH**2 - (Y-self.FEMUR_LENGTH)**2)**.5
+            C = self.FEMUR_LENGTH - self.TIBIA_LENGTH
+            D = -((C)**2 - Y**2)**.5
+            E = -(self.TIBIA_LENGTH**2 - (Y - self.FEMUR_LENGTH)**2)**.5
+            F = -(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2)**.5
         except Exception as e:
             print(f"EXCEPTION: {e}")
             return False, None
+
+        if A >= X >= B:
+            return True, perp_destination
+
+        if 0 <= X <= A and Y <= C:
+            return True, perp_destination
+
+        if D >= X >= E:
+            return True, perp_destination
+
+        if 0 >= X >= F and Y <= C:
+            return True, perp_destination
+
+        if 0 < B and Y >= C:
+            # Snaps input to within the envelope while maintaining desired height
+            return True, [B, perp_destination[1], perp_destination[2]]
+
         return False, None
     
     def calculate_second_third_servo_positions(self, snapped_destination) -> float:
         """Assumes it's in envelope"""
-        L = np.sqrt(snapped_destination[0]**2 + snapped_destination[2]**2)
-        angle_three = np.arccos(self.BCSQD2BC - L**2 * self.D2BC)
+        L = (snapped_destination[0]**2 + snapped_destination[2]**2)**.5
+        angle_three = math.acos(self.BCSQD2BC - L**2 * self.D2BC)
 
         Y = float(snapped_destination[2])
         X = float(snapped_destination[0])
 
         try:
-            vector_angle = -np.arctan(Y/X)
+            vector_angle = -math.atan(Y/X)
         except:
-            vector_angle = np.pi/2
+            vector_angle = math.pi/2
 
         ambiguous = 1
 
-        if L < self.TIBIA_LENGTH*np.cos(np.arcsin(self.FEMUR_LENGTH/self.TIBIA_LENGTH)):
+        if L < self.TIBIA_LENGTH*math.cos(math.asin(self.FEMUR_LENGTH/self.TIBIA_LENGTH)):
             ambiguous = 0
         
-        alpha = ambiguous * np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)) + (1-ambiguous)*(np.pi-np.arcsin(self.TIBIA_LENGTH/L*np.sin(angle_three)))
+        alpha = ambiguous * math.asin(self.TIBIA_LENGTH/L*math.sin(angle_three)) + (1-ambiguous)*(math.pi-math.asin(self.TIBIA_LENGTH/L*math.sin(angle_three)))
 
-        angle_two = np.pi/2 + vector_angle - alpha
+        angle_two = math.pi/2 + vector_angle - alpha
 
         return angle_two, angle_three
 
@@ -114,7 +133,7 @@ class Leg:
         if in_envelope:
 
             servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(snapped_destination)
-            angles = np.array([theta + np.pi/2, np.pi-servo_two_angle, servo_three_angle]) * 180 / np.pi
+            angles = [theta * DEG + 90, 90 - servo_two_angle * DEG, servo_three_angle * DEG]
             # print(f"ANGLES:{angles}\n\n")
             return True, angles
         else:
