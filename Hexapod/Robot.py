@@ -124,8 +124,7 @@ class Robot:
             self.current_leg_positions[leg.index] = leg.position
 
     def drop_grounded_legs(self):
-        controller_input = self.get_controller_input()
-        self.calculate_new_leg_positions(controller_input)
+        self.calculate_new_leg_positions((0, 0, 0))
         self.move_legs_from_current_to_next(2)
 
     def tick(self):
