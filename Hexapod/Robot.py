@@ -43,16 +43,17 @@ class Robot:
         self.grounded_legs = self.left_tripod
         self.lifted_legs = self.right_tripod
 
-        # self.xrot = 0
-        # self.yrot = 0
-
         self.REMOVE = 0
 
-        pygame.init()
+        self.has_controller = False
 
-        # pygame.joystick.init()
-        self.controller = pygame.joystick.Joystick(0)
-        self.controller.init()
+        try:
+            pygame.init()
+            self.controller = pygame.joystick.Joystick(0)
+            self.controller.init()
+            self.has_controller = True
+        except:
+            print("Controller Not Connected")
 
         # self.control_board = ControlBoard(18)
     
@@ -128,18 +129,19 @@ class Robot:
         self.move_legs_from_current_to_next(2)
 
     def tick(self):
-        pygame.event.get()
+        if self.has_controller:
+            pygame.event.get()
+            
+            if self.controller.get_button(13):
+                self.reset_leg_positions()
+            else:
+                controller_input = self.get_controller_input()
+                self.calculate_new_leg_positions(controller_input)
+                self.move_legs_from_current_to_next(0.02)
         
-        if self.controller.get_button(13):
-            self.reset_leg_positions()
-        else:
-            controller_input = self.get_controller_input()
-            self.calculate_new_leg_positions(controller_input)
-            self.move_legs_from_current_to_next(0.02)
-        
-        for i in range(len(self.current_leg_positions)):
-            for j in range(len(self.current_leg_positions[i])):
-                self.current_leg_positions[i][j] = self.next_leg_positions[i][j] # ! May have errors when next gets changed
+            for i in range(len(self.current_leg_positions)):
+                for j in range(len(self.current_leg_positions[i])):
+                    self.current_leg_positions[i][j] = self.next_leg_positions[i][j] # ! May have errors when next gets changed
         # sleep(1/60)
     
     def get_controller_input(self):
