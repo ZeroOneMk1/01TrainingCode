@@ -60,7 +60,7 @@ class Leg:
         """Assumes that the destination is WITHIN WORKABLE XY-ANGLE"""
 
         Y = float(perp_destination[2])
-        X = float(perp_destination[0]) # TODO FIGURE OUT WHY MATRICES STACK
+        X = float(perp_destination[0])
         
         try:
             A = ((self.TIBIA_LENGTH + self.FEMUR_LENGTH)**2 - Y**2)**.5
@@ -71,6 +71,10 @@ class Leg:
             F = -(self.TIBIA_LENGTH**2 - (Y + self.FEMUR_LENGTH)**2)**.5
         except Exception as e:
             print(f"EXCEPTION: {e}")
+            return False, None
+        
+        if isinstance(A, complex) or isinstance(B, complex) or isinstance(C, complex) or isinstance(D, complex) or isinstance(E, complex) or isinstance(F, complex):
+            print(f"COMPLEX NUMBERS, VARIABLE DUMP:\n{A}\n{B}\n{C}\n{D}\n{E}\n{F}\n")
             return False, None
 
         if A >= X >= B:
@@ -133,7 +137,7 @@ class Leg:
         if in_envelope:
 
             servo_two_angle, servo_three_angle = self.calculate_second_third_servo_positions(snapped_destination)
-            angles = [theta * DEG + 90, 90 - servo_two_angle * DEG, servo_three_angle * DEG]
+            angles = [theta * DEG + 90, 180 - servo_two_angle * DEG, servo_three_angle * DEG]
             # print(f"ANGLES:{angles}\n\n")
             return True, angles
         else:

@@ -6,12 +6,16 @@ from datetime import datetime as dt
 from datetime import timedelta
 import math
 
+import pygame
+
 DEG = 180 / math.pi
 RAD = math.pi / 180
 
 THETA_WEIGHT = 0.4
 POINTS_WEIGHT = 0.4
 COM_WEIGHT = 1
+
+ROTATION_SPEED = 0.02 * math.pi
 
 class Robot:
     def __init__(self, hip_x, hip_y) -> None:
@@ -39,7 +43,16 @@ class Robot:
         self.grounded_legs = self.left_tripod
         self.lifted_legs = self.right_tripod
 
+        # self.xrot = 0
+        # self.yrot = 0
+
         self.REMOVE = 0
+
+        pygame.init()
+
+        # pygame.joystick.init()
+        self.controller = pygame.joystick.Joystick(0)
+        self.controller.init()
 
         # self.control_board = ControlBoard(18)
     
@@ -110,22 +123,54 @@ class Robot:
             self.current_leg_positions[leg.index] = leg.position
 
     def drop_grounded_legs(self):
-        self.calculate_new_leg_positions((0, 0))
+        controller_input = self.get_controller_input()
+        self.calculate_new_leg_positions(controller_input)
         self.move_legs_from_current_to_next(2)
 
     def tick(self):
-        controller_input = self.get_controller_input()
-        self.calculate_new_leg_positions(controller_input)
-        self.move_legs_from_current_to_next(0.02)
+        pygame.event.get()
+        
+        if self.controller.get_button(13):
+            self.reset_leg_positions()
+        else:
+            controller_input = self.get_controller_input()
+            self.calculate_new_leg_positions(controller_input)
+            self.move_legs_from_current_to_next(0.02)
+        
         for i in range(len(self.current_leg_positions)):
             for j in range(len(self.current_leg_positions[i])):
                 self.current_leg_positions[i][j] = self.next_leg_positions[i][j] # ! May have errors when next gets changed
         # sleep(1/60)
     
     def get_controller_input(self):
-        c, s = math.cos(self.REMOVE), math.sin(self.REMOVE)
-        self.REMOVE += math.pi/256
-        return (c, s) # TODO actually set up the controller instead of just giving X=0 Y=0.5
+        # c, s = math.cos(self.REMOVE), math.sin(self.REMOVE)
+        # self.REMOVE += math.pi/256
+        # return (c, s) # TODO actually set up the controller instead of just giving X=0 Y=0.5
+        self.controller.init()
+        x = self.controller.get_axis(0)
+        y = self.controller.get_axis(1)
+
+        z = self.controller.get_axis(2) * ROTATION_SPEED
+
+        # rotx = (self.controller.get_button(6) - self.controller.get_button(4)) * ROTATION_SPEED
+
+        # if self.xrot > math.pi/8 and rotx > 0:
+        #     rotx = 0
+        # elif self.xrot < math.pi/8 and rotx < 0:
+        #     rotx = 0
+
+        # self.xrot += rotx
+
+        # roty = (self.controller.get_button(7) - self.controller.get_button(5)) * ROTATION_SPEED
+
+        # if self.yrot > math.pi/8 and roty > 0:
+        #     roty = 0
+        # elif self.yrot < math.pi/8 and roty < 0:
+        #     roty = 0
+
+        # self.yrot += roty
+
+        return (x, -y, z)
 
     
 
@@ -150,14 +195,36 @@ class Robot:
         return True
     
     def shift_grounded_leg_positions(self, input: tuple) -> None:  
-        reversed_input = (-input[0], -input[1])      
+        reversed_input = (-input[0], -input[1], -input[2])      
         for leg in self.grounded_legs:
             self.shift_leg_position(leg.index, reversed_input, self.WORKING_HEIGHT)
 
     def shift_leg_position(self, leg_index: int,  vector: tuple, height: float) -> None:
+        
+
         self.next_leg_positions[leg_index][0] = self.current_leg_positions[leg_index][0] + vector[0]
         self.next_leg_positions[leg_index][1] = self.current_leg_positions[leg_index][1] + vector[1]
         self.next_leg_positions[leg_index][2] = height
+        
+        self.next_leg_positions[leg_index] = self.rotate_z(vector[2], self.next_leg_positions[leg_index])
+
+        # self.next_leg_positions[leg_index] = self.rotate_x(self.next_leg_positions[leg_index])
+        # self.next_leg_positions[leg_index] = self.rotate_y(self.next_leg_positions[leg_index])
+
+    def rotate_z(self, theta, to_rotate):
+        c, s = np.cos(theta), np.sin(theta)
+
+        return [c*to_rotate[0] - s*to_rotate[1], s*to_rotate[0] + c*to_rotate[1], to_rotate[2]]
+    
+    # def rotate_x(self, to_rotate):
+    #     c, s = np.cos(self.xrot), np.sin(self.xrot)
+
+    #     return [to_rotate[0], c*to_rotate[1] - s*to_rotate[2], s*to_rotate[1] + c*to_rotate[2]]
+    
+    # def rotate_y(self, to_rotate):
+    # #     c, s = np.cos(self.yrot), np.sin(self.yrot)
+
+    #     return [c*to_rotate[0] + s*to_rotate[2], to_rotate[1], -s*to_rotate[0] + c*to_rotate[2]]
 
     def get_COM_distance(self, vector):
 
@@ -174,6 +241,10 @@ class Robot:
         for i in range(len(points)):
             points[i][0] = points[i][0] - vector[0]
             points[i][1] = points[i][1] - vector[1]
+            points[i] = self.rotate_z(-vector[2], points[i])
+
+            # points[i] = self.rotate_x(points[i])
+            # points[i] = self.rotate_y(points[i])
 
         distances = []
 
