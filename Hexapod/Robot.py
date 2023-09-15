@@ -20,12 +20,21 @@ class Robot:
         self.WORKING_HEIGHT = -11.5
         self.STANDARD_DISTANCE = 15
 
-        self.legs.append(Leg(0, np.array([-hip_x, hip_y, 0]), 135)) # Front Left Leg
-        self.legs.append(Leg(1, np.array([-hip_x, 0, 0]), 180)) # Center Left Leg
-        self.legs.append(Leg(2, np.array([-hip_x, -hip_y, 0]), 225)) # Back Left Leg
-        self.legs.append(Leg(3, np.array([hip_x, hip_y, 0]), 45)) # Front Right Leg
-        self.legs.append(Leg(4, np.array([hip_x, 0, 0]), 0)) # Center Right Leg
-        self.legs.append(Leg(5, np.array([hip_x, -hip_y, 0]), 315)) # Back Right Leg
+        # RECTANGULAR BODY
+
+        # self.legs.append(Leg(0, np.array([-hip_x, hip_y, 0]), 135)) # Front Left Leg
+        # self.legs.append(Leg(1, np.array([-hip_x, 0, 0]), 180)) # Center Left Leg
+        # self.legs.append(Leg(2, np.array([-hip_x, -hip_y, 0]), 225)) # Back Left Leg
+        # self.legs.append(Leg(3, np.array([hip_x, hip_y, 0]), 45)) # Front Right Leg
+        # self.legs.append(Leg(4, np.array([hip_x, 0, 0]), 0)) # Center Right Leg
+        # self.legs.append(Leg(5, np.array([hip_x, -hip_y, 0]), 315)) # Back Right Leg
+
+        self.legs.append(Leg(0, np.array([-11.68, 16.68, 0]), 135)) # Front Left Leg
+        self.legs.append(Leg(1, np.array([-14.318, 0, 0]), 180)) # Center Left Leg
+        self.legs.append(Leg(2, np.array([-11.68, -16.68, 0]), 225)) # Back Left Leg
+        self.legs.append(Leg(3, np.array([11.68, 16.68, 0]), 45)) # Front Right Leg
+        self.legs.append(Leg(4, np.array([14.318, 0, 0]), 0)) # Center Right Leg
+        self.legs.append(Leg(5, np.array([11.68, -16.68, 0]), 315)) # Back Right Leg
 
         self.current_leg_positions = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
         self.next_leg_positions = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]

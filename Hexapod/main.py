@@ -68,26 +68,32 @@ def main():
         # plt.gca().add_collection3d(srf)
 
         # adding Body
-        for i in range(3):
-            x.append(-robot.hip_x)
-        for i in range(3):
-            x.append(robot.hip_x)
-        for i in range(2):
-            y.append(robot.hip_y)
-            y.append(0)
-            y.append(-robot.hip_y)
         for i in range(6):
-            z.append(0)
+            x.append(robot.legs[i].hipPos[0])
+        for i in range(6):
+            y.append(robot.legs[i].hipPos[1])
+        for i in range(6):
+            z.append(robot.legs[i].hipPos[2])
 
         # center of body on floor
         x.append(0)
         y.append(0)
         z.append(robot.WORKING_HEIGHT)
 
-        plot_line([-robot.hip_x, -robot.hip_y, 0], [robot.hip_x, -robot.hip_y, 0])
-        plot_line([robot.hip_x, -robot.hip_y, 0], [robot.hip_x, robot.hip_y, 0])
-        plot_line([robot.hip_x, robot.hip_y, 0], [-robot.hip_x, robot.hip_y, 0])
-        plot_line([-robot.hip_x, robot.hip_y, 0], [-robot.hip_x, -robot.hip_y, 0])
+        # RECTANGULAR BOT
+
+        # plot_line([-robot.hip_x, -robot.hip_y, 0], [robot.hip_x, -robot.hip_y, 0])
+        # plot_line([robot.hip_x, -robot.hip_y, 0], [robot.hip_x, robot.hip_y, 0])
+        # plot_line([robot.hip_x, robot.hip_y, 0], [-robot.hip_x, robot.hip_y, 0])
+        # plot_line([-robot.hip_x, robot.hip_y, 0], [-robot.hip_x, -robot.hip_y, 0])
+
+        plot_line(robot.legs[0].hipPos, robot.legs[1].hipPos)
+        plot_line(robot.legs[1].hipPos, robot.legs[2].hipPos)
+        plot_line(robot.legs[3].hipPos, robot.legs[4].hipPos)
+        plot_line(robot.legs[4].hipPos, robot.legs[5].hipPos)
+
+        plot_line(robot.legs[3].hipPos, robot.legs[0].hipPos)
+        plot_line(robot.legs[2].hipPos, robot.legs[5].hipPos)
 
         #adding legs
         for i in range(6):
