@@ -57,15 +57,15 @@ def main():
         y.append(ysum)
         z.append(robot.WORKING_HEIGHT)
 
-        # # adding triangles
+        # adding triangles
         
-        # verts = [list(zip([x[0], x[2], x[4]], [y[0], y[2], y[4]], [z[0], z[2], z[4]]))]
-        # srf = Poly3DCollection(verts, alpha=.25, facecolor='#800000')
-        # plt.gca().add_collection3d(srf)
+        verts = [list(zip([x[0], x[2], x[4]], [y[0], y[2], y[4]], [z[0], z[2], z[4]]))]
+        srf = Poly3DCollection(verts, alpha=.25, facecolor='#800000')
+        plt.gca().add_collection3d(srf)
 
-        # verts = [list(zip([x[1], x[3], x[5]], [y[1], y[3], y[5]], [z[1], z[3], z[5]]))]
-        # srf = Poly3DCollection(verts, alpha=.25, facecolor='#008000')
-        # plt.gca().add_collection3d(srf)
+        verts = [list(zip([x[1], x[3], x[5]], [y[1], y[3], y[5]], [z[1], z[3], z[5]]))]
+        srf = Poly3DCollection(verts, alpha=.25, facecolor='#008000')
+        plt.gca().add_collection3d(srf)
 
         # adding Body
         for i in range(6):
@@ -122,7 +122,7 @@ def main():
         ax.set_ylim(-30, 30)
         ax.set_zlim(-30, 30)
 
-    ani = FuncAnimation(fig, update, frames=range(5), interval=10)
+    ani = FuncAnimation(fig, update, frames=range(5), interval=5)
 
     plt.show()
 
@@ -149,7 +149,7 @@ def main():
 
     # time.sleep(5)"""
 
-    # for i in range(60):
+    # for i in range(1000):
     #     robot.tick()
 
     robot.loosen()

@@ -59,6 +59,8 @@ print(added, multid)
 
 print("__________________________")
 
+print((-1)**.5)
+
 
 if __name__ == '__main__':
 
