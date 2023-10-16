@@ -1,0 +1,20 @@
+split help into pages that you can control with reactions? - 339384118959800320
+Mods being able to turn off commands - 339384118959800320
+command to lock wizard to only post in a single channel - 339384118959800320
+Person-based meeting times as well - self
+Balance and Karma Swag - 154979334002704384
+set server time zones - 339384118959800320
+Make a flask website that the bot can interact with, on which I can write better documentation, and with which I can expand the capabilities of my bot to the next level. - 154979334002704384
+make randstats unsorted, add modifiers to advanage - Harrison
+Init that gets typed in by the players - 154979334002704384
+spell book with purchase able spells - 154979334002704384
+wizard duels - 154979334002704384
+familiars - 154979334002704384
+turn karma into wizard xp levels - 154979334002704384
+rebalance karma to fit DND exp standards - 154979334002704384
+turn commands into slash :( - 154979334002704384
+move to 5e.tools - 154979334002704384
+commission the same thing for both bots - 939510283683115098
+advantage and disadvantage work with dice rolling notation - 939510283683115098
+have a method to talk to creator through the wizard - 939510283683115098
+the feat. link seems to be broken :( - 372642886648332288

@@ -1,3 +1,0 @@
-{"AB":	"A", "BAAA": "B", "BABA": "C", "BAA": "D", "A": "E", "AABA": "F", "BBA": "G", "AAAA": "H", "AA": "I", "ABBB": "J", "BAB": "K", "ABAA": "L",
-"BB": "M", "BA": "N", "BBB": "O", "ABBA": "P", "BBAB": "Q", "ABA": "R", "AAA":"S". "B":"T", "AAB": "U", "AAAB": "V", "ABB": "W", "BAAB": "X",
-"BABB": "Y", "BBAA": "Z"}

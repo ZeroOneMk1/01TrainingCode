@@ -5,7 +5,7 @@ DEG = 180 / math.pi
 RAD = math.pi / 180
 
 class Leg:
-    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 15.0, femur_length: float = 7.5, coxa_length: float = 5) -> None:
+    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 15.16, femur_length: float = 7.579, coxa_length: float = 4.98) -> None:
         self.hipPos = np.array(hipPos)
         self.index = index
 

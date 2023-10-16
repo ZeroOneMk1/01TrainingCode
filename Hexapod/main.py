@@ -67,6 +67,13 @@ def main():
     #     srf = Poly3DCollection(verts, alpha=.25, facecolor='#008000')
     #     plt.gca().add_collection3d(srf)
 
+        # adding Body
+        for i in range(6):
+            x.append(robot.legs[i].hipPos[0])
+        for i in range(6):
+            y.append(robot.legs[i].hipPos[1])
+        for i in range(6):
+            z.append(robot.legs[i].hipPos[2])
     #     # adding Body
     #     for i in range(3):
     #         x.append(-robot.hip_x)
@@ -84,6 +91,20 @@ def main():
     #     y.append(0)
     #     z.append(robot.WORKING_HEIGHT)
 
+        # RECTANGULAR BOT
+
+        # plot_line([-robot.hip_x, -robot.hip_y, 0], [robot.hip_x, -robot.hip_y, 0])
+        # plot_line([robot.hip_x, -robot.hip_y, 0], [robot.hip_x, robot.hip_y, 0])
+        # plot_line([robot.hip_x, robot.hip_y, 0], [-robot.hip_x, robot.hip_y, 0])
+        # plot_line([-robot.hip_x, robot.hip_y, 0], [-robot.hip_x, -robot.hip_y, 0])
+
+        plot_line(robot.legs[0].hipPos, robot.legs[1].hipPos)
+        plot_line(robot.legs[1].hipPos, robot.legs[2].hipPos)
+        plot_line(robot.legs[3].hipPos, robot.legs[4].hipPos)
+        plot_line(robot.legs[4].hipPos, robot.legs[5].hipPos)
+
+        plot_line(robot.legs[3].hipPos, robot.legs[0].hipPos)
+        plot_line(robot.legs[2].hipPos, robot.legs[5].hipPos)
     #     plot_line([-robot.hip_x, -robot.hip_y, 0], [robot.hip_x, -robot.hip_y, 0])
     #     plot_line([robot.hip_x, -robot.hip_y, 0], [robot.hip_x, robot.hip_y, 0])
     #     plot_line([robot.hip_x, robot.hip_y, 0], [-robot.hip_x, robot.hip_y, 0])
