@@ -163,14 +163,14 @@ class Robot:
         sleep(1/60)
     
     def get_controller_input(self):
-        # c, s = math.cos(self.REMOVE), math.sin(self.REMOVE)
-        # self.REMOVE += math.pi/256
-        # return (c, s) # TODO actually set up the controller instead of just giving X=0 Y=0.5
-        self.controller.init()
-        x = self.controller.get_axis(X_AXIS)
-        y = self.controller.get_axis(Y_AXIS)
+        c, s = math.cos(self.REMOVE), math.sin(self.REMOVE)
+        self.REMOVE += math.pi/256
+        return (c, s) # TODO actually set up the controller instead of just giving X=0 Y=0.5
+        # self.controller.init()
+        # x = self.controller.get_axis(X_AXIS)
+        # y = self.controller.get_axis(Y_AXIS)
 
-        z = self.controller.get_axis(Z_AXIS) * ROTATION_SPEED
+        # z = self.controller.get_axis(Z_AXIS) * ROTATION_SPEED
 
         # rotx = (self.controller.get_button(6) - self.controller.get_button(4)) * ROTATION_SPEED
 
