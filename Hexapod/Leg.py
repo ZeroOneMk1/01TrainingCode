@@ -5,7 +5,7 @@ DEG = 180 / math.pi
 RAD = math.pi / 180
 
 class Leg:
-    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 25.0, femur_length: float = 13.5, coxa_length: float = 2.5) -> None:
+    def __init__(self, index:int, hipPos, zeroOrientation: float, tibia_length: float = 15.0, femur_length: float = 7.5, coxa_length: float = 5) -> None:
         self.hipPos = np.array(hipPos)
         self.index = index
 
@@ -118,7 +118,6 @@ class Leg:
         angle_two = math.pi/2 + vector_angle - alpha
 
         return angle_two, angle_three
-
 
         
     def calculate_all_servo_positions(self, abs_destination):

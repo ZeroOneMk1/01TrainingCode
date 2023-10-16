@@ -1,5 +1,5 @@
 from Leg import Leg
-# from ControlBoard import ControlBoard
+from ControlBoard import ControlBoard
 import numpy as np
 from time import sleep
 from datetime import datetime as dt
@@ -15,7 +15,17 @@ THETA_WEIGHT = 0.4
 POINTS_WEIGHT = 0.4
 COM_WEIGHT = 1
 
-ROTATION_SPEED = 0.02 * math.pi
+# EXIT_BUTTON = 13
+# X_AXIS = 0
+# Y_AXIS = 1
+# Z_AXIS = 2
+
+EXIT_BUTTON = 1
+X_AXIS = 0
+Y_AXIS = 1
+Z_AXIS = 3
+
+ROTATION_SPEED = 0.01 * math.pi
 
 class Robot:
     def __init__(self, hip_x, hip_y) -> None:
@@ -25,7 +35,7 @@ class Robot:
         self.hip_y = hip_y
 
         self.WORKING_HEIGHT = -11.5
-        self.STANDARD_DISTANCE = 15
+        self.STANDARD_DISTANCE = 5
 
         self.legs.append(Leg(0, np.array([-hip_x, hip_y, 0]), 135)) # Front Left Leg
         self.legs.append(Leg(1, np.array([-hip_x, 0, 0]), 180)) # Center Left Leg
@@ -55,7 +65,7 @@ class Robot:
         except:
             print("Controller Not Connected")
 
-        # self.control_board = ControlBoard(18)
+        self.control_board = ControlBoard(18)
     
     def move_leg_to_position(self, leg_index: int, desired_position) -> None:
         reachable, servo_positions = self.legs[leg_index].calculate_all_servo_positions(desired_position)
@@ -67,7 +77,7 @@ class Robot:
                 servo_positions[i] = 0
             elif servo_positions[i] > 180:
                 servo_positions[i] = 180
-        # self.control_board.set_leg_servo_positions(leg_index, servo_positions)
+        self.control_board.set_leg_servo_positions(leg_index, servo_positions)
         self.servos[leg_index] = servo_positions
         self.legs[leg_index].position = desired_position
         # print(f"{desired_position}\n{servo_positions}\n\n")
@@ -108,7 +118,7 @@ class Robot:
 
     def reset_leg_positions(self):
         self.lift_all_legs()
-        # sleep(2)
+        sleep(2)
         self.drop_grounded_legs()
 
     def lift_all_legs(self):
@@ -131,7 +141,7 @@ class Robot:
         if self.has_controller:
             pygame.event.get()
             
-            if self.controller.get_button(13):
+            if self.controller.get_button(EXIT_BUTTON):
                 self.reset_leg_positions()
             else:
                 controller_input = self.get_controller_input()
@@ -141,17 +151,17 @@ class Robot:
             for i in range(len(self.current_leg_positions)):
                 for j in range(len(self.current_leg_positions[i])):
                     self.current_leg_positions[i][j] = self.next_leg_positions[i][j] # ! May have errors when next gets changed
-        # sleep(1/60)
+        sleep(1/60)
     
     def get_controller_input(self):
         # c, s = math.cos(self.REMOVE), math.sin(self.REMOVE)
         # self.REMOVE += math.pi/256
         # return (c, s) # TODO actually set up the controller instead of just giving X=0 Y=0.5
         self.controller.init()
-        x = self.controller.get_axis(0)
-        y = self.controller.get_axis(1)
+        x = self.controller.get_axis(X_AXIS)
+        y = self.controller.get_axis(Y_AXIS)
 
-        z = self.controller.get_axis(2) * ROTATION_SPEED
+        z = self.controller.get_axis(Z_AXIS) * ROTATION_SPEED
 
         # rotx = (self.controller.get_button(6) - self.controller.get_button(4)) * ROTATION_SPEED
 
@@ -312,7 +322,7 @@ class Robot:
     
     def loosen(self):
 
-        # for servo in self.control_board.servos:
-        #     servo.angle=None
+        for servo in self.control_board.servos:
+            servo.angle=None
         pass
 
