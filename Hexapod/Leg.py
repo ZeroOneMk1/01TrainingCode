@@ -119,7 +119,6 @@ class Leg:
 
         return angle_two, angle_three
 
-
         
     def calculate_all_servo_positions(self, abs_destination):
         rel_destination = self.absolute_to_relative_destination(abs_destination)

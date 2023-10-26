@@ -22,7 +22,8 @@ class ControlBoard:
 
         # Objects
 
-        if num_servos < 16:
+
+        if self.nbPCAServo <= 16:
             self.pca = ServoKit(channels=16)
 
             self.servos = []
@@ -30,9 +31,9 @@ class ControlBoard:
             for i in range(self.nbPCAServo):
                 self.servos.append(self.pca.servo[i])
         
-        elif num_servos < 32:
+        elif self.nbPCAServo < 32:
             self.pca = ServoKit(channels=16)
-            self.pca_two = ServoKit(channels=16, address=65) # TODO TEST IF IT HAS A DIFFERENT INDEX.
+            self.pca_two = ServoKit(channels=16, address=0x41) # TODO TEST IF IT HAS A DIFFERENT INDEX.
 
             self.servos = [] # TODO TEST IF THIS EVEN WORKS IN THE WAY I THINK IT DOES
 
@@ -72,10 +73,21 @@ class ControlBoard:
 
         # self.servos[2].angle = 180
         # time.sleep(2)
+        # for i in range(5):
+        for j in range(6):
+            self.servos[3*j].angle = 90
+        # for k in range(5):
+        for l in range(6):
+            self.servos[3*l+1].angle = 0
 
-        for servo in self.servos:
-            servo.angle = 90
-        time.sleep(1)
+        for m in range(5):
+            for n in range(6):
+                self.servos[3*n+2].angle = m * 45
+        # time.sleep(1)   
+
+        # for servo in self.servos:
+        #     servo.angle = 0
+        # time.sleep(1)
         for servo in self.servos:
             servo.angle=None
 
