@@ -165,34 +165,14 @@ class Robot:
     def get_controller_input(self):
         c, s = math.cos(self.REMOVE), math.sin(self.REMOVE)
         self.REMOVE += math.pi/256
-        return (c, s) # TODO actually set up the controller instead of just giving X=0 Y=0.5
+        return (c, s, 0) # TODO actually set up the controller instead of just giving X=0 Y=0.5
         # self.controller.init()
         # x = self.controller.get_axis(X_AXIS)
         # y = self.controller.get_axis(Y_AXIS)
 
         # z = self.controller.get_axis(Z_AXIS) * ROTATION_SPEED
 
-        # rotx = (self.controller.get_button(6) - self.controller.get_button(4)) * ROTATION_SPEED
-
-        # if self.xrot > math.pi/8 and rotx > 0:
-        #     rotx = 0
-        # elif self.xrot < math.pi/8 and rotx < 0:
-        #     rotx = 0
-
-        # self.xrot += rotx
-
-        # roty = (self.controller.get_button(7) - self.controller.get_button(5)) * ROTATION_SPEED
-
-        # if self.yrot > math.pi/8 and roty > 0:
-        #     roty = 0
-        # elif self.yrot < math.pi/8 and roty < 0:
-        #     roty = 0
-
-        # self.yrot += roty
-
-        return (x, -y, z)
-
-    
+        # return (x, -y, z)
 
     def calculate_new_leg_positions(self, input: tuple) -> None:
         if self.shift_lifted_leg_positions(input):
@@ -215,7 +195,7 @@ class Robot:
         return True
     
     def shift_grounded_leg_positions(self, input: tuple) -> None:  
-        reversed_input = (-input[0], -input[1], -input[2])      
+        reversed_input = (-input[0], -input[1])      
         for leg in self.grounded_legs:
             self.shift_leg_position(leg.index, reversed_input, self.WORKING_HEIGHT)
 
@@ -227,9 +207,6 @@ class Robot:
         self.next_leg_positions[leg_index][2] = height
         
         self.next_leg_positions[leg_index] = self.rotate_z(vector[2], self.next_leg_positions[leg_index])
-
-        # self.next_leg_positions[leg_index] = self.rotate_x(self.next_leg_positions[leg_index])
-        # self.next_leg_positions[leg_index] = self.rotate_y(self.next_leg_positions[leg_index])
 
     def rotate_z(self, theta, to_rotate):
         c, s = np.cos(theta), np.sin(theta)
