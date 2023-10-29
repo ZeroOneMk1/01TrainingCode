@@ -45,7 +45,7 @@ class Tower:
         
 
 if __name__ == '__main__':
-    tower = Tower(6)
+    tower = Tower(8)
 
     tower.move_the_above(0, 2, 1, tower.num_stacked - 1)
     with open("instructions.txt", 'w') as f:
