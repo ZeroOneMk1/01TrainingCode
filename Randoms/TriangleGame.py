@@ -1,45 +1,63 @@
 import regex as re
 from random import randint as ri
+from math import log, floor
+import gmpy
 
-# def minimax(board, depth, maximizing_player):
-#     if game_over(board):
-#         return (-1)**(not maximizing_player)
+def get_nimsum(board):
+    nimsum = 0
+
+    for i in range(len(board)):
+        nimsum = nimsum ^ board[i]
+    
+    print(f"NIMSUM: {nimsum}")
+    return nimsum
+
+def get_lsb_ind(board):
+    lsbs_us = []
+    for i in range(len(board)):
+        lsbs_us.append(gmpy.scan1(board[i]) + 1)
+    
+    lsbs_s = [lsbs_us[i] for i in range(len(lsbs_us))]
+    lsbs_s.sort()
+
+    return lsbs_us, lsbs_s
+
+def find_best_move(board):
+    nimsum = get_nimsum(board)
+
+    if nimsum != 0:
+
+        msbn = floor(log(nimsum)/log(2) + 1)
+
+        msbs = [floor(log(num + 0.9999999)/log(2)) + 1 for num in board]
+
+        for i in range(len(board)):
+            if msbn <= msbs[i]:
+                if board[i] & 2**(msbn-1):
+                    break
         
-#     if depth == 0:
-#         return 0
+        bxn = board[i]^nimsum
+        
+        best_move = (i, (board[i]-bxn - 1)%board[i] + 1)
+    else:
+        lsbs_us, lsbs_s = get_lsb_ind(board)
+        i = 0
+        while(i < len(lsbs_s)):
+            if lsbs_s[i] > 0:
+                break
+            i += 1
+        
+        to_remove_from = find_first_instance(lsbs_us, lsbs_s[i])
+        best_move = (to_remove_from, 1)
 
-#     if maximizing_player:
-#         best_value = -float("inf")
-#         for move in legal_moves(board):
-#             new_board = make_move(board, move)
-#             value = minimax(new_board, depth - 1, False)
-#             best_value = max(best_value, value)
-#         return best_value
-#     else:
-#         best_value = float("inf")
-#         for move in legal_moves(board):
-#             new_board = make_move(board, move)
-#             value = minimax(new_board, depth - 1, True)
-#             best_value = min(best_value, value)
-#         return best_value
-
-def find_best_move(board, depth, player):
-    # best_move = None
-    # best_value = -float("inf")
-    # for move in legal_moves(board):
-    #     new_board = make_move(board, move)
-    #     value = minimax(new_board, depth - 1, False)
-    #     if value > best_value:
-    #         best_value = value
-    #         best_move = move
-    #     elif(value == best_value):
-    #         if(best_move[1] < move[1]):
-    #             best_value = value
-    #             best_move = move
-    # print(best_value)  
-    moves = legal_moves(board)
-    best_move = moves[ri(0, len(moves) - 1)]
     return best_move
+
+def find_first_instance(lsbs, lsb):
+    for i in range(len(lsbs)):
+        if lsb == lsbs[i]:
+            return i
+
+    return -1
 
 def game_over(board):
     if(sum(board) == 0):
@@ -47,43 +65,51 @@ def game_over(board):
     else:
         return False
 
-def legal_moves(board):
-    list = []
-    for i in range(board[0]):
-        list.append((0, i + 1))
-    for i in range(board[1]):
-        list.append((1, i + 1))
-    for i in range(board[2]):
-        list.append((2, i + 1))
-    return list
 
 def make_move(board, move):
-    temp_board = [board[i] for i in range(3)]
+    temp_board = [board[i] for i in range(len(board))]
     temp_board[move[0]] -= move[1]
     return temp_board
 
 
 if __name__ == "__main__":
-    board = [3, 7, 5]
+    board = [ri(0, 32) for i in range(ri(3, 8))]
+    # board = [3, 7, 5]
+    print(board)
+
+    if(get_nimsum(board) == 0):
+        print("PREDICT P2 WIN")
+    else:
+        print("PREDICT P1 WIN")
 
     player = True
 
-    while(sum(board) != 0):
-        if not player:
-            best_move = find_best_move(board, 12, player)
+    playing = False
+
+    if not playing:
+        while(sum(board) != 0):
+            best_move = find_best_move(board)
             print("Best Move:", best_move)
             board = make_move(board, best_move)
             print(board)
-        else:
-            movestr = input("What move do you want to play?")
-            move = re.findall(r"\d", movestr)
-            for i in range(len(move)):
-                move[i] = int(move[i])
-            print(f"Your Move: {move}")
-            board = make_move(board, move)
-            print(board)
+            player = not player
+    else:
+        while(sum(board) != 0):
+            if not player:
+                best_move = find_best_move(board)
+                print("Best Move:", best_move)
+                board = make_move(board, best_move)
+                print(board)
+            else:
+                movestr = input("What move do you want to play?")
+                move = re.findall(r"[\d]+", movestr)
+                for i in range(len(move)):
+                    move[i] = int(move[i])
+                print(f"Your Move: {move}")
+                board = make_move(board, move)
+                print(board)
 
-        player = not player
+            player = not player
     
     if player:
         print("Player 2 wins!")

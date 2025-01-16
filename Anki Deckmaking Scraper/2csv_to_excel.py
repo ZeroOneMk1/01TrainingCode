@@ -16,7 +16,7 @@ with open("words.json", "r") as f:
 
 for word in words:
     words[word]['meanings'] = ', '.join(words[word]['meanings'])
-    words[word]['origin'] = ', '.join(words[word]['origin'])
+    # words[word]['origin'] = ', '.join(words[word]['origin'])
 df = pd.DataFrame(data=words)
 
 df = (df.T)

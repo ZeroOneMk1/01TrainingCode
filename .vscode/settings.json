@@ -1,7 +1,12 @@
 {
     "python.pythonPath": "/usr/local/bin/python3",
     "files.associations": {
+        "gamepasscracker": "plaintext",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__locale": "c",
+        "__string": "c",
+        "string": "c",
+        "string_view": "c"
     }
 }

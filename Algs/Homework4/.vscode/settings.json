@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "gamepasscracker": "plaintext",
+        "stdio.h": "c",
+        "math.h": "c"
+    }
+}

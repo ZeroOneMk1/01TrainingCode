@@ -1,0 +1,8 @@
+Question 1:
+The problem is that this version of the algorithm chooses pivots based on location annd not sizxe, and so the pivot can someties be 0, eading to division by 0 errors.
+
+
+Question 2:
+This is a Redundant matrix because row1 + row2 = row3
+
+To remedy this, we can check during selection of every pivot if every number in a column is 0. If it is, the system is Redundant and has multiple solutions.

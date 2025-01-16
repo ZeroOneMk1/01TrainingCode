@@ -2,12 +2,12 @@
 
 import sys
 import re
-import nagisa
+# import nagisa
 import requests
 import asyncio as aio
 import json
 
-from os import listdir
+# from os import listdir
 
 API_URL = "https://jisho.org/api/v1/search/words?keyword={}"
 
@@ -19,7 +19,7 @@ han_range = r'\u4E00-\u9FFF'
 PATH = '/Users/yusufsimsek/Desktop/Code/01TrainingCode/Anki Deckmaking Scraper/lyrics'
 
 # Combine the ranges in the regex pattern
-pattern = re.compile(f'[{hiragana_range}{katakana_range}{han_range}]')
+pattern = re.compile(f'[{hiragana_range}{katakana_range}{han_range}]+')
 class ProgressBar:
     def __init__(self, high, size=50):
         self.high = high
@@ -55,33 +55,35 @@ async def get_meaning(dictionary, word, progress_bar, origins):
     reading = data['japanese'][0]['reading']
     meanings = [x['english_definitions'][0] for x in data['senses']]
 
-    dictionary[word] = {'reading': reading, 'meanings': meanings, 'origin': origins[word]}
+    dictionary[word] = {'reading': reading, 'meanings': meanings} # , 'origin': origins[word]
 
     progress_bar.increment()
 
 
 async def main(meanings):
     words = set()
-    songlist = listdir(PATH)
+    songlist = ['onomotopeia.txt']# listdir(PATH)
     words_origins = {}
 
     for song in songlist:
 
         with open(f'Anki Deckmaking Scraper/lyrics/{song}', 'r') as file:
 
-            songname = re.findall(r'([^.]+).[^.]+', song)[0]
-            content = file.read()
-            for word in filter(
-                    validate_word,
-                    nagisa.wakati(content)):
+            # songname = re.findall(r'([^.]+).[^.]+', song)[0]
+            content = re.findall(pattern, file.read())
+            for word in content:
                 words.add(word)
+            # for word in filter(
+            #         validate_word,
+            #         nagisa.wakati(content)):
+            #     words.add(word)
                 
-                try:
-                    if(songname not in words_origins[word]):
-                        words_origins[word].append(songname)
-                except:
-                    words_origins[word] = []
-                    words_origins[word].append(songname)
+                # try:
+                #     if(songname not in words_origins[word]):
+                #         words_origins[word].append(songname)
+                # except:
+                #     words_origins[word] = []
+                #     words_origins[word].append(songname)
                 
                 # TODO find a way to remember which word came from which song
     
@@ -99,8 +101,8 @@ async def main(meanings):
     # print(words)
 
     progress_bar = ProgressBar(len(words))
-    coroutines = [get_meaning(meanings, word, progress_bar, words_origins) for word in words]
-    await aio.wait(coroutines)
+    tasks = [aio.create_task(get_meaning(meanings, word, progress_bar, words_origins)) for word in words]
+    await aio.wait(tasks)
     print("\nDone.")
 
 
