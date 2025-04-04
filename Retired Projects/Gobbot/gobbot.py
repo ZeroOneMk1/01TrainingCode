@@ -1,6 +1,10 @@
 from GobDat.consts import *
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from math import sqrt
 import traceback
 
@@ -16,6 +20,16 @@ optstwo.headless = True
 browser = Firefox(options=opts)
 browsertwo = Firefox(options=optstwo)
 
+def wait_for_bets_score_not_zero(driver, timeout=10):
+    """Waits until an element with class 'BetsScore' has non-zero text."""
+    try:
+        WebDriverWait(driver, timeout).until(
+            lambda driver: driver.find_element(By.CLASS_NAME, "BetsScore").text != "0"
+        )
+        return True  # Element found and has non-zero text
+    except TimeoutException:
+        print("Timeout: BetsScore element did not become non-zero within the specified time.")
+        return False # element was not found, or text was never non-zero
 
 def parse(page: str) -> None:
     return None
@@ -327,7 +341,7 @@ def apply_health_conditions(side: str, stats: dict, hp: int) -> int:
 def calc_tougher(right_name:str, left_name:str) -> float:
 
     stats = get_stats(right_name, left_name)
-
+    # TODO: estimating to-hit is based off of stats instead of attacks for some reason. This doesn't take into account Power Hitter or Advantage. Implement those
     left_ac = int(re.findall(
         r"\d+", browser.find_element("xpath", LEFTSIDE_AC).text)[0])
     left_estimated_to_hit = max(int(
@@ -376,6 +390,8 @@ def run():
 
         browser.refresh()
 
+        wait_for_bets_score_not_zero(browser)
+
         score = browser.find_element("class name", "BetsScore").text
 
         print(f"Score: {score}GP")
@@ -422,9 +438,9 @@ def run():
                     browser.find_element("xpath", RIGHTSIDECOMMIT).click()
                     print(f"Bot: betting {bet/int(score) * 100}% ({bet} GP) on '{right_name}'")
 
-                    browsertwo.find_element("xpath", RIGHTSIDEBET).clear()
-                    browsertwo.find_element("xpath", RIGHTSIDEBET).send_keys("1")
-                    browsertwo.find_element("xpath", RIGHTSIDECOMMIT).click()
+                    browsertwo.find_element("xpath", LEFTSIDEBET).clear()
+                    browsertwo.find_element("xpath", LEFTSIDEBET).send_keys("1")
+                    browsertwo.find_element("xpath", LEFTSIDECOMMIT).click()
                     print("Bot 2 counterbet 1 GP")
                 except:
                     print("Ran out of time before betting.")
