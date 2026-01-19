@@ -7,16 +7,17 @@ COOKIE = {"name": "connect.sid", "value": "s%3AmhHLi-Z0TYDwO4WMJkmK1cmIUF_DySeC.
 ACCOUNTBUTTON = "/html/body/div/div/div[1]/div[1]/div[1]/span[2]/img"
 
 EMAIL = "zeroonemk1@gmail.com"
-EMAILTWO = "yusuf01px2022@saschina.org"
+COUNTEREMAILS = ["yusuf01px2022@saschina.org", "tewira9717@24faw.com"]
 # This is not the password for anything important for me, so don't try using it anywhere else.
 PASS = "vUM3hPGC2tvk7AH"
-PASSTWO = "POGCHAMPS"
+COUNTERPASSES = ["POGCHAMPS", "NOWAYINBELL"]
 
 LOGINLOCATION = "/html/body/div/div/div[2]/div[1]/div/div[2]/div[11]/div[2]"
 USERNAMEBUTTON = "/html/body/div/div/div[2]/div[1]/div/div[2]/div[2]/form/input[1]"
 PASSWORDBUTTON = "/html/body/div/div/div[2]/div[1]/div/div[2]/div[2]/form/input[2]"
 LOGINBUTTON = "/html/body/div/div/div[2]/div[1]/div/div[2]/div[3]"
 CONTINUEBUTTON = "/html/body/div/div/div[2]/div[1]/div/div[2]/div[11]"
+CONTINUEBUTTON_ASCENT = "/html/body/div/div/div[2]/div[1]/div/div[2]/div[3]"
 
 BETTINGBANNER = "/html/body/div/div/div[2]/div[8]/div"
 
@@ -25,6 +26,8 @@ LEFTSIDEBET = "/html/body/div[1]/div/div[2]/div[8]/div[2]/div/input"
 LEFTSIDECOMMIT = "/html/body/div/div/div[2]/div[8]/div[2]/div/div[5]"
 LEFTSIDENAME = "/html/body/div/div/div[2]/div[1]/div[2]/div/span[1]/span"
 LEFTSIDENAMETWO = "/html/body/div/div/div[2]/div[1]/div[2]/div/span[1]/a"
+LEFTSIDEISOWNED = "/html/body/div/div/div[2]/div[1]/div[2]/div/div[2]/a/span"
+LEFTSIDENAMEWHENOWNED = "/html/body/div/div/div[2]/div[1]/div[2]/div/div[2]/div[1]"
 
 LEFTSIDE_AC = "/html/body/div[1]/div/div[2]/div[1]/div[2]/div/div[2]/span[9]"
 LEFTSIDE_HP = "/html/body/div[1]/div/div[2]/div[1]/div[2]/div/div[2]/span[8]"
@@ -49,6 +52,8 @@ RIGHTSIDEBET = "/html/body/div[1]/div/div[2]/div[9]/div[2]/div/input"
 RIGHTSIDECOMMIT = "/html/body/div/div/div[2]/div[9]/div[2]/div/div[5]"
 RIGHTSIDENAME = "/html/body/div/div/div[2]/div[4]/div[2]/div/span[1]/span"
 RIGHTSIDENAMETWO = "/html/body/div/div/div[2]/div[4]/div[2]/div/span[1]/a"
+RIGHTSIDEISOWNED = "/html/body/div/div/div[2]/div[4]/div[2]/div/div[2]/a/span"
+RIGHTSIDENAMEWHENOWNED = "/html/body/div/div/div[2]/div[4]/div[2]/div/div[2]/div[1]"
 
 RIGHTSIDE_STR = "/html/body/div/div/div[2]/div[4]/div[2]/div/div[2]/span[2]"
 RIGHTSIDE_DEX = "/html/body/div/div/div[2]/div[4]/div[2]/div/div[2]/span[3]"
