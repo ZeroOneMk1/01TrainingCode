@@ -14,6 +14,8 @@ def sigmoid(x: float) -> float:
 def group_cr(cr: int) -> int:
     if cr < -4:
         return -4
+    # if 0 <= cr <= 1: # 1, 0
+    #     return 0
     if 3 <= cr <= 4: # 4, 3
         return 3
     if 6 <= cr <= 7: # 7, 6
@@ -33,7 +35,7 @@ class MatchupModel:
         self.bracket_strength = [0.0] * 20 # For calculating ELO per bracket. from -2 to 17 so 20 brackets.
         self.trust_threshold = trust_threshold
 
-    def update(self, winner: int, loser: int, lr=0.2, bracket_lr=0.4):
+    def update(self, winner: int, loser: int, lr=0.15, bracket_lr=0.2):
         # Get bracket indices first (needed for both updates)
         winner_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[winner]]) + 2
         loser_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[loser]]) + 2

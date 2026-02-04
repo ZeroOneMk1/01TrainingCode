@@ -77,7 +77,7 @@ MONSTER_CR = {
     "Ice Mephit": -1,
     "Dust Mephit": -1,
 
-    "Swarm of Ravens": 0,
+    "Swarm of Ravens": 1, # Acutally 0 but it's screwing up bracket calcs
     "Worg": 0,
     "Warhorse Skeleton": 0,
     "Warhorse": 0,
