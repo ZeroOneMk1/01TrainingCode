@@ -5,9 +5,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from math import sqrt, log, floor
+from math import sqrt, log, floor, log2
 import traceback
 from matplotlib import pyplot as plt
+from collections import Counter
 
 import random as rd
 import re
@@ -66,11 +67,26 @@ def get_current_gp() -> int:
 
 def plot_scores(score):
     score_history.append(int(score))
-    plt.plot(score_history, marker='o')
-    plt.title('Score History')
-    plt.xlabel('Bets')
-    plt.ylabel('Score (GP)')
-    plt.grid()
+    ax[0].plot(score_history, marker='o')
+    ax[0].set_title('Score History')
+    ax[0].set_xlabel('Bets')
+    ax[0].set_ylabel('Score (GP)')
+    ax[0].grid()
+    plt.pause(0.1)  # Pause to allow the plot to update
+    plt.show()
+
+def plot_max_scores():
+    log_bins = [floor(log2(v)) for v in max_history if v > 0]
+
+    # Define integer-aligned bin edges
+    bin_edges = [b - 0.5 for b in range(min(log_bins), max(log_bins) + 2)]
+
+    ax[1].hist(log_bins, bins=bin_edges)
+    ax[1].set_title('Maxima History')
+    ax[1].set_xlabel("Score power of 2")
+    ax[1].set_ylabel('Count')
+    ax[1].set_xticks(range(min(log_bins), max(log_bins) + 1))
+
     plt.pause(0.1)  # Pause to allow the plot to update
     plt.show()
 
@@ -197,7 +213,7 @@ def get_info() -> tuple:
     return leftside_info, rightside_info
 
 def run():
-    global last_gp, pending_match, last_bet_on, wincount, matchcount, model
+    global last_gp, max_gp,  pending_match, last_bet_on, wincount, last_confidence, matchcount, model
 
     if betting():
         print("\n\n---------------BETTING---------------")
@@ -209,13 +225,15 @@ def run():
         current_gp = get_current_gp()
 
         plot_scores(current_gp)
+        if max_history:
+            plot_max_scores()
 
         leftside_info, rightside_info = get_info()
-
         # Resolve previous match
         if pending_match is not None and last_gp is not None and last_bet_on is not None:
             if current_gp > last_gp:
                 winner = last_bet_on
+                max_gp = max(current_gp, max_gp)
             else:
                 winner = "RIGHT" if last_bet_on == "LEFT" else "LEFT"
 
@@ -230,26 +248,46 @@ def run():
             
             if max_current_cr <= 0 and max_prev_cr >= 10:
                 print("Detected tournament reset (CR drop from high to low), skipping log for previous match.")
+                max_history.append(max_gp)
+                score_history.clear()
                 pending_match = None
+                last_gp = None
+                last_bet_on = None
+                max_gp = 0
             else:
                 log_entry = pending_match.copy()
                 log_entry["winner"] = winner
                 append_log(log_entry)
-                pending_match = None
 
-                # Update win and match counts
-                matchcount += 1
-                if winner == last_bet_on:
-                    wincount += 1
+                if (last_confidence is not None):
+                    # Update win and match counts
+                    # new version: changed to split matchcount, wincount into arrays of 5 ints, incrementing for confidence brackets:
+                    # 0 -> 50%-60%
+                    # 1 -> 60%-70%
+                    # 2 -> 70%-80%
+                    # 3 -> 80%-90%
+                    # 4 -> 90%-100%
+                    last_confidence = min(max(last_confidence, 0.5), 0.99)
+                    current_confidence_bracket = floor((last_confidence - 0.5) * 10)
+                    matchcount[current_confidence_bracket] += 1
+                    if winner == last_bet_on:
+                        wincount[current_confidence_bracket] += 1
                 
-                if (matchcount > 0): # matchcount % 10 == 0 and 
-                    model = MatchupModel()
-                    train_from_log(model)
-                    print("Retrained model from log.")
-
+                model = MatchupModel()
+                train_from_log(model)
+                # print("Retrained model from log.")
+                
+                pending_match = None
+                last_gp = None
+                last_bet_on = None
+                last_confidence = None
         last_gp = current_gp
 
-        print(f"Win Rate: {wincount}/{matchcount} ({(wincount/matchcount*100) if matchcount > 0 else 0:.2f}%)")
+        print(f"Win Rate for confidence 50%-60% : {wincount[0]}/{matchcount[0]} ({(wincount[0]/matchcount[0]*100) if matchcount[0] > 0 else 0:.2f}%)")
+        print(f"Win Rate for confidence 60%-70% : {wincount[1]}/{matchcount[1]} ({(wincount[1]/matchcount[1]*100) if matchcount[1] > 0 else 0:.2f}%)")
+        print(f"Win Rate for confidence 70%-80% : {wincount[2]}/{matchcount[2]} ({(wincount[2]/matchcount[2]*100) if matchcount[2] > 0 else 0:.2f}%)")
+        print(f"Win Rate for confidence 80%-90% : {wincount[3]}/{matchcount[3]} ({(wincount[3]/matchcount[3]*100) if matchcount[3] > 0 else 0:.2f}%)")
+        print(f"Win Rate for confidence 90%-100%: {wincount[4]}/{matchcount[4]} ({(wincount[4]/matchcount[4]*100) if matchcount[4] > 0 else 0:.2f}%)")
 
         print(f"Score: {current_gp}GP")
 
@@ -277,29 +315,35 @@ def run():
 
         if p_left_wins > 0.5:
             prediction = "LEFT"
+            confidence = p_left_wins
         else:
             prediction = "RIGHT"
+            confidence = 1-p_left_wins
+        # TODO REDO THE READJUSTMENT WHEN REACHING 10K MATCHES
+        last_confidence = confidence
 
         # Temporary measure to not ruin the fun for others and intentionally lose tournaments
         current_left_cr = MONSTER_CR.get(leftside_info[0], 0)
         current_right_cr = MONSTER_CR.get(rightside_info[0], 0)
+
+        # Calculate bet amount based on confidence and Kelly criterion
+        confidence = -0.614286 * (confidence ** 2) + 1.72543 * confidence - 0.24485 # Readjusting confidence based on tests and best fit quadratic. TEMPORARY
+        p = confidence
+        q = 1 - p
+        b = 0.5 + 0.5 * counterbettercount  # Adjusted odds based on number of counterbetters
+        kelly_fraction = p - (q / b)
+        kelly_fraction = max(0, min(kelly_fraction, 1))  # Clamp between 0 and 1
+
         if current_left_cr == 17 or current_right_cr == 17:
             if prediction == "LEFT":
                 prediction = "RIGHT"
             else:
                 prediction = "LEFT"
             bet = current_gp  # All-in to lose quickly
+            last_confidence = None # don't log in winrate.
             print("Intentionally losing against CR 17 monster.")
         else:
-
-            last_bet_on = prediction
-
-            # Calculate bet amount based on confidence and Kelly criterion
-            p = p_left_wins if prediction == "LEFT" else (1 - p_left_wins)
-            q = 1 - p
-            b = 0.5 + 0.5 * counterbettercount  # Adjusted odds based on number of counterbetters
-            kelly_fraction = p - (q / b)
-            kelly_fraction = max(0, min(kelly_fraction, 1))  # Clamp between 0 and 1
+            
             bet = int(current_gp * kelly_fraction)
 
             if bet < 1:
@@ -312,6 +356,8 @@ def run():
                 bet = 1
             elif prediction == "RIGHT" and leftside_info[1] == "Starts Invisible":
                 bet = 1
+
+        last_bet_on = prediction
 
         if prediction == "RIGHT":
             try:
@@ -358,14 +404,22 @@ if __name__ == '__main__':
     counterbetters = [Firefox(options=optstwo) for _ in range(counterbettercount)]
 
     score_history = []
+    max_history = []
     last_gp = None
+    max_gp = 0
     pending_match = None
-    wincount = 0
-    matchcount = 0
+    wincount = [0, 0, 0, 0, 0]
+    matchcount = [0, 0, 0, 0, 0]
+    last_confidence = None
 
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(2, 1)
     plt.ion()  # Turn on interactive mode for live updates
-    plt.yscale('log')
+    fig.set_figheight(10)
+    fig.set_figwidth(15)
+
+    
+    ax[0].set_yscale('log', base=2)
+    # ax[1].set_yscale('log', base=2)
 
     login()
     login_two()
