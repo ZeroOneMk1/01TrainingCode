@@ -137,21 +137,23 @@ class MatchupModel:
         Predict win probability for monster A vs monster B.
         
         Args:
-            a_info: Tuple of (monster_name, condition_name) for left side
-            b_info: Tuple of (monster_name, condition_name) for right side
+            a_info: Tuple of (monster_enum_id, condition_enum_id) for left side
+            b_info: Tuple of (monster_enum_id, condition_enum_id) for right side
             debug: Print debug information
             
         Returns:
             Probability that A wins (0.0 to 1.0)
         """
-        print(f"A info: {a_info}")
-        a_name, a_condition = a_info
-        b_name, b_condition = b_info
+        a, a_condition_id = a_info
+        b, b_condition_id = b_info
         
-        a = MONSTER_ENUM[a_name]
-        b = MONSTER_ENUM[b_name]
+        # Convert condition IDs to names for lookup
+        a_condition = CONDITION_ENUM_INV.get(a_condition_id, "") if a_condition_id else ""
+        b_condition = CONDITION_ENUM_INV.get(b_condition_id, "") if b_condition_id else ""
         
         # Get bracket indices and bracket strength
+        a_name = MONSTER_ENUM_INV[a]
+        b_name = MONSTER_ENUM_INV[b]
         a_bracket = group_cr(MONSTER_CR[a_name]) + 2
         b_bracket = group_cr(MONSTER_CR[b_name]) + 2
         
@@ -167,49 +169,35 @@ class MatchupModel:
         # Compute condition-condition interactions
         interaction_contrib = self._compute_condition_interaction(a_condition, b_condition)
         
-        # Direct matchup history (empirical)
-        w_ab = self.wins[a][b]
-        w_ba = self.wins[b][a]
-        total = w_ab + w_ba
-        
-        if total == 0:
-            # No direct matches, rely on model
-            total_diff = strength_diff + bracket_weight * bracket_diff + condition_contrib + interaction_contrib
-            p = sigmoid(total_diff)
-            
-            if debug:
-                print(f"No direct matches. Model prediction:")
-                print(f"  Monster strength: {strength_diff:.2f}")
-                print(f"  Bracket strength: {bracket_weight * bracket_diff:.2f}")
-                print(f"  Condition contribution: {condition_contrib:.2f}")
-                print(f"  Condition interactions: {interaction_contrib:.2f}")
-                print(f"  Predicted win rate: {p:.2f}")
-            
-            return p
-        
-        # Blend empirical + model
-        p_direct = w_ab / total
+        # Compute final prediction from model
         total_diff = strength_diff + bracket_weight * bracket_diff + condition_contrib + interaction_contrib
-        p_model = sigmoid(total_diff)
-        
-        alpha = min(1.0, total / self.trust_threshold)
-        prediction = alpha * p_direct + (1 - alpha) * p_model
+        p = sigmoid(total_diff)
         
         if debug:
-            print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct:.2f})")
-            print(f"Monster strength diff: {strength_diff:.2f}")
-            print(f"Bracket strength diff: {bracket_diff:.2f}")
-            print(f"Condition contribution: {condition_contrib:.2f}")
-            print(f"Condition interactions: {interaction_contrib:.2f}")
-            print(f"Model prediction: {p_model:.2f}")
-            print(f"Blended (alpha={alpha:.2f}): {prediction:.2f}")
+            # Direct matchup history for reference
+            w_ab = self.wins[a][b]
+            w_ba = self.wins[b][a]
+            total = w_ab + w_ba
+            
+            if total > 0:
+                p_direct = w_ab / total
+                print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct:.2f})")
+            else:
+                print(f"No direct match history")
+            
+            print(f"Model prediction breakdown:")
+            print(f"  Monster strength: {strength_diff:.2f}")
+            print(f"  Bracket strength: {bracket_weight * bracket_diff:.2f}")
+            print(f"  Condition contribution: {condition_contrib:.2f}")
+            print(f"  Condition interactions: {interaction_contrib:.2f}")
+            print(f"  Final prediction: {p:.2f}")
             
             if a_condition:
                 print(f"Left condition: {a_condition}")
             if b_condition:
                 print(f"Right condition: {b_condition}")
         
-        return prediction
+        return p
 
     def print_model(self):
         """Generate HTML heatmap of matchups (ignoring conditions for overview)."""
@@ -220,9 +208,7 @@ class MatchupModel:
             for j in range(MONSTERCOUNT):
                 a = sortedmonsters[i]
                 b = sortedmonsters[j]
-                a_name = MONSTER_ENUM_INV[a]
-                b_name = MONSTER_ENUM_INV[b]
-                winprobs[i][j] = self.predict((a_name, ""), (b_name, ""), debug=False)
+                winprobs[i][j] = self.predict((a, None), (b, None), debug=False)
         
         # Create heatmap
         heatmap = []
