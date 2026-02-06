@@ -62,24 +62,26 @@ class MatchupModel:
         self.bracket_strength[winner_bracket] += delta_bracket
         self.bracket_strength[loser_bracket] -= delta_bracket
 
-    def predict(self, a: int, b: int, debug: bool) -> float:
-        w_ab = self.wins[a][b]
-        w_ba = self.wins[b][a]
+    def predict(self, left: tuple[int, int], right: tuple[int, int], debug: bool) -> float:
+        left_monster_id, right_monster_id = left[0], right[0]
+
+        w_ab = self.wins[left_monster_id][right_monster_id]
+        w_ba = self.wins[right_monster_id][left_monster_id]
         total = w_ab + w_ba
 
         # Transitive estimate
-        strength_diff = self.strength[a] - self.strength[b]
+        strength_diff = self.strength[left_monster_id] - self.strength[right_monster_id]
         p_trans = sigmoid(strength_diff)
 
         # Bracket adjustment
-        a_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[a]]) + 2
-        b_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[b]]) + 2
-        cum_strength_a = self.strength[a] + self.bracket_strength[a_bracket] * bracket_weight
-        cum_strength_b = self.strength[b] + self.bracket_strength[b_bracket] * bracket_weight
+        a_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[left_monster_id]]) + 2
+        b_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[right_monster_id]]) + 2
+        cum_strength_a = self.strength[left_monster_id] + self.bracket_strength[a_bracket] * bracket_weight
+        cum_strength_b = self.strength[right_monster_id] + self.bracket_strength[b_bracket] * bracket_weight
         bracket_diff = cum_strength_a - cum_strength_b
         p_bracket_included = sigmoid(bracket_diff)
 
-        print(f"Elo of Left: {self.strength[a]:.2f}\nElo of Right: {self.strength[b]:.2f}\nTransitive win probability: {p_trans:.2f}") if debug else None
+        print(f"Elo of Left: {self.strength[left_monster_id]:.2f}\nElo of Right: {self.strength[right_monster_id]:.2f}\nTransitive win probability: {p_trans:.2f}") if debug else None
         print(f"Bracket adjusted Elo of Left: {cum_strength_a:.2f}\nBracket adjusted Elo of Right: {cum_strength_b:.2f}\nBracket adjusted win probability: {p_bracket_included:.2f}") if debug and a_bracket != b_bracket else None
 
         if total == 0:
@@ -91,7 +93,7 @@ class MatchupModel:
         alpha = min(1.0, total / self.trust_threshold)
 
         prediction = alpha * p_direct + (1 - alpha) * p_bracket_included
-        print(f"Using alpha={alpha:.2f}, final prediction: {max(prediction, 1-prediction):.2f} for {MONSTER_ENUM_INV[a] if prediction > 0.5 else MONSTER_ENUM_INV[b]}") if debug else None
+        print(f"Using alpha={alpha:.2f}, final prediction: {max(prediction, 1-prediction):.2f} for {MONSTER_ENUM_INV[left_monster_id] if prediction > 0.5 else MONSTER_ENUM_INV[right_monster_id]}") if debug else None
 
         return prediction
     

@@ -11927,3 +11927,23 @@
 {"timestamp": 1770110002.1705327, "left_monster": "Chimera", "left_condition": "Projectile Catching", "right_monster": "Couatl", "right_condition": "Regenerator", "winner": "RIGHT"}
 {"timestamp": 1770110062.185917, "left_monster": "Young Brass Dragon", "left_condition": "Starts Invisibile", "right_monster": "Tyrannosaurus Rex", "right_condition": "Power Attacker", "winner": "LEFT"}
 {"timestamp": 1770110162.3359659, "left_monster": "Salamander", "left_condition": "Memorized One Spell", "right_monster": "Young Copper Dragon", "right_condition": "+2 DEX", "winner": "LEFT"}
+{"timestamp": 1770387042.4986959, "left_monster": "Adult Blue Dragon", "left_condition": "Memorized One Spell", "right_monster": "Planetar", "right_condition": "Green Half-Dragon", "winner": "RIGHT"}
+{"timestamp": 1770387321.699896, "left_monster": "Dragon Turtle", "left_condition": "Armored", "right_monster": "Ice Devil", "right_condition": "Skilled", "winner": "LEFT"}
+{"timestamp": 1770387475.3152661, "left_monster": "Adult Green Dragon", "left_condition": "Boots of Charging", "right_monster": "Iron Golem", "right_condition": "Electric Body", "winner": "RIGHT"}
+{"timestamp": 1770387649.0081642, "left_monster": "Marilith", "left_condition": "Memorized One Spell", "right_monster": "Adult Copper Dragon", "right_condition": "Parrier", "winner": "LEFT"}
+{"timestamp": 1770387973.087588, "left_monster": "Androsphinx", "left_condition": "Tough", "right_monster": "Adult Black Dragon", "right_condition": "Blurred", "winner": "RIGHT"}
+{"timestamp": 1770388176.862365, "left_monster": "Mummy Lord", "left_condition": "+2 CON", "right_monster": "Adult Silver Dragon", "right_condition": "Diseased", "winner": "RIGHT"}
+{"timestamp": 1770388330.481146, "left_monster": "Adult Silver Dragon", "left_condition": "Diseased", "right_monster": "Planetar", "right_condition": "Green Half-Dragon", "winner": "RIGHT"}
+{"timestamp": 1770388453.866506, "left_monster": "Iron Golem", "left_condition": "Electric Body", "right_monster": "Adult Red Dragon", "right_condition": "Fan Favorite", "winner": "LEFT"}
+{"timestamp": 1770388627.532568, "left_monster": "Dragon Turtle", "left_condition": "Armored", "right_monster": "Adult Gold Dragon", "right_condition": "Evasive", "winner": "LEFT"}
+{"timestamp": 1770388851.421342, "left_monster": "Adult Black Dragon", "left_condition": "Blurred", "right_monster": "Marilith", "right_condition": "Memorized One Spell", "winner": "RIGHT"}
+{"timestamp": 1770389135.460614, "left_monster": "Dragon Turtle", "left_condition": "Armored", "right_monster": "Iron Golem", "right_condition": "Electric Body", "winner": "RIGHT"}
+{"timestamp": 1770389329.185287, "left_monster": "Planetar", "left_condition": "Green Half-Dragon", "right_monster": "Marilith", "right_condition": "Memorized One Spell", "winner": "RIGHT"}
+{"timestamp": 1770389716.69677, "left_monster": "Stirge", "left_condition": "Death Defying", "right_monster": "Giant Crab", "right_condition": "Reliable Damage", "winner": "RIGHT"}
+{"timestamp": 1770389790.313128, "left_monster": "Guard", "left_condition": "Smelly", "right_monster": "Sprite", "right_condition": "Memorized One Spell", "winner": "LEFT"}
+{"timestamp": 1770389863.82669, "left_monster": "Noble", "left_condition": "Natural Heroism", "right_monster": "Giant Centipede", "right_condition": "Diseased", "winner": "LEFT"}
+{"timestamp": 1770389927.3614888, "left_monster": "Mastiff", "left_condition": "+2 CON", "right_monster": "Cultist", "right_condition": "Boots of Charging", "winner": "RIGHT"}
+{"timestamp": 1770390000.910431, "left_monster": "Blood Hawk", "left_condition": "Memorized One Spell", "right_monster": "Flying Snake", "right_condition": "Zombie", "winner": "RIGHT"}
+{"timestamp": 1770390074.4924932, "left_monster": "Pony", "left_condition": "Armored", "right_monster": "Camel", "right_condition": "Regenerator", "winner": "LEFT"}
+{"timestamp": 1770390228.504622, "left_monster": "Giant Rat", "left_condition": "Mirrored", "right_monster": "Acolyte", "right_condition": "Wild Element", "winner": "RIGHT"}
+{"timestamp": 1770390332.251942, "left_monster": "Kobold", "left_condition": "Memorized One Spell", "right_monster": "Giant Weasel", "right_condition": "Thunder Attuned", "winner": "LEFT"}

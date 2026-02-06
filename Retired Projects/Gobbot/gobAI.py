@@ -22,8 +22,8 @@ from time import sleep
 LOG_PATH = "training_log.jsonl"
 
 # Set up Elo+Empirical model
-from model import MatchupModel, train_from_log
-from monsters import MONSTER_ENUM, MONSTER_CR
+from model_feats import MatchupModel, train_from_log
+from monsters import MONSTER_ENUM, MONSTER_CR, CONDITION_ENUM
 
 model = MatchupModel()
 train_from_log(model)
@@ -307,11 +307,11 @@ def run():
         # print(f"Prediction: {prediction} with confidence ratio {ratio}")
 
         # ! TURN OFF WHEN NOT TRAINING ANYMORE
-        # prediction = "LEFT"
-        a = MONSTER_ENUM[leftside_info[0]]
-        b = MONSTER_ENUM[rightside_info[0]]
 
-        p_left_wins = model.predict(a, b, debug=True)
+        left = (MONSTER_ENUM[leftside_info[0]], CONDITION_ENUM[leftside_info[1]])
+        right = (MONSTER_ENUM[rightside_info[0]], CONDITION_ENUM[rightside_info[1]])
+
+        p_left_wins = model.predict(left, right, debug=True)
 
         if p_left_wins > 0.5:
             prediction = "LEFT"
@@ -323,8 +323,8 @@ def run():
         last_confidence = confidence
 
         # Temporary measure to not ruin the fun for others and intentionally lose tournaments
-        current_left_cr = MONSTER_CR.get(leftside_info[0], 0)
-        current_right_cr = MONSTER_CR.get(rightside_info[0], 0)
+        current_left_cr = MONSTER_CR[leftside_info[0]]
+        current_right_cr = MONSTER_CR[rightside_info[0]]
 
         # Calculate bet amount based on confidence and Kelly criterion
         confidence = -0.614286 * (confidence ** 2) + 1.72543 * confidence - 0.24485 # Readjusting confidence based on tests and best fit quadratic. TEMPORARY
