@@ -144,6 +144,7 @@ class MatchupModel:
         Returns:
             Probability that A wins (0.0 to 1.0)
         """
+        print(f"A info: {a_info}")
         a_name, a_condition = a_info
         b_name, b_condition = b_info
         

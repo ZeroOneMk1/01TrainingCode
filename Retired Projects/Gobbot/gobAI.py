@@ -319,7 +319,7 @@ def run():
         else:
             prediction = "RIGHT"
             confidence = 1-p_left_wins
-        # TODO REDO THE READJUSTMENT WHEN REACHING 10K MATCHES
+        
         last_confidence = confidence
 
         # Temporary measure to not ruin the fun for others and intentionally lose tournaments
