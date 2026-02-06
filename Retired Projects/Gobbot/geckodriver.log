@@ -449,8 +449,8 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
- errors will be ignored for this session
-1769658957805	Marionette	INFO	Stopped listening on port 64766
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+805	Marionette	INFO	Stopped listening on port 64766
 JavaScript error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
 Dynamically enable window occlusion 1
 console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
@@ -476,8 +476,8 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-onette	INFO	Stopped listening on port 64838
-JavaScript error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+ipt error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
 Dynamically enable window occlusion 1
 console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
@@ -502,8 +502,8 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-onette	INFO	Stopped listening on port 64903
-JavaScript error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+ipt error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
 Dynamically enable window occlusion 1
 console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
@@ -528,8 +528,8 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-onette	INFO	Stopped listening on port 64984
-JavaScript error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+ipt error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
 Dynamically enable window occlusion 1
 console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
@@ -554,7 +554,8 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+ing down
 ner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.2\\firefox.exe" "--marionette" "--headless=new" " ... 2" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofilexixlx4"
 *** You are running in headless mode.
 console.warn: services.settings: Ignoring preference override of remote settings server
@@ -658,4 +659,15 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NotFoundError: Could not move `C:\Users\Yusuf\AppData\Local\Temp\rust_mozprofilehUUYcb\bookmarkbackups\bookmarks-2026-02-02_10_xDB0x3uwfC8r-GaFzMH1gr3aZLqIr8X3E3CmWeDhViY=.jsonlz4' to `C:\Users\Yusuf\AppData\Local\Temp\rust_mozprofilehUUYcb\bookmarkbackups\bookmarks-2026-02-03_10_xDB0x3uwfC8r-GaFzMH1gr3aZLqIr8X3E3CmWeDhViY=.jsonlz4': source file does not exist (NS_ERROR_FILE_NOT_FOUND)
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+1770239736698	geckodriver	INFO	Listening on 127.0.0.1:64109
+1770239739795	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 0" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofileW253jB"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1770239740414	Marionette	INFO	Marionette enabled
+1770239740485	Marionette	INFO	Listening on port 64125
+WebDriver BiDi listening on ws://127.0.0.1:64110
+Read port: 64125
+1770239740658	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
