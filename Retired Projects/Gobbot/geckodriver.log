@@ -451,9 +451,10 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-
-JavaScript error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
-Dynamically enable window occlusion 1
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+ally enable window occlusion 1
 console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
 console.warn: services.settings: Ignoring preference override of remote settings server
@@ -479,9 +480,10 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-ls.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
-Dynamically enable window occlusion 1
-console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
 console.warn: services.settings: Ignoring preference override of remote settings server
 console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
@@ -506,9 +508,10 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-ls.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
-Dynamically enable window occlusion 1
-console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
 console.warn: services.settings: Ignoring preference override of remote settings server
 console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
@@ -533,9 +536,10 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-ls.sys.mjs, line 19: TypeError: can't access property "isChromeWindow", aWindow is null
-Dynamically enable window occlusion 1
-console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
 unning in headless mode.
 console.warn: services.settings: Ignoring preference override of remote settings server
 console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
@@ -560,7 +564,10 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-rs\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.2\\firefox.exe" "--marionette" "--headless=new" " ... 2" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofilexixlx4"
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+"-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofilexixlx4"
 *** You are running in headless mode.
 console.warn: services.settings: Ignoring preference override of remote settings server
 console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
@@ -705,3 +712,44 @@ Dynamically enable window occlusion 0
 WebDriver BiDi listening on ws://127.0.0.1:58239
 Read port: 58246
 1770348267627	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1770390992241	geckodriver	INFO	Listening on 127.0.0.1:62302
+1770390995326	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 3" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofile44DhGy"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1770390995601	Marionette	INFO	Marionette enabled
+1770390995675	Marionette	INFO	Listening on port 62313
+WebDriver BiDi listening on ws://127.0.0.1:62303
+Read port: 62313
+1770390995860	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1770422628476	geckodriver	INFO	Listening on 127.0.0.1:53338
+1770422631562	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 9" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofilexsDvqD"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1770422631801	Marionette	INFO	Marionette enabled
+1770422631873	Marionette	INFO	Listening on port 53349
+WebDriver BiDi listening on ws://127.0.0.1:53339
+Read port: 53349
+1770422631945	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1770422764952	geckodriver	INFO	Listening on 127.0.0.1:53408
+1770422767986	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 9" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofilelhd3jL"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1770422768200	Marionette	INFO	Marionette enabled
+1770422768275	Marionette	INFO	Listening on port 53416
+WebDriver BiDi listening on ws://127.0.0.1:53409
+Read port: 53416
+1770422768360	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1770435764884	geckodriver	INFO	Listening on 127.0.0.1:54969
+1770435767962	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 0" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofileKRjGlI"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1770435768209	Marionette	INFO	Marionette enabled
+1770435768282	Marionette	INFO	Listening on port 54979
+WebDriver BiDi listening on ws://127.0.0.1:54970
+Read port: 54979
+1770435768346	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE

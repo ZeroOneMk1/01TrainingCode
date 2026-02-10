@@ -288,6 +288,7 @@ def run():
         print(f"Win Rate for confidence 70%-80% : {wincount[2]}/{matchcount[2]} ({(wincount[2]/matchcount[2]*100) if matchcount[2] > 0 else 0:.2f}%)")
         print(f"Win Rate for confidence 80%-90% : {wincount[3]}/{matchcount[3]} ({(wincount[3]/matchcount[3]*100) if matchcount[3] > 0 else 0:.2f}%)")
         print(f"Win Rate for confidence 90%-100%: {wincount[4]}/{matchcount[4]} ({(wincount[4]/matchcount[4]*100) if matchcount[4] > 0 else 0:.2f}%)")
+        print(f"Total Win Rate: {sum(wincount)}/{sum(matchcount)} ({sum(wincount)/sum(matchcount) if sum(matchcount) > 0 else 0:.2f}%)")
 
         print(f"Score: {current_gp}GP")
 
@@ -327,7 +328,7 @@ def run():
         current_right_cr = MONSTER_CR[rightside_info[0]]
 
         # Calculate bet amount based on confidence and Kelly criterion
-        confidence = -0.614286 * (confidence ** 2) + 1.72543 * confidence - 0.24485 # Readjusting confidence based on tests and best fit quadratic. TEMPORARY
+        confidence = -0.928571 * (confidence ** 2) + 2.19886 * confidence - 0.38265 # Readjusting confidence based on tests and best fit quadratic. TEMPORARY
         p = confidence
         q = 1 - p
         b = 0.5 + 0.5 * counterbettercount  # Adjusted odds based on number of counterbetters

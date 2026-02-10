@@ -72,7 +72,7 @@ class MatchupModel:
 
     def update(self, winner_idx: int, loser_idx: int, 
                winner_condition: str = "", loser_condition: str = "",
-               lr=0.15, condition_lr=0.05, bracket_lr=0.4):
+               lr=0.15, condition_lr=0.15, bracket_lr=0.4):
         """
         Update model based on match outcome.
         
@@ -131,6 +131,8 @@ class MatchupModel:
         if loser_condition:
             self.condition_monster_interactions[(loser_condition, loser_idx)] += condition_lr * 0.3 * (1 - p)
             self.condition_monster_interactions[(loser_condition, winner_idx)] -= condition_lr * 0.3 * (1 - p)
+        
+        # TODO Update monster-monster interactions (which monsters counter which other monsters)
 
     def predict(self, a_info: tuple, b_info: tuple, debug: bool = False) -> float:
         """
@@ -202,7 +204,7 @@ class MatchupModel:
     def print_model(self):
         """Generate HTML heatmap of matchups (ignoring conditions for overview)."""
         winprobs = [[0.0]*MONSTERCOUNT for _ in range(MONSTERCOUNT)]
-        sortedmonsters = sorted(range(MONSTERCOUNT), key=lambda x: self.strength[x], reverse=True)
+        sortedmonsters = sorted(range(MONSTERCOUNT), key=lambda x: (group_cr(MONSTER_CR[MONSTER_ENUM_INV[x]]), self.strength[x]), reverse=True)
         
         for i in range(MONSTERCOUNT):
             for j in range(MONSTERCOUNT):
@@ -300,8 +302,8 @@ def train_from_log(
             model.update(winner, loser, winner_condition, loser_condition, lr=lr, condition_lr=condition_lr)
 
     model.print_model()
-    print(f"\nModel training complete.")
-    print(f"  Monsters: {MONSTERCOUNT}")
-    print(f"  Conditions: {len(model.condition_strength)}")
-    print(f"  Total condition-condition interactions: {len(model.condition_interactions)}")
-    print(f"  Total condition-monster interactions: {len(model.condition_monster_interactions)}")
+    # print(f"\nModel training complete.")
+    # print(f"  Monsters: {MONSTERCOUNT}")
+    # print(f"  Conditions: {len(model.condition_strength)}")
+    # print(f"  Total condition-condition interactions: {len(model.condition_interactions)}")
+    # print(f"  Total condition-monster interactions: {len(model.condition_monster_interactions)}")
