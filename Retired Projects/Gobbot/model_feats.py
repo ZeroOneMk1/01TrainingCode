@@ -271,7 +271,8 @@ class MatchupModel:
         # Use a neutral monster (index 0) with strength 0 for all matchups
         neutral_monster = 0
         
-        condition_names = sorted(CONDITION_ENUM_INV.values())
+        # Sort conditions by strength (strongest first)
+        condition_names = sorted(CONDITION_ENUM_INV.values(), key=lambda c: self.condition_strength.get(c, 0.0), reverse=True)
         condition_count = len(condition_names)
         winprobs = [[0.0] * condition_count for _ in range(condition_count)]
         
