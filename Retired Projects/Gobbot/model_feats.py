@@ -1,7 +1,7 @@
 import math
 import json
 from collections import defaultdict
-from monsters import MONSTER_ENUM, MONSTERCOUNT, MONSTER_ENUM_INV, MONSTER_CR, CONDITION_ENUM_INV
+from monsters import MONSTER_ENUM, MONSTERCOUNT, MONSTER_ENUM_INV, MONSTER_CR, CONDITION_ENUM_INV, CONDITION_ENUM
 import random
 from matplotlib import colormaps
 
@@ -266,6 +266,59 @@ class MatchupModel:
         
         print(f"Generated heatmap with {len(self.condition_strength)} conditions tracked")
 
+    def print_condition_heatmap(self):
+        """Generate HTML heatmap of condition matchups (neutral monster baseline)."""
+        # Use a neutral monster (index 0) with strength 0 for all matchups
+        neutral_monster = 0
+        
+        condition_names = sorted(CONDITION_ENUM_INV.values())
+        condition_count = len(condition_names)
+        winprobs = [[0.0] * condition_count for _ in range(condition_count)]
+        
+        for i, cond_a_name in enumerate(condition_names):
+            for j, cond_b_name in enumerate(condition_names):
+                cond_a_id = CONDITION_ENUM.get(cond_a_name)
+                cond_b_id = CONDITION_ENUM.get(cond_b_name)
+                
+                # Predict with neutral monster but different conditions
+                winprobs[i][j] = self.predict((neutral_monster, cond_a_id), (neutral_monster, cond_b_id), debug=False)
+        
+        # Create heatmap
+        heatmap = []
+        for i in range(condition_count):
+            row = []
+            for j in range(condition_count):
+                p = winprobs[i][j]
+                color = cmap(p)
+                r, g, b = int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)
+                row.append(f"rgb({r},{g},{b})")
+            heatmap.append(row)
+
+        # Save to HTML
+        table_width = 100 * (condition_count + 1)
+        with open("condition_heatmap.html", "w", encoding="utf-8") as f:
+            f.write(f"<html><head><style>table {{ table-layout: fixed; border-collapse: collapse; width: {table_width}px; }} td, th {{ width: 100px; height: 100px; border: 0px solid #000; font-size: 10px; }}</style></head><body><table>\n")
+            
+            # Header row
+            f.write("<tr><th></th>")
+            for j in range(condition_count):
+                cond_name = condition_names[j]
+                f.write(f"<th><div style='width: 100px; transform: rotate(-90deg); transform-origin: center; white-space: nowrap;'>{cond_name}</div></th>")
+            f.write("</tr>\n")
+
+            for i in range(condition_count):
+                cond_name = condition_names[i]
+                strength = self.condition_strength.get(cond_name, 0.0)
+                f.write(f"<tr><th>{cond_name}<br/>(Strength: {strength:.2f})</th>")
+                for j in range(condition_count):
+                    color = heatmap[i][j]
+                    f.write(f"<td style='background-color:{color};'></td>")
+                f.write("</tr>\n")
+            
+            f.write("</table></body></html>\n")
+        
+        print(f"Generated condition heatmap with {condition_count} conditions")
+
 def train_from_log(
     model: MatchupModel,
     path="training_log.jsonl",
@@ -320,6 +373,7 @@ def train_from_log(
             model.update(winner, loser, winner_condition, loser_condition, lr=lr, condition_lr=condition_lr)
 
     model.print_model()
+    model.print_condition_heatmap()
     # print(f"\nModel training complete.")
     # print(f"  Monsters: {MONSTERCOUNT}")
     # print(f"  Conditions: {len(model.condition_strength)}")
