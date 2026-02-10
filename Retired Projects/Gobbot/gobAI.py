@@ -23,10 +23,16 @@ LOG_PATH = "training_log.jsonl"
 
 # Set up Elo+Empirical model
 from model_feats import MatchupModel, train_from_log
+from model import MatchupModel as FeatlessModel
+from model import train_from_log as featless_train
 from monsters import MONSTER_ENUM, MONSTER_CR, CONDITION_ENUM
 
 model = MatchupModel()
+featlessmodel = FeatlessModel()
 train_from_log(model)
+featless_train(featlessmodel)
+
+debug = True
 
 ## Helpers ##
 def append_log(entry: dict):
@@ -213,7 +219,7 @@ def get_info() -> tuple:
     return leftside_info, rightside_info
 
 def run():
-    global last_gp, max_gp,  pending_match, last_bet_on, wincount, last_confidence, matchcount, model
+    global last_gp, max_gp,  pending_match, last_bet_on, wincount, last_confidence, matchcount, model, featlessmodel
 
     if betting():
         print("\n\n---------------BETTING---------------")
@@ -275,6 +281,8 @@ def run():
                 
                 model = MatchupModel()
                 train_from_log(model)
+                featlessmodel = FeatlessModel()
+                featless_train(featlessmodel)
                 # print("Retrained model from log.")
                 
                 pending_match = None
@@ -303,16 +311,14 @@ def run():
         print(f"Matchup:\n{leftside_info[0]}  vs.  {rightside_info[0]}")
         print(f"Conditions:\n{leftside_info[1]}  vs.  {rightside_info[1]}")
 
-        # prediction, ratio = ai_predict(leftside_info, rightside_info)
-
-        # print(f"Prediction: {prediction} with confidence ratio {ratio}")
-
-        # ! TURN OFF WHEN NOT TRAINING ANYMORE
-
         left = (MONSTER_ENUM[leftside_info[0]], CONDITION_ENUM[leftside_info[1]])
         right = (MONSTER_ENUM[rightside_info[0]], CONDITION_ENUM[rightside_info[1]])
 
-        p_left_wins = model.predict(left, right, debug=True)
+        p_left_wins = model.predict(left, right, debug=debug)
+        p_left_wins_featless = featlessmodel.predict(left, right, debug=debug)
+        difference = p_left_wins - p_left_wins_featless
+        if debug:
+            print(f"After running both models, their prediction difference is {difference*100:.2f}.")
 
         if p_left_wins > 0.5:
             prediction = "LEFT"

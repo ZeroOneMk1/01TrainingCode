@@ -15012,3 +15012,21 @@
 {"timestamp": 1770684572.3365886, "left_monster": "Cockatrice", "left_condition": "Magic Attacks", "right_monster": "Barbarian", "right_condition": "Vorpal Blade", "winner": "RIGHT"}
 {"timestamp": 1770684679.0405743, "left_monster": "Swarm of Ravens", "left_condition": "Blurred", "right_monster": "Thug", "right_condition": "Radiant Attuned", "winner": "RIGHT"}
 {"timestamp": 1770684795.5935805, "left_monster": "Barbarian", "left_condition": "Vorpal Blade", "right_monster": "Warhorse Skeleton", "right_condition": "Overflowing Health", "winner": "RIGHT"}
+{"timestamp": 1770685461.3324807, "left_monster": "Wizard", "left_condition": "Reliable Damage", "right_monster": "Monk", "right_condition": "Flying", "winner": "RIGHT"}
+{"timestamp": 1770686135.916744, "left_monster": "Thug", "left_condition": "Radiant Attuned", "right_monster": "Spy", "right_condition": "+2 CON", "winner": "RIGHT"}
+{"timestamp": 1770686254.414565, "left_monster": "Duergar", "left_condition": "Tough", "right_monster": "NPC Druid", "right_condition": "Gauntlets of Ogre Power", "winner": "RIGHT"}
+{"timestamp": 1770686402.841011, "left_monster": "Hippogriff", "left_condition": "Electric Body", "right_monster": "Paladin", "right_condition": "Always Reckless", "winner": "RIGHT"}
+{"timestamp": 1770686501.3522909, "left_monster": "Brown Bear", "left_condition": "Black Half-Dragon", "right_monster": "Giant Hyena", "right_condition": "Memorized One Spell", "winner": "RIGHT"}
+{"timestamp": 1770686599.7769969, "left_monster": "Monk", "left_condition": "Flying", "right_monster": "Spy", "right_condition": "+2 CON", "winner": "RIGHT"}
+{"timestamp": 1770686678.2551882, "left_monster": "Paladin", "left_condition": "Always Reckless", "right_monster": "Death Dog", "right_condition": "Diseased", "winner": "LEFT"}
+{"timestamp": 1770686836.7919939, "left_monster": "NPC Druid", "left_condition": "Gauntlets of Ogre Power", "right_monster": "Brass Dragon Wyrmling", "right_condition": "Death Defying", "winner": "RIGHT"}
+{"timestamp": 1770686935.4024973, "left_monster": "Brass Dragon Wyrmling", "left_condition": "Death Defying", "right_monster": "Spy", "right_condition": "+2 CON", "winner": "RIGHT"}
+{"timestamp": 1770687004.0493462, "left_monster": "Giant Hyena", "left_condition": "Memorized One Spell", "right_monster": "Paladin", "right_condition": "Always Reckless", "winner": "RIGHT"}
+{"timestamp": 1770687132.650479, "left_monster": "Spy", "left_condition": "+2 CON", "right_monster": "Paladin", "right_condition": "Always Reckless", "winner": "RIGHT"}
+{"timestamp": 1770687251.267424, "left_monster": "Giant Elk", "left_condition": "Good Stats", "right_monster": "Ankheg", "right_condition": "+2 STR", "winner": "LEFT"}
+{"timestamp": 1770687329.8359928, "left_monster": "Ogre", "left_condition": "Memorized One Spell", "right_monster": "Silver Dragon Wyrmling", "right_condition": "Diseased", "winner": "RIGHT"}
+{"timestamp": 1770687448.4702272, "left_monster": "Ghast", "left_condition": "Green Half-Dragon", "right_monster": "Gargoyle", "right_condition": "Vanilla", "winner": "RIGHT"}
+{"timestamp": 1770687536.958896, "left_monster": "White Dragon Wyrmling", "left_condition": "Zombie", "right_monster": "Cult Fanatic", "right_condition": "Vorpal Blade", "winner": "LEFT"}
+{"timestamp": 1770687625.6102953, "left_monster": "Paladin", "left_condition": "Always Reckless", "right_monster": "Azer", "right_condition": "Wild Element", "winner": "LEFT"}
+{"timestamp": 1770687744.001041, "left_monster": "Ogre Zombie", "left_condition": "Skilled", "right_monster": "Will-o-Wisp", "right_condition": "Regenerator", "winner": "RIGHT"}
+{"timestamp": 1770687932.7506065, "left_monster": "Giant Constrictor Snake", "left_condition": "Thunder Attuned", "right_monster": "Awakened Tree", "right_condition": "+2 CHA", "winner": "RIGHT"}

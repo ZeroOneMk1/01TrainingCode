@@ -105,7 +105,7 @@ class MatchupModel:
             for j in range(MONSTERCOUNT):
                 a = sortedmonsters[i]
                 b = sortedmonsters[j]
-                winprobs[i][j] = self.predict(a, b, debug=False)
+                winprobs[i][j] = self.predict((a, None), (b, None), debug=False)
         
         # Turn this matrix into a list of colors to be used as a heatmap
         heatmap = []
@@ -152,7 +152,7 @@ class MatchupModel:
             for j in range(MONSTERCOUNT):
                 a = sortedmonsters[i]
                 b = sortedmonsters[j]
-                winprobs[i][j] = self.predict(a, b, debug=False)
+                winprobs[i][j] = self.predict((a, None), (b, None), debug=False)
         
         # Turn this matrix into a list of colors to be used as a heatmap
         heatmap = []
