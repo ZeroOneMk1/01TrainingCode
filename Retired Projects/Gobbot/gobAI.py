@@ -407,7 +407,7 @@ if __name__ == '__main__':
     optstwo.add_argument('--headless=new')
     browser = Firefox(options=opts)
 
-    counterbettercount = 0
+    counterbettercount = 1
     counterbetters = [Firefox(options=optstwo) for _ in range(counterbettercount)]
 
     score_history = []
