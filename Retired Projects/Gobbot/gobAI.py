@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from math import sqrt, log, floor, log2
+import numpy as np
 import traceback
 from matplotlib import pyplot as plt
 from collections import Counter
@@ -334,7 +335,23 @@ def run():
         current_right_cr = MONSTER_CR[rightside_info[0]]
 
         # Calculate bet amount based on confidence and Kelly criterion
-        confidence = -0.928571 * (confidence ** 2) + 2.19886 * confidence - 0.38265 # Readjusting confidence based on tests and best fit quadratic. TEMPORARY
+        if sum(matchcount) < 1000:
+            # use pre-fit quadratic to adjust confidence early on when data is sparse, to avoid overbetting on high confidence predictions that aren't well-calibrated yet. After 1000 matches, the confidence should be more reliable so we can use it directly.
+            confidence = -0.928571 * (confidence ** 2) + 2.19886 * confidence - 0.38265 # Readjusting confidence based on tests and best fit quadratic. TEMPORARY
+        else:
+            # fit a quadratic to the actual win rates in each confidence bracket, and use that to adjust confidence to be more accurate. This is because the raw model confidence isn't perfectly calibrated, especially in the early stages when data is sparse, and this adjustment helps improve betting decisions.
+            fiftyfivepcwinrate = (wincount[0]/matchcount[0])
+            sixtyfivepcwinrate = (wincount[1]/matchcount[1])
+            seventyfivepcwinrate = (wincount[2]/matchcount[2])
+            eightyfivepcwinrate = (wincount[3]/matchcount[3])
+            ninetyfivepcwinrate = (wincount[4]/matchcount[4])
+            # Fit a quadratic to these 5 points: (0.55, fiftyfivepcwinrate), (0.65, sixtyfivepcwinrate), (0.75, seventyfivepcwinrate), (0.85, eightyfivepcwinrate), (0.95, ninetyfivepcwinrate)
+            x = [0.55, 0.65, 0.75, 0.85, 0.95]
+            y = [fiftyfivepcwinrate, sixtyfivepcwinrate, seventyfivepcwinrate, eightyfivepcwinrate, ninetyfivepcwinrate]
+            coeffs = np.polyfit(x, y, 2)
+            a, b, c = coeffs
+            confidence = a * (confidence ** 2) + b * confidence + c
+
         p = confidence
         q = 1 - p
         b = 0.5 + 0.5 * counterbettercount  # Adjusted odds based on number of counterbetters
