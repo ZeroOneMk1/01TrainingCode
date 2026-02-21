@@ -460,10 +460,11 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
- MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
-Dynamically enable window occlusion 0
-1769658923259	Marionette	INFO	Marionette enabled
-console.error: "Warning: unrecognized command line flag" "-headless"
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+Exiting due to channel error.
+Exiting due to channel error.
+unrecognized command line flag" "-headless"
 1769658923329	Marionette	INFO	Listening on port 64782
 WebDriver BiDi listening on ws://127.0.0.1:64775
 Read port: 64782
@@ -491,9 +492,9 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-lly enable window occlusion 0
-1769658971861	Marionette	INFO	Marionette enabled
-console.error: "Warning: unrecognized command line flag" "-headless"
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+: unrecognized command line flag" "-headless"
 1769658971934	Marionette	INFO	Listening on port 64856
 WebDriver BiDi listening on ws://127.0.0.1:64847
 Read port: 64856
@@ -521,9 +522,10 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-lly enable window occlusion 0
-1769659010240	Marionette	INFO	Marionette enabled
-console.error: "Warning: unrecognized command line flag" "-headless"
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+Exiting due to channel error.
+g" "-headless"
 1769659010312	Marionette	INFO	Listening on port 64919
 WebDriver BiDi listening on ws://127.0.0.1:64912
 Read port: 64919
@@ -551,9 +553,9 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-lly enable window occlusion 0
-1769659167311	Marionette	INFO	Marionette enabled
-console.error: "Warning: unrecognized command line flag" "-headless"
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+: unrecognized command line flag" "-headless"
 1769659167380	Marionette	INFO	Listening on port 65000
 WebDriver BiDi listening on ws://127.0.0.1:64993
 Read port: 65000
@@ -581,9 +583,9 @@ JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
 JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
-lly enable window occlusion 0
-1769659198106	Marionette	INFO	Marionette enabled
-console.error: "Warning: unrecognized command line flag" "-headless"
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+: unrecognized command line flag" "-headless"
 1769659198175	Marionette	INFO	Listening on port 65069
 WebDriver BiDi listening on ws://127.0.0.1:65062
 Read port: 65069
@@ -940,3 +942,60 @@ JavaScript error: resource:///modules/sessionstore/SessionStore.sys.mjs, line 28
 JavaScript error: resource:///modules/sessionstore/SessionStore.sys.mjs, line 2804: TypeError: subject.QueryInterface is not a function
 JavaScript error: resource:///modules/sessionstore/SessionStore.sys.mjs, line 2804: TypeError: subject.QueryInterface is not a function
 A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1771178795843	geckodriver	INFO	Listening on 127.0.0.1:53466
+1771178798926	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 7" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofileXsumiC"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1771178799229	Marionette	INFO	Marionette enabled
+1771178799310	Marionette	INFO	Listening on port 53477
+WebDriver BiDi listening on ws://127.0.0.1:53467
+Read port: 53477
+1771178799408	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+ner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--headless=new" " ... 6" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofileaqNc1J"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1771178804788	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-headless"
+1771178804862	Marionette	INFO	Listening on port 53493
+WebDriver BiDi listening on ws://127.0.0.1:53486
+Read port: 53493
+1771178804943	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+[GFX1-]: VideoBridgeParent receives IPC close with reason=AbnormalShutdown
+JavaScript error: resource:///modules/sessionstore/SessionStore.sys.mjs, line 2804: TypeError: subject.QueryInterface is not a function
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+1771183888713	geckodriver	INFO	Listening on 127.0.0.1:55104
+1771183891778	mozrunner::runner	INFO	Running command: "C:\\Users\\Yusuf\\.cache\\selenium\\firefox\\win64\\147.0.3\\firefox.exe" "--marionette" "--remote-debuggin ... 5" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Yusuf\\AppData\\Local\\Temp\\rust_mozprofileNOp4Mf"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1771183892029	Marionette	INFO	Marionette enabled
+1771183892102	Marionette	INFO	Listening on port 55115
+WebDriver BiDi listening on ws://127.0.0.1:55105
+Read port: 55115
+1771183892145	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: moz-src:///browser/components/search/SearchOneOffs.sys.mjs, line 392: TypeError: aEngine.getIconURL is not a function
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+1771381017391	Marionette	INFO	Stopped listening on port 55115
+Dynamically enable window occlusion 1
+console.warn: TopSitesFeed: Failed to fetch data from MARS server: NetworkError when attempting to fetch resource.
+ervices.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1771183897462	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-headless"
+1771183897535	Marionette	INFO	Listening on port 55131
+WebDriver BiDi listening on ws://127.0.0.1:55124
+Read port: 55131
+1771183897643	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+JavaScript error: moz-src:///browser/components/search/SearchOneOffs.sys.mjs, line 392: TypeError: aEngine.getIconURL is not a function
+JavaScript error: , line 0: NS_ERROR_NOT_AVAILABLE
+Exiting due to channel error.
