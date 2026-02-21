@@ -50,19 +50,30 @@ class MatchupModel:
         # Condition-condition interactions: (cond_a, cond_b) -> strength
         self.condition_interactions = defaultdict(float)
         
-        # Condition-monster interactions: (condition, monster_idx) -> strength
-        self.condition_monster_interactions = defaultdict(float)
+        # Condition-monster synergy: (condition, monster_idx_on) -> strength
+        # How much a condition helps the monster it's on
+        self.condition_monster_synergy = defaultdict(float)
+        
+        # Condition-monster counter: (condition, opponent_idx) -> strength
+        # How much a condition counters a specific opponent monster
+        self.condition_monster_counter = defaultdict(float)
         
         # Monster-monster interactions: (monster_a, monster_b) -> strength
         self.monster_interactions = defaultdict(float)
         
         self.trust_threshold = trust_threshold
 
-    def _get_condition_strength(self, monster_idx: int, condition: str) -> float:
-        """Get effective strength contribution of a condition for a given monster."""
+    def _get_condition_synergy(self, monster_idx: int, condition: str) -> float:
+        """Get synergy bonus when this condition is on the given monster."""
         if not condition or condition not in self.condition_strength:
             return 0.0
-        return self.condition_strength[condition] + self.condition_monster_interactions.get((condition, monster_idx), 0.0)
+        return self.condition_strength[condition] + self.condition_monster_synergy.get((condition, monster_idx), 0.0)
+    
+    def _get_condition_counter(self, condition: str, opponent_idx: int) -> float:
+        """Get counter bonus when this condition faces the given opponent."""
+        if not condition:
+            return 0.0
+        return self.condition_monster_counter.get((condition, opponent_idx), 0.0)
 
     def _compute_condition_interaction(self, condition_a: str, condition_b: str) -> float:
         """Compute strength modifier from condition-condition interactions."""
@@ -101,11 +112,13 @@ class MatchupModel:
         # Compute predicted win probability with bracket consideration
         strength_diff = self.strength[winner_idx] - self.strength[loser_idx]
         bracket_diff = self.bracket_strength[winner_bracket] - self.bracket_strength[loser_bracket]
-        condition_contrib = (self._get_condition_strength(winner_idx, winner_condition) - 
-                            self._get_condition_strength(loser_idx, loser_condition))
+        synergy_contrib = (self._get_condition_synergy(winner_idx, winner_condition) - 
+                          self._get_condition_synergy(loser_idx, loser_condition))
+        counter_contrib = (self._get_condition_counter(winner_condition, loser_idx) - 
+                          self._get_condition_counter(loser_condition, winner_idx))
         interaction_contrib = self._compute_condition_interaction(winner_condition, loser_condition)
         
-        combined_diff = strength_diff + bracket_weight * bracket_diff + condition_contrib + interaction_contrib
+        combined_diff = strength_diff + bracket_weight * bracket_diff + synergy_contrib + counter_contrib + interaction_contrib
         p = sigmoid(combined_diff)
         
         # Update monster strength (ELO-like)
@@ -133,13 +146,17 @@ class MatchupModel:
             self.condition_interactions[key_ab] += condition_lr * 0.5 * (1 - p)
             self.condition_interactions[key_ba] -= condition_lr * 0.5 * (1 - p)
         
-        # Update condition-monster interactions (which conditions help which monsters)
+        # Update condition-monster synergy (how much a condition helps the monster it's on)
         if winner_condition:
-            self.condition_monster_interactions[(winner_condition, winner_idx)] += condition_lr * 0.3 * (1 - p)
-            self.condition_monster_interactions[(winner_condition, loser_idx)] -= condition_lr * 0.3 * (1 - p)
+            self.condition_monster_synergy[(winner_condition, winner_idx)] += condition_lr * 0.5 * (1 - p)
         if loser_condition:
-            self.condition_monster_interactions[(loser_condition, loser_idx)] += condition_lr * 0.3 * (1 - p)
-            self.condition_monster_interactions[(loser_condition, winner_idx)] -= condition_lr * 0.3 * (1 - p)
+            self.condition_monster_synergy[(loser_condition, loser_idx)] -= condition_lr * 0.5 * (1 - p)
+        
+        # Update condition-monster counter (how much a condition counters its opponent)
+        if winner_condition:
+            self.condition_monster_counter[(winner_condition, loser_idx)] += condition_lr * 0.5 * (1 - p)
+        if loser_condition:
+            self.condition_monster_counter[(loser_condition, winner_idx)] -= condition_lr * 0.5 * (1 - p)
         
         # Update monster-monster interactions (which monsters counter which other monsters)
         key_ab = (winner_idx, loser_idx)
@@ -177,10 +194,15 @@ class MatchupModel:
         strength_diff = self.strength[a] - self.strength[b]
         bracket_diff = self.bracket_strength[a_bracket] - self.bracket_strength[b_bracket]
         
-        # Compute condition contributions
-        condition_contrib_a = self._get_condition_strength(a, a_condition)
-        condition_contrib_b = self._get_condition_strength(b, b_condition)
-        condition_contrib = condition_contrib_a - condition_contrib_b
+        # Compute condition synergy contributions
+        synergy_contrib_a = self._get_condition_synergy(a, a_condition)
+        synergy_contrib_b = self._get_condition_synergy(b, b_condition)
+        synergy_contrib = synergy_contrib_a - synergy_contrib_b
+        
+        # Compute condition counter contributions
+        counter_contrib_a = self._get_condition_counter(a_condition, b)
+        counter_contrib_b = self._get_condition_counter(b_condition, a)
+        counter_contrib = counter_contrib_a - counter_contrib_b
         
         # Compute condition-condition interactions
         interaction_contrib = self._compute_condition_interaction(a_condition, b_condition)
@@ -189,7 +211,7 @@ class MatchupModel:
         monster_interaction = self._compute_monster_interaction(a, b)
         
         # Compute final prediction from model
-        total_diff = strength_diff + bracket_weight * bracket_diff + condition_contrib + interaction_contrib + monster_interaction
+        total_diff = strength_diff + bracket_weight * bracket_diff + synergy_contrib + counter_contrib + interaction_contrib + monster_interaction
         p = sigmoid(total_diff)
         
         if debug:
@@ -207,7 +229,8 @@ class MatchupModel:
             print(f"Model prediction breakdown:")
             print(f"  Monster strength: {strength_diff:.2f}")
             print(f"  Bracket strength: {bracket_weight * bracket_diff:.2f}")
-            print(f"  Condition contribution: {condition_contrib:.2f}")
+            print(f"  Condition synergy: {synergy_contrib:.2f}")
+            print(f"  Condition counter: {counter_contrib:.2f}")
             print(f"  Condition interactions: {interaction_contrib:.2f}")
             print(f"  Monster interactions: {monster_interaction:.2f}")
             print(f"  Final prediction: {p:.2f}")
@@ -379,4 +402,5 @@ def train_from_log(
     # print(f"  Monsters: {MONSTERCOUNT}")
     # print(f"  Conditions: {len(model.condition_strength)}")
     # print(f"  Total condition-condition interactions: {len(model.condition_interactions)}")
-    # print(f"  Total condition-monster interactions: {len(model.condition_monster_interactions)}")
+    # print(f"  Total condition-monster synergy: {len(model.condition_monster_synergy)}")
+    # print(f"  Total condition-monster counter: {len(model.condition_monster_counter)}")
