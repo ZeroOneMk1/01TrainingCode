@@ -376,10 +376,10 @@ def run():
             if current_gp - bet <= 50:
                 bet = current_gp
 
-            if prediction == "LEFT" and rightside_info[1] == "Starts Invisible":
-                bet = 1
-            elif prediction == "RIGHT" and leftside_info[1] == "Starts Invisible":
-                bet = 1
+            # if prediction == "LEFT" and rightside_info[1] == "Starts Invisible":
+            #     bet = 1
+            # elif prediction == "RIGHT" and leftside_info[1] == "Starts Invisible":
+            #     bet = 1
 
         last_bet_on = prediction
 
