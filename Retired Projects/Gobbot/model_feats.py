@@ -190,9 +190,26 @@ class MatchupModel:
         a_bracket = group_cr(MONSTER_CR[a_name]) + 2
         b_bracket = group_cr(MONSTER_CR[b_name]) + 2
         
-        # Compute strength differential
+        # Compute strength differential and bracket impact
         strength_diff = self.strength[a] - self.strength[b]
         bracket_diff = self.bracket_strength[a_bracket] - self.bracket_strength[b_bracket]
+        
+        # base win probability from strength + bracket
+        p_strength = sigmoid(strength_diff + bracket_weight * bracket_diff)
+        # blend with direct winrate evidence
+        w_ab = self.wins[a][b]
+        w_ba = self.wins[b][a]
+        total = w_ab + w_ba
+        if total > 0:
+            p_direct = w_ab / total
+            alpha = min(1.0, total / self.trust_threshold)
+            p_strength = alpha * p_direct + (1 - alpha) * p_strength
+        
+        # convert blended probability back into a logit (= elo-like diff)
+        # guard against extremes to avoid math domain errors
+        eps = 1e-6
+        p_strength_clamped = min(max(p_strength, eps), 1 - eps)
+        logit_strength = math.log(p_strength_clamped / (1 - p_strength_clamped))
         
         # Compute condition synergy contributions
         synergy_contrib_a = self._get_condition_synergy(a, a_condition)
@@ -207,32 +224,23 @@ class MatchupModel:
         # Compute condition-condition interactions
         interaction_contrib = self._compute_condition_interaction(a_condition, b_condition)
         
-        # Compute monster-monster interactions
-        monster_interaction = self._compute_monster_interaction(a, b)
-        
-        # Compute final prediction from model
-        total_diff = strength_diff + bracket_weight * bracket_diff + synergy_contrib + counter_contrib + interaction_contrib + monster_interaction
+        # Combine everything into final difference and sigmoid
+        total_diff = logit_strength + synergy_contrib + counter_contrib + interaction_contrib
         p = sigmoid(total_diff)
         
         if debug:
             # Direct matchup history for reference
-            w_ab = self.wins[a][b]
-            w_ba = self.wins[b][a]
-            total = w_ab + w_ba
-            
             if total > 0:
-                p_direct = w_ab / total
-                print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct:.2f})")
+                print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct:.2f}), alpha={alpha:.2f}")
             else:
                 print(f"No direct match history")
             
             print(f"Model prediction breakdown:")
-            print(f"  Monster strength: {strength_diff:.2f}")
-            print(f"  Bracket strength: {bracket_weight * bracket_diff:.2f}")
+            print(f"  Strength winprob (after blend): {p_strength:.2f}")
+            print(f"  Logit strength diff: {logit_strength:.2f}")
             print(f"  Condition synergy: {synergy_contrib:.2f}")
             print(f"  Condition counter: {counter_contrib:.2f}")
             print(f"  Condition interactions: {interaction_contrib:.2f}")
-            print(f"  Monster interactions: {monster_interaction:.2f}")
             print(f"  Final prediction: {p:.2f}")
             
             if a_condition:
