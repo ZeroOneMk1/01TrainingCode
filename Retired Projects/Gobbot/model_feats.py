@@ -109,9 +109,24 @@ class MatchupModel:
         winner_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[winner_idx]]) + 2
         loser_bracket = group_cr(MONSTER_CR[MONSTER_ENUM_INV[loser_idx]]) + 2
         
-        # Compute predicted win probability with bracket consideration
+        # Compute strength-only prediction (without conditions)
         strength_diff = self.strength[winner_idx] - self.strength[loser_idx]
         bracket_diff = self.bracket_strength[winner_bracket] - self.bracket_strength[loser_bracket]
+        p_strength_only = sigmoid(strength_diff + bracket_weight * bracket_diff)
+        
+        # Blend with hard evidence for surprise calculation
+        w_ab = self.wins[winner_idx][loser_idx]
+        w_ba = self.wins[loser_idx][winner_idx]
+        total = w_ab + w_ba
+        p_surprise_basis = p_strength_only
+        if total > 0:
+            p_direct_raw = w_ab / total
+            # Soften evidence: map [0, 1] to [0.1, 0.9] to reduce extreme scaling
+            p_direct = 0.1 + 0.8 * p_direct_raw
+            alpha = min(1.0, total / self.trust_threshold)
+            p_surprise_basis = alpha * p_direct + (1 - alpha) * p_strength_only
+        
+        # Compute predicted win probability with condition consideration
         synergy_contrib = (self._get_condition_synergy(winner_idx, winner_condition) - 
                           self._get_condition_synergy(loser_idx, loser_condition))
         counter_contrib = (self._get_condition_counter(winner_condition, loser_idx) - 
@@ -133,36 +148,42 @@ class MatchupModel:
         self.bracket_strength[winner_bracket] += delta_bracket
         self.bracket_strength[loser_bracket] -= delta_bracket
         
-        # Update condition strengths based on outcome
-        if winner_condition:
-            self.condition_strength[winner_condition] += condition_lr * (1 - p)
-        if loser_condition:
-            self.condition_strength[loser_condition] -= condition_lr * (1 - p)
+        # Compute surprise factor: how unexpected was this outcome based on strength + evidence?
+        # If outcome was expected by both ELO and hard evidence, surprise is low.
+        # If hard evidence (e.g., 9-0 record) strongly predicted winner, that reduces surprise.
+        surprise = abs(p_surprise_basis - 1.0)
         
-        # Update condition-condition interactions
+        # Update condition strengths with surprise weighting
+        # Conditions get stronger updates when they enable surprising victories or prevent surprising defeats
+        if winner_condition:
+            self.condition_strength[winner_condition] += condition_lr * (1 - p) * surprise
+        if loser_condition:
+            self.condition_strength[loser_condition] -= condition_lr * (1 - p) * surprise
+        
+        # Update condition-condition interactions with surprise weighting
         if winner_condition and loser_condition:
             key_ab = (winner_condition, loser_condition)
             key_ba = (loser_condition, winner_condition)
-            self.condition_interactions[key_ab] += condition_lr * 0.5 * (1 - p)
-            self.condition_interactions[key_ba] -= condition_lr * 0.5 * (1 - p)
+            self.condition_interactions[key_ab] += condition_lr * 0.5 * (1 - p) * surprise
+            self.condition_interactions[key_ba] -= condition_lr * 0.5 * (1 - p) * surprise
         
-        # Update condition-monster synergy (how much a condition helps the monster it's on)
+        # Update condition-monster synergy with surprise weighting
         if winner_condition:
-            self.condition_monster_synergy[(winner_condition, winner_idx)] += condition_lr * 0.5 * (1 - p)
+            self.condition_monster_synergy[(winner_condition, winner_idx)] += condition_lr * 0.5 * (1 - p) * surprise
         if loser_condition:
-            self.condition_monster_synergy[(loser_condition, loser_idx)] -= condition_lr * 0.5 * (1 - p)
+            self.condition_monster_synergy[(loser_condition, loser_idx)] -= condition_lr * 0.5 * (1 - p) * surprise
         
-        # Update condition-monster counter (how much a condition counters its opponent)
+        # Update condition-monster counter with surprise weighting
         if winner_condition:
-            self.condition_monster_counter[(winner_condition, loser_idx)] += condition_lr * 0.5 * (1 - p)
+            self.condition_monster_counter[(winner_condition, loser_idx)] += condition_lr * 0.5 * (1 - p) * surprise
         if loser_condition:
-            self.condition_monster_counter[(loser_condition, winner_idx)] -= condition_lr * 0.5 * (1 - p)
+            self.condition_monster_counter[(loser_condition, winner_idx)] -= condition_lr * 0.5 * (1 - p) * surprise
         
         # Update monster-monster interactions (which monsters counter which other monsters)
         key_ab = (winner_idx, loser_idx)
         key_ba = (loser_idx, winner_idx)
-        self.monster_interactions[key_ab] += condition_lr * 0.5 * (1 - p)
-        self.monster_interactions[key_ba] -= condition_lr * 0.5 * (1 - p)
+        self.monster_interactions[key_ab] += condition_lr * 0.5 * (1 - p) * surprise
+        self.monster_interactions[key_ba] -= condition_lr * 0.5 * (1 - p) * surprise
 
 
     def predict(self, a_info: tuple, b_info: tuple, debug: bool = False) -> float:
@@ -196,12 +217,14 @@ class MatchupModel:
         
         # base win probability from strength + bracket
         p_strength = sigmoid(strength_diff + bracket_weight * bracket_diff)
-        # blend with direct winrate evidence
+        # blend with direct winrate evidence, but soften extreme evidence
         w_ab = self.wins[a][b]
         w_ba = self.wins[b][a]
         total = w_ab + w_ba
         if total > 0:
-            p_direct = w_ab / total
+            p_direct_raw = w_ab / total
+            # Soften evidence: map [0, 1] to [0.1, 0.9] to reduce extreme scaling
+            p_direct = 0.1 + 0.8 * p_direct_raw
             alpha = min(1.0, total / self.trust_threshold)
             p_strength = alpha * p_direct + (1 - alpha) * p_strength
         
@@ -231,7 +254,7 @@ class MatchupModel:
         if debug:
             # Direct matchup history for reference
             if total > 0:
-                print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct:.2f}), alpha={alpha:.2f}")
+                print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct_raw:.2f}), softened to {p_direct:.2f}, alpha={alpha:.2f}")
             else:
                 print(f"No direct match history")
             
