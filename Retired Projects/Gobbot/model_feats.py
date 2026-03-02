@@ -243,24 +243,56 @@ class MatchupModel:
         p = sigmoid(total_diff)
         
         if debug:
-            # Direct matchup history for reference
+            print("--- DEBUG PREDICTION ---")
+            # strength and bracket breakdown
+            print(f"Strength diff: {strength_diff:.4f} (A {self.strength[a]:.4f} vs B {self.strength[b]:.4f})")
+            print(f"Bracket diff: {bracket_diff:.4f} (A bracket {a_bracket}, B bracket {b_bracket})")
+            raw_strength_prob = sigmoid(strength_diff + bracket_weight * bracket_diff)
+            print(f"Raw strength winprob: {raw_strength_prob:.4f}")
+            initial_logit = math.log(min(max(raw_strength_prob, 1e-6),1-1e-6)/(1-min(max(raw_strength_prob,1e-6),1-1e-6)))
+            print(f"Initial logit (before evidence): {initial_logit:.4f}")
+            
             if total > 0:
-                print(f"Direct matches: {w_ab} vs {w_ba} ({p_direct_raw:.2f}), softened to {p_direct:.2f}, alpha={alpha:.2f}")
+                print(f"Direct matches: {w_ab} vs {w_ba} (raw {p_direct_raw:.4f}), softened {p_direct:.4f}, alpha {alpha:.4f}")
             else:
-                print(f"No direct match history")
+                print("No direct match history")
             
-            print(f"Model prediction breakdown:")
-            print(f"  Strength winprob (after blend): {p_strength:.2f}")
-            print(f"  Logit strength diff: {logit_strength:.2f}")
-            print(f"  Condition synergy: {synergy_contrib:.2f}")
-            print(f"  Condition counter: {counter_contrib:.2f}")
-            print(f"  Condition interactions: {interaction_contrib:.2f}")
-            print(f"  Final prediction: {p:.2f}")
+            print(f"Blended strength winprob: {p_strength:.4f}")
+            print(f"Converted logit_strength (after evidence): {logit_strength:.4f}")
+            change = logit_strength - initial_logit
+            print(f"Logit change due to evidence: {change:+.4f}")
             
+            # Condition messages
+            if synergy_contrib_a or synergy_contrib_b:
+                print(f"Monster A's condition gives a {synergy_contrib_a:.4f} boost, B's gives {synergy_contrib_b:.4f}")
+            # report counter contributions individually; positive = strong against opponent
+            if counter_contrib_a != 0.0:
+                verb = "helps" if counter_contrib_a > 0 else "is weak against"
+                print(f"Monster A's condition {verb} B by {counter_contrib_a:.4f}")
+            else:
+                print("Monster A's condition has no significant counter effect on B")
+            if counter_contrib_b != 0.0:
+                verb = "helps" if counter_contrib_b > 0 else "is weak against"
+                print(f"Monster B's condition {verb} A by {counter_contrib_b:.4f}")
+            else:
+                print("Monster B's condition has no significant counter effect on A")
+            if interaction_contrib != 0.0:
+                if interaction_contrib > 0:
+                    print(f"Condition {a_condition!r} counters {b_condition!r} by {interaction_contrib:.4f}")
+                else:
+                    print(f"Condition {b_condition!r} counters {a_condition!r} by {abs(interaction_contrib):.4f}")
+            else:
+                print("No significant condition-condition interaction")
+            
+            print(f"Total diff before sigmoid: {total_diff:.4f}")
+            print(f"Final prediction probability: {p:.4f}")
+            favored = 'A' if p>0.5 else 'B'
+            print(f"Favored side: {favored} ({p:.4f} vs {1-p:.4f})")
             if a_condition:
                 print(f"Left condition: {a_condition}")
             if b_condition:
                 print(f"Right condition: {b_condition}")
+            print("--- END DEBUG ---")
         
         return p
 
@@ -309,7 +341,7 @@ class MatchupModel:
             
             f.write("</table></body></html>\n")
         
-        print(f"Generated heatmap with {len(self.condition_strength)} conditions tracked")
+        print(f"Generated heatmap with {len(sortedmonsters)} monsters tracked")
 
     def print_condition_heatmap(self):
         """Generate HTML heatmap of condition matchups (neutral monster baseline)."""
@@ -388,10 +420,6 @@ def train_from_log(
 
             left = MONSTER_ENUM[row["left_monster"]]
             right = MONSTER_ENUM[row["right_monster"]]
-
-            # Skip matches with Starts Invisible (too dominant)
-            if row.get("left_condition") == "Starts Invisible" or row.get("right_condition") == "Starts Invisible":
-                continue
 
             left_condition = row.get("left_condition", "")
             right_condition = row.get("right_condition", "")
