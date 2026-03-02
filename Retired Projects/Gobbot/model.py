@@ -81,19 +81,26 @@ class MatchupModel:
         bracket_diff = cum_strength_a - cum_strength_b
         p_bracket_included = sigmoid(bracket_diff)
 
-        print(f"Elo of Left: {self.strength[left_monster_id]:.2f}\nElo of Right: {self.strength[right_monster_id]:.2f}\nTransitive win probability: {p_trans:.2f}") if debug else None
-        print(f"Bracket adjusted Elo of Left: {cum_strength_a:.2f}\nBracket adjusted Elo of Right: {cum_strength_b:.2f}\nBracket adjusted win probability: {p_bracket_included:.2f}") if debug and a_bracket != b_bracket else None
+        if debug:
+            print("--- DEBUG PREDICTION RAW ---")
+            print(f"Elo of Left: {self.strength[left_monster_id]:.2f}\nElo of Right: {self.strength[right_monster_id]:.2f}\nTransitive win probability: {p_trans:.2f}")
+            if a_bracket != b_bracket:
+                print(f"Bracket adjusted Elo of Left: {cum_strength_a:.2f}\nBracket adjusted Elo of Right: {cum_strength_b:.2f}\nBracket adjusted win probability: {p_bracket_included:.2f}")
 
         if total == 0:
-            print("No direct matches, relying entirely on transitive estimate") if debug else None
+            if debug:
+                print("No direct matches, relying entirely on transitive estimate")
             return p_bracket_included
 
         p_direct = w_ab / total
-        print(f"Left's direct win rate over Right: {p_direct:.2f} based on {total} matches") if debug else None
+        if debug:
+            print(f"Left's direct win rate over Right: {p_direct:.2f} based on {total} matches")
         alpha = min(1.0, total / self.trust_threshold)
 
         prediction = alpha * p_direct + (1 - alpha) * p_bracket_included
-        print(f"Using alpha={alpha:.2f}, final prediction: {max(prediction, 1-prediction):.2f} for {MONSTER_ENUM_INV[left_monster_id] if prediction > 0.5 else MONSTER_ENUM_INV[right_monster_id]}") if debug else None
+        if debug:
+            print(f"Using alpha={alpha:.2f}, final prediction: {max(prediction, 1-prediction):.2f} for {MONSTER_ENUM_INV[left_monster_id] if prediction > 0.5 else MONSTER_ENUM_INV[right_monster_id]}")
+            print("--- END DEBUG RAW ---")
 
         return prediction
     

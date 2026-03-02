@@ -243,7 +243,7 @@ class MatchupModel:
         p = sigmoid(total_diff)
         
         if debug:
-            print("--- DEBUG PREDICTION ---")
+            print("--- DEBUG PREDICTION FEATS ---")
             # strength and bracket breakdown
             print(f"Strength diff: {strength_diff:.4f} (A {self.strength[a]:.4f} vs B {self.strength[b]:.4f})")
             print(f"Bracket diff: {bracket_diff:.4f} (A bracket {a_bracket}, B bracket {b_bracket})")
@@ -292,7 +292,7 @@ class MatchupModel:
                 print(f"Left condition: {a_condition}")
             if b_condition:
                 print(f"Right condition: {b_condition}")
-            print("--- END DEBUG ---")
+            print("--- END DEBUG FEATS ---")
         
         return p
 
