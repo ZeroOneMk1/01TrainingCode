@@ -168,13 +168,7 @@ class MatchupModel:
         if winner_condition:
             self.condition_monster_counter[(winner_condition, loser_idx)] += condition_lr * 0.5 * (1 - p) * surprise
         if loser_condition:
-            self.condition_monster_counter[(loser_condition, winner_idx)] -= condition_lr * 0.5 * (1 - p) * surprise
-        
-        # Update monster-monster interactions (which monsters counter which other monsters)
-        key_ab = (winner_idx, loser_idx)
-        key_ba = (loser_idx, winner_idx)
-        self.monster_interactions[key_ab] += condition_lr * 0.5 * (1 - p) * surprise
-        self.monster_interactions[key_ba] -= condition_lr * 0.5 * (1 - p) * surprise
+            self.condition_monster_counter[(loser_condition, winner_idx)] -= condition_lr * 0.5 * (1 - p) * surprise\
 
 
     def predict(self, a_info: tuple, b_info: tuple, debug: bool = False) -> float:
