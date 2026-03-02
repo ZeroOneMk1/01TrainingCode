@@ -58,9 +58,6 @@ class MatchupModel:
         # How much a condition counters a specific opponent monster
         self.condition_monster_counter = defaultdict(float)
         
-        # Monster-monster interactions: (monster_a, monster_b) -> strength
-        self.monster_interactions = defaultdict(float)
-        
         self.trust_threshold = trust_threshold
 
     def _get_condition_synergy(self, monster_idx: int, condition: str) -> float:
@@ -83,12 +80,6 @@ class MatchupModel:
         key_ab = (condition_a, condition_b)
         key_ba = (condition_b, condition_a)
         return self.condition_interactions.get(key_ab, 0.0) - self.condition_interactions.get(key_ba, 0.0)
-
-    def _compute_monster_interaction(self, monster_a: int, monster_b: int) -> float:
-        """Compute strength modifier from monster-monster interactions (matchup-specific effects)."""
-        key_ab = (monster_a, monster_b)
-        key_ba = (monster_b, monster_a)
-        return self.monster_interactions.get(key_ab, 0.0) - self.monster_interactions.get(key_ba, 0.0)
 
     def update(self, winner_idx: int, loser_idx: int, 
                winner_condition: str = "", loser_condition: str = "",
@@ -157,12 +148,6 @@ class MatchupModel:
             self.condition_monster_counter[(winner_condition, loser_idx)] += condition_lr * 0.5 * (1 - p)
         if loser_condition:
             self.condition_monster_counter[(loser_condition, winner_idx)] -= condition_lr * 0.5 * (1 - p)
-        
-        # Update monster-monster interactions (which monsters counter which other monsters)
-        key_ab = (winner_idx, loser_idx)
-        key_ba = (loser_idx, winner_idx)
-        self.monster_interactions[key_ab] += condition_lr * 0.5 * (1 - p)
-        self.monster_interactions[key_ba] -= condition_lr * 0.5 * (1 - p)
 
 
     def predict(self, a_info: tuple, b_info: tuple, debug: bool = False) -> float:
