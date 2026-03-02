@@ -297,7 +297,7 @@ def run():
         print(f"Win Rate for confidence 70%-80% : {wincount[2]}/{matchcount[2]} ({(wincount[2]/matchcount[2]*100) if matchcount[2] > 0 else 0:.2f}%)")
         print(f"Win Rate for confidence 80%-90% : {wincount[3]}/{matchcount[3]} ({(wincount[3]/matchcount[3]*100) if matchcount[3] > 0 else 0:.2f}%)")
         print(f"Win Rate for confidence 90%-100%: {wincount[4]}/{matchcount[4]} ({(wincount[4]/matchcount[4]*100) if matchcount[4] > 0 else 0:.2f}%)")
-        print(f"Total Win Rate: {sum(wincount)}/{sum(matchcount)} ({sum(wincount)/sum(matchcount) if sum(matchcount) > 0 else 0:.2f}%)")
+        print(f"Total Win Rate: {sum(wincount)}/{sum(matchcount)} ({100*sum(wincount)/sum(matchcount) if sum(matchcount) > 0 else 0:.2f}%)")
 
         print(f"Score: {current_gp}GP")
 
@@ -320,6 +320,19 @@ def run():
         difference = p_left_wins - p_left_wins_featless
         if debug:
             print(f"After running both models, their prediction difference is {difference*100:.2f}.")
+
+            if difference > 0:
+                print("The feature-based model is more confident in LEFT winning than the featless model.")
+            elif difference < 0:
+                print("The featless model is more confident in LEFT winning than the feature-based model.")
+            else:
+                print("Both models have equal confidence in LEFT winning.")
+
+            # Check if models disagree on winner
+            left_model_winner = "LEFT" if p_left_wins > 0.5 else "RIGHT"
+            featless_model_winner = "LEFT" if p_left_wins_featless > 0.5 else "RIGHT"
+            if left_model_winner != featless_model_winner:
+                print(f"Models disagree: Feature-based model predicts {left_model_winner}, featless model predicts {featless_model_winner}.")
 
         if p_left_wins > 0.5:
             prediction = "LEFT"
